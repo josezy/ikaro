@@ -1,0 +1,32 @@
+@media (max-width: 1300px) {
+    div.mw-wrap {
+        width: 100%;
+        min-width: initial;
+    }
+    div.mw-header {
+        display: inline-block;
+    }
+    #geopoint-map-elem {
+        width: 100%;
+    }
+    div.mw-wrap div.mw-adress-input-wrap {
+        float: left;
+        width: 100%;
+    }
+}
+
+@media (max-width:764px) {
+
+    img.d-block.w-100 {
+        height: 200px;
+    }
+    .main-scroll{
+        height: auto;
+        overflow-y: initial;
+    }
+
+    /* Filters */
+    .filter-container .dropdown.dropdown-menu-mobile .dropdown-menu{
+        left: -160% !important;
+    }
+}

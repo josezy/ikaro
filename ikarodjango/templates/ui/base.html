@@ -1,0 +1,78 @@
+{% load static %}
+{% load utils %}
+{% load cache %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="language" content="es">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>{% block title %}Home{% endblock %} | Tucano AR</title>
+
+        <meta name="description" content="">
+        <meta name="keywords" content="aerialrobotics">
+
+        <meta name="theme-color" content="#222">
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui">
+        <meta name="apple-mobile-web-app-title" content="Tucano AR">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        {% block metatags %}{% endblock %}
+
+        <link rel="preload" as="style" href="{% http2static 'css/bootstrap.min.css' '4' %}" crossorigin>
+        <link rel="preload" as="style" href="{% http2static 'css/fa-all.min.css' '5' %}" crossorigin>
+        <link rel="preload" as="style" href="{% http2static 'css/shards-dashboards.1.1.0.min.css' '1' %}" crossorigin>
+        <link rel="preload" as="style" href="https://fonts.googleapis.com/icon?family=Material+Icons" crossorigin>
+        <link rel="preload" as="style" href="{% http2static 'css/base.css' GIT_SHA %}" crossorigin>
+        <link rel="preload" as="style" href="{% http2static 'css/base.mobile.css' GIT_SHA %}" crossorigin>
+
+        {% if custom_stylesheet %}
+            <link rel="preload" as="style" href="{% http2static 'css/'|add:custom_stylesheet GIT_SHA %}" crossorigin>
+        {% endif %}
+        {% block preloads %}{% endblock %}
+
+        <link rel="stylesheet" href="{% http2static 'css/bootstrap.min.css' '4' %}" type="text/css" crossorigin>
+        <link rel="stylesheet" href="{% http2static 'css/fa-all.min.css' '5' %}" type="text/css" crossorigin>
+        <link rel="stylesheet" href="{% http2static 'css/shards-dashboards.1.1.0.min.css' '1' %}" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" crossorigin>
+        <link rel="stylesheet" href="{% http2static 'css/base.css' GIT_SHA %}" type="text/css" crossorigin>
+        <link rel="stylesheet" href="{% http2static 'css/base.mobile.css' GIT_SHA %}" type="text/css" crossorigin>
+        {% if custom_stylesheet %}
+            <link rel="stylesheet" href="{% http2static 'css/'|add:custom_stylesheet GIT_SHA %}" type="text/css" crossorigin>
+        {% endif %}
+
+        <script>
+            window.loading = {head: Date.now()};
+            window.title = {{title|json}};
+            window.user = {{user|json}};
+            window.DEBUG = {{DEBUG|json}};
+            window.ENVIRONMENT = '{{ENVIRONMENT}}';
+            window.GIT_SHA = '{{GIT_SHA}}';
+        </script>
+
+
+        {% block head %}{% endblock %}
+    </head>
+    <body class="{{body_classes}} body-{{page_id}} {{body_theme}}-theme">
+
+        {% block outer %}
+            {% block header %}
+            {% endblock %}
+
+            <div class="container-fluid inner-content">
+                {% block inner %}
+                {% endblock %}
+            </div>
+
+            {% block footer %}
+            {% endblock %}
+        {% endblock %}
+
+        <script src="{% http2static 'js/overrides.js' GIT_SHA %}" type="text/javascript" crossorigin></script>
+        <script src="{% http2static 'js/jquery-3.2.1.min.js' GIT_SHA %}" type="text/javascript" crossorigin></script>
+
+        {% block tail %}{% endblock %}
+
+    </body>
+</html>

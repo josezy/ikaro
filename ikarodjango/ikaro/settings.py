@@ -12,9 +12,14 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+IKARO_ENV = os.getenv('IKARO_ENV', 'DEV').upper()
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+REPO_DIR = os.path.dirname(BASE_DIR)
+DATA_DIR = os.path.abspath(os.path.join(REPO_DIR, 'data'))
 
+GIT_SHA = "someshafornow"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -24,9 +29,18 @@ SECRET_KEY = 'i2h^x(1n$qwa(k1dcvt4($n)jj919ji&4b*usyw(=jbzaf-pbw'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
+IPYTHON_ARGUMENTS = ['--no-confirm-exit', '--no-banner']
+
+
+TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
+STATICFILES_DIR = os.path.join(BASE_DIR, 'static')
+MEDIA_ROOT = os.path.join(DATA_DIR, 'media')
+STATIC_ROOT = os.path.join(DATA_DIR, 'static')
 
 # Application definition
 
@@ -37,6 +51,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'ikaro',
+    'ui',
 ]
 
 MIDDLEWARE = [
@@ -54,7 +71,7 @@ ROOT_URLCONF = 'ikaro.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATES_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -66,6 +83,7 @@ TEMPLATES = [
         },
     },
 ]
+STATICFILES_DIRS = [STATICFILES_DIR]
 
 WSGI_APPLICATION = 'ikaro.wsgi.application'
 
