@@ -10,6 +10,12 @@ apt install python3 python3-pip npm
 python3 -m pip install --user pipenv
 
 cd ikaro
+
+# For Bash: add this line to ~/.bashrc or ~/.bash_profile
+PATH=~/.local/bin:$PATH
+# For fish: add this line to ~/.config/fish/config.fish
+set -x PATH ~/.local/bin $PATH
+
 pipenv install
 
 # Install javascript dependencies (dev machines only)
