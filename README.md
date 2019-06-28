@@ -6,8 +6,8 @@ Django based web server for tucano services
 * Clone this repo
 * Run these commands
 ```bash
-apt install python3 python3-pip npm
-python3 -m pip install --user pipenv
+apt install python3.7 python3-pip npm
+python3.7 -m pip install --user pipenv
 
 cd ikaro
 
