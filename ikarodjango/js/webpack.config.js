@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
   mode: 'production',
   entry: {
-    'home': './pages/home.js',
+    'flight_panel': './pages/flight_panel.js',
   },
   output: {
     path: path.resolve(__dirname, '../static/js/pages'),

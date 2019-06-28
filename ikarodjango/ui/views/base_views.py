@@ -110,7 +110,11 @@ class BaseView(BaseContextMixin, View):
         context = self.get_context(request, *args, **kwargs)
 
         content = loader.render_to_string(self.template, context, request)
-        return HttpResponseWithCallback(content, request=request)
+        return HttpResponseWithCallback(
+            content,
+            request=request,
+            callback=self.after_response
+        )
 
     def after_response(self, **kwargs):
         pass
