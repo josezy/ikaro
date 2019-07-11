@@ -21,3 +21,4 @@ env/secrets.env
 etc/nginx/*.csr
 etc/nginx/*.crt
 etc/nginx/*.key
+.venv
