@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# build images, install packages, believe in magic
+docker-compose build
+
+# migrate database and collect static files
+docker-compose exec web python ikarodjango/manage.py migrate --no-input
+docker-compose exec web python ikarodjango/manage.py collectstatic --no-input
+
+# run containers
+docker-compose up -d
