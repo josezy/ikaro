@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:1.15-alpine
+    volumes:
+      - ./etc/nginx:/etc/nginx/conf.d
+      - ./data:/opt/ikaro/data
+    ports:
+      - "80:80"
+      - "443:443"
+
+  web:
+    build: .
+    command: python ikarodjango/manage.py runserver 0.0.0.0:8000
+
