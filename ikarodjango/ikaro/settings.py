@@ -28,7 +28,7 @@ GIT_SHA = "someshafornow"
 SECRET_KEY = 'i2h^x(1n$qwa(k1dcvt4($n)jj919ji&4b*usyw(=jbzaf-pbw'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
@@ -132,7 +132,3 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.2/howto/static-files/
-
-STATIC_URL = '/static/'
