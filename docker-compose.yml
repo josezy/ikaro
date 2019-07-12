@@ -6,6 +6,8 @@ services:
     volumes:
       - ./etc/nginx:/etc/nginx/conf.d
       - ./data:/opt/ikaro/data
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
     ports:
       - "80:80"
       - "443:443"
@@ -16,3 +18,8 @@ services:
     volumes:
       - .:/opt/ikaro
 
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
