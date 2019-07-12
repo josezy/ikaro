@@ -6,8 +6,6 @@ services:
     volumes:
       - ./etc/nginx:/etc/nginx/conf.d
       - ./data:/opt/ikaro/data
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
     ports:
       - "80:80"
       - "443:443"
@@ -17,15 +15,4 @@ services:
     command: python ikarodjango/manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/opt/ikaro
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
 
-  certbot:
-    image: certbot/certbot
-    volumes:
-      - .:/opt/ikaro
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
-    depends_on:
-      - web
-    command: certonly --webroot --webroot-path=/opt/ikaro --email jose@tucanoar.com --agree-tos --no-eff-email --staging -d tucanoar.com  -d www.tucanoar.com 
