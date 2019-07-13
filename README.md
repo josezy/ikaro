@@ -38,43 +38,43 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-### Server management
+# Server management
 
 
-# SSL CERTS
+### SSL CERTS
 
-### SELF SIGNED
+# SELF SIGNED
 `openssl req -x509 -nodes -days 3650 -newkey rsa:4096 -keyout tucanoar.com.key -out tucanoar.com.crt -subj "/C=CO/ST=Antioquia/L=Rionegro/O=TucanoAR/CN=tucanoar.com"`
 
-### LetsEncrypt
-# create volume
+# LetsEncrypt
+### create volume
     `- /root/certs-data:/data/letsencrypt/`
-# add location (comment rewrite)
+### add location (comment rewrite)
     `location /.well-known/ { allow all; root /data/letsencrypt/; }`
-# run certbot
+### run certbot
     `certbot certonly --webroot -w /root/certs-data -d tucanoar.com -d www.tucanoar.com`
 
 
 
-### MANAGEMENT COMMANDS
-# setup handled by docker
+# MANAGEMENT COMMANDS
+### setup handled by docker
     ```
     apt install docker.io docker-compose
     docker-compose up -d --build
     ```
 
-# start
+### start
     `docker-compose up -d`
-# stop
+### stop
     `docker-compose down`
 
-# deploy
+### deploy
     ```
     git pull
     docker-compose down
     docker-compose up -d --build
     ```
 
-# backup
+### backup
     --
 
