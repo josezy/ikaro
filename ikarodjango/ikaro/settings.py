@@ -42,6 +42,8 @@ STATICFILES_DIR = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(DATA_DIR, 'media')
 STATIC_ROOT = os.path.join(DATA_DIR, 'static')
 
+REDIS_URL = "redis://localhost:6379"
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -51,6 +53,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'channels',
 
     'ikaro',
     'ui',
@@ -83,10 +87,20 @@ TEMPLATES = [
         },
     },
 ]
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [REDIS_URL],
+        },
+    },
+}
+
 STATICFILES_DIRS = [STATICFILES_DIR]
 
-WSGI_APPLICATION = 'ikaro.wsgi.application'
-
+# WSGI_APPLICATION = 'ikaro.wsgi.application'
+ASGI_APPLICATION = 'ikaro.routing.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases

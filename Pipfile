@@ -10,6 +10,11 @@ ipdb = "*"
 [packages]
 django = "*"
 bleach = "*"
+redis = "*"
+channels = "*"
+channels-redis = "*"
+service-identity = "*"
+asyncio = "*"
 
 [requires]
 python_version = "3.7"
