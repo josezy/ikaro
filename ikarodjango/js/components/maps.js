@@ -49,9 +49,9 @@ export class MapContainer extends PureComponent {
             viewport: {
                 width: '100%',
                 height: '100%',
-                latitude: 40.7,
-                longitude: -74.1,
-                zoom: 8
+                latitude: 6.147674,
+                longitude: -75.393580,
+                zoom: 16
             }
         }
     }
@@ -61,6 +61,8 @@ export class MapContainer extends PureComponent {
     }
 
     render() {
+        const {center} = this.props
+
         return <ReactMapGL
                   {...this.state.viewport}
                   mapStyle="mapbox://styles/mapbox/streets-v8"
@@ -71,6 +73,11 @@ export class MapContainer extends PureComponent {
             <div style={navStyle}>
                 <NavigationControl onViewportChange={::this.updateViewport} />
             </div>
+            {center &&
+                <Marker latitude={center.lat} longitude={center.lon} >
+                    <Pin />
+                </Marker>
+            }
 
         </ReactMapGL>
     }

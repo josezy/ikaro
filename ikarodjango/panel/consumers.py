@@ -19,7 +19,6 @@ class PanelConsumer(AsyncConsumer):
         })
 
     async def websocket_receive(self, event):
-        print("received", event)
         mav_msg = event.get('text', None)
         if mav_msg is not None:
             await self.channel_layer.group_send(
@@ -31,7 +30,6 @@ class PanelConsumer(AsyncConsumer):
             )
 
     async def flight_message(self, event):
-        print("sending group", event)
         await self.send({
             'type': 'websocket.send',
             'text': event.get('message')
