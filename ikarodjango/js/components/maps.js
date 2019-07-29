@@ -3,7 +3,6 @@ import ReactMapGL, {Marker, NavigationControl, GeolocateControl} from 'react-map
 
 import 'mapbox-gl/dist/mapbox-gl.css'
 
-const MAPBOX_ACCESS_TOKEN = "pk.eyJ1Ijoiam9zZXp5IiwiYSI6ImNqd3ZmdGFmbzA4dGQ0OW41em5reDU3cmMifQ.5Ab2UzBgSWEoRgjxN9fMhg"
 
 
 const ICON = `
@@ -66,7 +65,7 @@ export class MapContainer extends PureComponent {
         return <ReactMapGL
                   {...this.state.viewport}
                   mapStyle="mapbox://styles/mapbox/streets-v8"
-                  mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
+                  mapboxApiAccessToken={global.props.map_api}
                   onViewportChange={(viewport) => this.setState({viewport})}
                 >
 
