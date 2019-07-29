@@ -9,5 +9,5 @@ class FlightPanel(PublicReactView):
 
     def props(self, request, *args, **kwargs):
         return {
-            'map_api': settings.MAP_API
+            'map_key': settings.MAP_KEY
         }
