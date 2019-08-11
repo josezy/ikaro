@@ -28,7 +28,7 @@ GIT_SHA = "someshafornow"
 SECRET_KEY = 'i2h^x(1n$qwa(k1dcvt4($n)jj919ji&4b*usyw(=jbzaf-pbw'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
