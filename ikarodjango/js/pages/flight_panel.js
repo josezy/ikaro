@@ -1,67 +1,54 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import {Row, Col} from 'react-bootstrap'
+import {createStore, combineReducers} from 'redux'
+import {Provider} from 'react-redux'
 
-import {MapContainer} from '@/components/maps'
+import {mavlink} from '@/reducers/mavlink'
+
+import {SocketRouter} from '@/components/websocket'
+import {ControlStation} from '@/components/gcs'
 
 
-const socket = new WebSocket('ws://localhost:8000/flight');
+export const FlightPanel = {
+    view: 'ui.views.pages.FlightPanel',
 
+    init(props) {
+        const initial_state = {}
+        const store = this.setupStore({
+            mavlink
+        }, initial_state)
 
-class FlightPanelComponent extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            marker_center: undefined,
-        }
-    }
-    componentWillMount() {
-        socket.onopen = (e) => {
-            console.log("websocket connected", e)
-        }
-        socket.onmessage = (message) => {
-            if(message.data.includes("mavpackettype")) {
-                const msg_data = JSON.parse(message.data)
-                if(msg_data.mavpackettype == "GLOBAL_POSITION_INT") {
-                    this.setState({
-                        marker_center: {
-                            lon: msg_data.lon / 10**7,
-                            lat: msg_data.lat / 10**7
-                        }
-                    })
-                }
-            }
+        const socket = new SocketRouter(store, '/flight')
 
-        }
-        socket.onerror = (e) => {
-            console.log("onerror:", e)
-        }
-        socket.onclose = (e) => {
-            console.log("onclose:", e)
-        }
-    }
-    render() {
-        const {marker_center} = this.state
-        return <Row style={{height: '100vh'}}>
-            <Col>
-                <Row style={{height: '50vh'}}>
-                    <div className="m-auto">STREAM</div>
-                </Row>
-                <Row style={{height: '50vh'}}>
-                    <div className="m-auto">HUD</div>
-                </Row>
-            </Col>
-            <Col>
-                <div style={{width: '100%', height: '100%'}}>
-                    <MapContainer center={marker_center}/>
-                </div>
-            </Col>
-        </Row>
-    }
+        // this group of references define everything available to a Page
+        return {props, store, socket}
+    },
+    setupStore(reducers, initial_state) {
+        // create the redux store for the page
+        return createStore(combineReducers(
+            reducers,
+            initial_state,
+        ))
+    },
+    render({store}) {
+        return (
+            <Provider store={store}>
+                <ControlStation />
+            </Provider>
+        )
+    },
+    mount(props, mount_point) {
+        global.page = this.init(props)
+        ReactDOM.render(
+            this.render(global.page),
+            mount_point,
+        )
+    },
 }
 
-ReactDOM.render(
-    React.createElement(FlightPanelComponent, global.props),
-    global.react_mount,
-)
+if (global.react_mount) {
+    // we're in a browser, so mount the page
+    FlightPanel.mount(global.props, global.react_mount)
+}
+
