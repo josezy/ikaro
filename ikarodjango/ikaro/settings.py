@@ -28,7 +28,7 @@ GIT_SHA = "someshafornow"
 SECRET_KEY = 'i2h^x(1n$qwa(k1dcvt4($n)jj919ji&4b*usyw(=jbzaf-pbw'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
@@ -42,6 +42,8 @@ STATICFILES_DIR = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(DATA_DIR, 'media')
 STATIC_ROOT = os.path.join(DATA_DIR, 'static')
 
+REDIS_URL = "redis://localhost:6379"
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -51,6 +53,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'channels',
 
     'ikaro',
     'ui',
@@ -83,10 +87,20 @@ TEMPLATES = [
         },
     },
 ]
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [REDIS_URL],
+        },
+    },
+}
+
 STATICFILES_DIRS = [STATICFILES_DIR]
 
-WSGI_APPLICATION = 'ikaro.wsgi.application'
-
+# WSGI_APPLICATION = 'ikaro.wsgi.application'
+ASGI_APPLICATION = 'ikaro.routing.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
@@ -117,6 +131,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+MAP_KEY = "pk.eyJ1Ijoiam9zZXp5IiwiYSI6ImNqd3ZmdGFmbzA4dGQ0OW41em5reDU3cmMifQ.5Ab2UzBgSWEoRgjxN9fMhg"
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
@@ -130,5 +145,3 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-

@@ -1,32 +1,54 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import {Row, Col} from 'react-bootstrap'
+import {createStore, combineReducers} from 'redux'
+import {Provider} from 'react-redux'
 
-import {MapContainer} from '@/components/maps'
+import {mavlink} from '@/reducers/mavlink'
+
+import {SocketRouter} from '@/components/websocket'
+import {ControlStation} from '@/components/gcs'
 
 
-class FlightPanelComponent extends React.Component {
-    render() {
-        return <Row>
-            <Col>
-                <Row>
-                    <center>STREAM</center>
-                </Row>
-                <Row>
-                    <center>HUD</center>
-                </Row>
-            </Col>
-            <Col>
-                <div style={{width: 500, height: 800}}>
-                    <MapContainer />
-                </div>
-            </Col>
-        </Row>
-    }
+export const FlightPanel = {
+    view: 'ui.views.pages.FlightPanel',
+
+    init(props) {
+        const initial_state = {}
+        const store = this.setupStore({
+            mavlink
+        }, initial_state)
+
+        const socket = new SocketRouter(store, '/flight')
+
+        // this group of references define everything available to a Page
+        return {props, store, socket}
+    },
+    setupStore(reducers, initial_state) {
+        // create the redux store for the page
+        return createStore(combineReducers(
+            reducers,
+            initial_state,
+        ))
+    },
+    render({store}) {
+        return (
+            <Provider store={store}>
+                <ControlStation />
+            </Provider>
+        )
+    },
+    mount(props, mount_point) {
+        global.page = this.init(props)
+        ReactDOM.render(
+            this.render(global.page),
+            mount_point,
+        )
+    },
 }
 
-ReactDOM.render(
-    React.createElement(FlightPanelComponent, global.props),
-    global.react_mount,
-)
+if (global.react_mount) {
+    // we're in a browser, so mount the page
+    FlightPanel.mount(global.props, global.react_mount)
+}
+
