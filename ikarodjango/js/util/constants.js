@@ -1,0 +1,6 @@
+
+export const ALLOWED_MAVLINK_MSGS = [
+    'HEARTBEAT',
+    'GLOBAL_POSITION_INT',
+    'TUKANO_DATA',
+]

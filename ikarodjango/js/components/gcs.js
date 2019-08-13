@@ -10,16 +10,12 @@ import {MapContainer} from '@/components/maps'
 
 class ControlStationComponent extends React.Component {
     render() {
-        const {position} = this.props
-        let marker_center = undefined
-        
-        if (position){
-            marker_center = {
-                lat: position.lat,
-                lon: position.lon,
-            }
+        const {position, tukano_text} = this.props
+        const marker_center = position && {
+            lat: position.lat,
+            lon: position.lon,
         }
-
+        console.log(tukano_text)
         return <Row style={{height: '100vh'}}>
             <div style={{width: '100%', height: '100%'}}>
                 <MapContainer center={marker_center}/>
@@ -30,7 +26,7 @@ class ControlStationComponent extends React.Component {
 
 export const ControlStation = reduxify({
     mapStateToProps: (state, props) => {
-        return compute_props(select_props(state))
+        return compute_props(state.mavlink || {})
     },
     mapDispatchToProps: {},
     render: (props) =>
@@ -38,11 +34,7 @@ export const ControlStation = reduxify({
 })
 
 
-const select_props = (state) => {
-    return state.mavlink || {}
-}
-
-const compute_props = ({HEARTBEAT, GLOBAL_POSITION_INT}) => {
+const compute_props = ({HEARTBEAT, GLOBAL_POSITION_INT, TUKANO_DATA}) => {
     const vehicle_state = {
         armed: HEARTBEAT && Boolean(HEARTBEAT.base_mode & 128),
         position: GLOBAL_POSITION_INT && {
@@ -51,5 +43,8 @@ const compute_props = ({HEARTBEAT, GLOBAL_POSITION_INT}) => {
             alt: GLOBAL_POSITION_INT.alt / 10**3,
         }
     }
-    return vehicle_state
+    const tukano_payload = {
+        tukano_text: TUKANO_DATA && TUKANO_DATA.text
+    }
+    return {...vehicle_state, ...tukano_payload}
 }
