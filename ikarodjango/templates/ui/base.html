@@ -60,10 +60,12 @@
             {% block header %}
             {% endblock %}
 
+            {% block inner %}
             <div class="container-fluid inner-content">
-                {% block inner %}
+                {% block inner_container %}
                 {% endblock %}
             </div>
+            {% endblock %}
 
             {% block footer %}
             {% endblock %}
