@@ -6,3 +6,16 @@
 .mapbox-component {
     height: 100%;
 }
+
+/*    Tukano data div    */
+.tukano-data-div {
+    width: 600px;
+    height: 200px;
+    position: absolute;
+    bottom: 0;
+    background: white;
+    margin: 2vw;
+    border-radius: 20px;
+    padding: 0.6rem 1rem;
+    z-index: 10;
+}

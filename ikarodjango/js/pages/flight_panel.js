@@ -7,7 +7,8 @@ import {Provider} from 'react-redux'
 import {mavlink} from '@/reducers/mavlink'
 
 import {SocketRouter} from '@/components/websocket'
-import {ControlStation} from '@/components/gcs'
+import {MapContainer} from '@/gcs/maps'
+import {TukanoPanel} from '@/gcs/panels'
 
 
 export const FlightPanel = {
@@ -34,7 +35,8 @@ export const FlightPanel = {
     render({store}) {
         return (
             <Provider store={store}>
-                <ControlStation />
+                <MapContainer />
+                <TukanoPanel />
             </Provider>
         )
     },
