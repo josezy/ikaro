@@ -1,24 +1,43 @@
 import React, {PureComponent} from 'react'
 import {reduxify} from '@/util/reduxify'
 
+import Tabs from 'react-bootstrap/Tabs'
+import Tab from 'react-bootstrap/Tab'
+
 
 class TukanoPanelComponent extends PureComponent {
     render() {
-        const {data_str} = this.props
-
-        if (data_str)
-            console.log(JSON.parse(data_str))
+        const sensors = this.props
 
         return <div className="tukano-data-div">
-            {data_str}
+            <Tabs defaultActiveKey={0}>
+                {Object.keys(sensors).map((sensor, idx) =>
+                    <Tab eventKey={idx} title={sensor} key={sensor}>
+                        <div className="variables-container">
+                        {Object.keys(sensors[sensor]).map((variable, idxx) =>
+                            <div key={idxx}>
+                                <span className="variable-title">
+                                    {variable}:
+                                </span>&nbsp;
+                                <span className="variable-value">
+                                    {sensors[sensor][variable]}
+                                </span>
+                            </div>
+                        )}
+                        </div>
+                    </Tab>
+                )}
+            </Tabs>
         </div>
     }
 }
 
 const compute_props = ({TUKANO_DATA}) => {
-    return {
-        data_str: TUKANO_DATA && TUKANO_DATA.text
-    }
+    if (!TUKANO_DATA) return {}
+
+    const tk_data = TUKANO_DATA && JSON.parse(TUKANO_DATA.text)
+    const {dt, pos, ...sensors} = tk_data
+    return sensors
 }
 
 export const TukanoPanel = reduxify({
