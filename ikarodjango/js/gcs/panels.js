@@ -4,6 +4,8 @@ import {reduxify} from '@/util/reduxify'
 import Tabs from 'react-bootstrap/Tabs'
 import Tab from 'react-bootstrap/Tab'
 
+import {snake_to_title} from '@/util/javascript'
+
 
 class TukanoPanelComponent extends PureComponent {
     render() {
@@ -14,16 +16,17 @@ class TukanoPanelComponent extends PureComponent {
                 {Object.keys(sensors).map((sensor, idx) =>
                     <Tab eventKey={idx} title={sensor} key={sensor}>
                         <div className="variables-container">
-                        {Object.keys(sensors[sensor]).map((variable, idxx) =>
-                            <div key={idxx}>
+                        {Object.keys(sensors[sensor]).map((variable, idxx) => {
+                            const var_data = sensors[sensor][variable]
+                            return <div key={idxx}>
                                 <span className="variable-title">
-                                    {variable}:
+                                    {snake_to_title(variable)}:
                                 </span>&nbsp;
                                 <span className="variable-value">
-                                    {sensors[sensor][variable]}
+                                    {var_data['value']} ({var_data['units']})
                                 </span>
                             </div>
-                        )}
+                        })}
                         </div>
                     </Tab>
                 )}
@@ -36,7 +39,7 @@ const compute_props = ({TUKANO_DATA}) => {
     if (!TUKANO_DATA) return {}
 
     const tk_data = TUKANO_DATA && JSON.parse(TUKANO_DATA.text)
-    const {dt, pos, ...sensors} = tk_data
+    const {dt, pos, ...sensors} = tk_data.slice(-1)[0]
     return sensors
 }
 
