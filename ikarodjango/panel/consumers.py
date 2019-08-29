@@ -4,10 +4,7 @@ from channels.consumer import AsyncConsumer
 
 
 class PanelConsumer(AsyncConsumer):
-
     async def websocket_connect(self, event):
-        print("connected", event)
-
         self.flight_room = "some_room_for_now"
         await self.channel_layer.group_add(
             self.flight_room,

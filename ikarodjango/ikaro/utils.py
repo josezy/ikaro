@@ -82,6 +82,9 @@ class ExtendedEncoder(DjangoJSONEncoder):
         elif isinstance(obj, QuerySet):
             return list(obj)
 
+        elif isinstance(obj, set):
+            return list(obj)
+
         elif isinstance(obj, uuid.UUID):
             return str(obj)
 
