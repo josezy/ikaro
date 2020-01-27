@@ -6,16 +6,9 @@ Django based web server for tucano services
 * Clone this repo
 * Run these commands
 ```bash
-apt install python3.7 python3-pip npm
-python3.7 -m pip install --user pipenv
+apt install python3.7 python-pip python-setuptools pipenv npm
 
 cd ikaro
-
-# For Bash: add this line to ~/.bashrc or ~/.bash_profile
-PATH=~/.local/bin:$PATH
-# For fish: add this line to ~/.config/fish/config.fish
-set -x PATH ~/.local/bin $PATH
-
 pipenv install
 
 # Install javascript dependencies (dev machines only)
@@ -46,7 +39,7 @@ python manage.py runserver
 ### Run postgres
 `postgres -D ./data/database`
 ### Create role with password and database
-```
+```bash
 psql -c "CREATE USER ikaro WITH PASSWORD 'ikaro';" postgres
 psql -c "CREATE DATABASE ikaro OWNER ikaro;" postgres
 psql -c "GRANT ALL PRIVILEGES ON DATABASE ikaro TO ikaro;" postgres
@@ -56,10 +49,6 @@ psql -c "ALTER USER ikaro CREATEDB;" postgres
 `pipenv run ./ikarodjango/manage.py migrate`
 
 ## Server management
-psql -c "CREATE USER ikaro WITH PASSWORD 'ikaro';" postgres
-psql -c "CREATE DATABASE ikaro OWNER ikaro;" postgres
-psql -c "GRANT ALL PRIVILEGES ON DATABASE ikaro TO ikaro;" postgres
-psql -c "ALTER USER ikaro CREATEDB;" postgres
 ### SSL CERTS
 
 #### SELF SIGNED
@@ -75,7 +64,7 @@ psql -c "ALTER USER ikaro CREATEDB;" postgres
 
 
 
-### MANAGEMENT COMMANDS
+### [[ DOCKER ZONE ]]
 #### setup handled by docker
     apt install docker.io docker-compose
     docker-compose up -d --build
