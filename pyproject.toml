@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "ikaro"
+version = "0.1.0"
+description = "Tukano server"
+authors = ["Jose B <jose.zdy@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+channels-redis = "^2.4.1"
+service-identity = "^18.1.0"
+redis = "^3.3.11"
+channels = "^2.4.0"
+bleach = "^3.1.0"
+asyncio = "^3.4.3"
+django = "2.0"
+
+[tool.poetry.dev-dependencies]
+ipdb = "^0.12.3"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
