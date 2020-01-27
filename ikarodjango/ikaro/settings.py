@@ -131,7 +131,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-MAP_KEY = "pk.eyJ1Ijoiam9zZXp5IiwiYSI6ImNqd3ZmdGFmbzA4dGQ0OW41em5reDU3cmMifQ.5Ab2UzBgSWEoRgjxN9fMhg"
+MAP_KEY = "pk.eyJ1Ijoiam9zZXp5IiwiYSI6ImNrM2VxcWNlZDAwN2EzYm03NHV1ODgxYTIifQ.z-I55SfhO8A1kob8p9kdSQ"
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
