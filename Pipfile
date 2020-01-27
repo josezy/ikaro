@@ -8,7 +8,7 @@ ipython = "*"
 ipdb = "*"
 
 [packages]
-django = "*"
+django = "==2.0"
 bleach = "*"
 redis = "*"
 channels = "*"
