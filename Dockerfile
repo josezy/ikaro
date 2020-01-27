@@ -11,3 +11,4 @@ RUN pip install --upgrade pip &&\
     pipenv install --skip-lock --system
 
 COPY . /opt/ikaro/
+WORKDIR /opt/ikaro/ikarodjango
