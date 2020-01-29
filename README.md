@@ -6,12 +6,19 @@ Django based web server for tucano services
 * Clone this repo
 * Run these commands
 ```bash
-apt install python3.7 python-pip python-setuptools pipenv virtualenv npm
+apt install python3.7 python-pip python-setuptools virtualenv npm supervisor redis
 
 cd ikaro
-pipenv install
 
-# Install javascript dependencies (dev machines only)
+curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3
+poetry install
+
+ln -fs /etc/supervisor/conf.d/ikaro.conf etc/supervisor/ikaro.conf
+```
+
+For development
+```bash
+# Install javascript dependencies
 npm install -g npm
 npm install --upgrade --global yarn
 
@@ -46,7 +53,7 @@ psql -c "GRANT ALL PRIVILEGES ON DATABASE ikaro TO ikaro;" postgres
 psql -c "ALTER USER ikaro CREATEDB;" postgres
 ```
 ### Run migrations
-`pipenv run ./ikarodjango/manage.py migrate`
+`poetry run python ikarodjango/manage.py migrate`
 
 ## Server management
 ### SSL CERTS
