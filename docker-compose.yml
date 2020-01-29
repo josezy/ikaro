@@ -4,7 +4,7 @@ services:
   nginx:
     image: nginx:1.15-alpine
     volumes:
-      - ./etc/nginx:/etc/nginx/conf.d
+      - ./etc/nginx/ikaro.docker.conf:/etc/nginx/conf.d/ikaro.docker.conf
       - ./data:/opt/ikaro/data
     ports:
       - "80:80"

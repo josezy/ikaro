@@ -6,7 +6,7 @@ Django based web server for tucano services
 * Clone this repo
 * Run these commands
 ```bash
-apt install python3.7 python-pip python-setuptools pipenv npm
+apt install python3.7 python-pip python-setuptools pipenv virtualenv npm
 
 cd ikaro
 pipenv install
