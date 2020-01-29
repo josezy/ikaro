@@ -13,7 +13,7 @@ cd ikaro
 curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3
 poetry install
 
-ln -fs /etc/supervisor/conf.d/ikaro.conf etc/supervisor/ikaro.conf
+ln -fs /opt/ikaro/etc/supervisor/ikaro.conf /etc/supervisor/conf.d/ikaro.conf
 ```
 
 For development
