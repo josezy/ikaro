@@ -6,7 +6,7 @@ Django based web server for tucano services
 * Clone this repo
 * Run these commands
 ```bash
-apt install python3.7 python-pip python-setuptools virtualenv npm supervisor redis
+apt install python3.7 python-pip python-setuptools python3-venv virtualenv npm supervisor redis
 
 cd ikaro
 
