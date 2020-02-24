@@ -18,6 +18,9 @@
         <meta name="apple-mobile-web-app-title" content="Tucano AR">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+        <link rel="icon" type="image/png" href="{% http2static 'favicon.ico' %}">
+
         {% block metatags %}{% endblock %}
 
         <link rel="preload" as="style" href="{% http2static 'css/bootstrap.min.css' '4' %}" crossorigin>
