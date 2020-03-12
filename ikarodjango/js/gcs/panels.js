@@ -6,7 +6,7 @@ import {createSelector} from 'reselect'
 import Tabs from 'react-bootstrap/Tabs'
 import Tab from 'react-bootstrap/Tab'
 
-import {snake_to_title} from '@/util/javascript'
+import {snake_to_title, two_dec} from '@/util/javascript'
 
 
 class TukanoPanelComponent extends PureComponent {
@@ -25,7 +25,7 @@ class TukanoPanelComponent extends PureComponent {
                                     {snake_to_title(variable)}:
                                 </span>&nbsp;
                                 <span className="variable-value">
-                                    {var_data['value']} ({var_data['units']})
+                                    {two_dec(var_data['value'])} ({var_data['units']})
                                 </span>
                             </div>
                         })}
