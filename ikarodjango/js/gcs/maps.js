@@ -1,6 +1,8 @@
 import React, {PureComponent} from 'react'
 import {reduxify} from '@/util/reduxify'
 
+import {createSelector} from 'reselect'
+
 import ReactMapboxGl, {Marker} from 'react-mapbox-gl'
 
 import {
@@ -33,19 +35,21 @@ class MapContainerComponent extends PureComponent {
     }
 }
 
-const compute_props = ({GLOBAL_POSITION_INT}) => {
-    return {
-        vehicle_center: GLOBAL_POSITION_INT && {
-            lat: GLOBAL_POSITION_INT.lat / 10**7,
-            lon: GLOBAL_POSITION_INT.lon / 10**7,
-        }
+
+const compute_center = createSelector(
+    state => state.mavlink.GLOBAL_POSITION_INT,
+    GLOBAL_POSITION_INT => GLOBAL_POSITION_INT && {
+        lat: GLOBAL_POSITION_INT.lat / 10**7,
+        lon: GLOBAL_POSITION_INT.lon / 10**7,
     }
-}
+)
+
+const mapStateToProps = (state, props) => ({
+    vehicle_center: compute_center(state)
+})
 
 export const MapContainer = reduxify({
-    mapStateToProps: ({mavlink}, props) => {
-        return compute_props(mavlink || {})
-    },
+    mapStateToProps,
     mapDispatchToProps: {},
     render: (props) =>
         <MapContainerComponent {...props} />

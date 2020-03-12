@@ -1,6 +1,8 @@
 import React, {PureComponent} from 'react'
 import {reduxify} from '@/util/reduxify'
 
+import {createSelector} from 'reselect'
+
 import Tabs from 'react-bootstrap/Tabs'
 import Tab from 'react-bootstrap/Tab'
 
@@ -9,7 +11,7 @@ import {snake_to_title} from '@/util/javascript'
 
 class TukanoPanelComponent extends PureComponent {
     render() {
-        const sensors = this.props
+        const {sensors} = this.props
 
         return <div className="tukano-data-div">
             <Tabs defaultActiveKey={0}>
@@ -35,19 +37,24 @@ class TukanoPanelComponent extends PureComponent {
     }
 }
 
-const compute_props = ({TUKANO_DATA}) => {
-    if (!TUKANO_DATA) return {}
 
-    const tk_data = TUKANO_DATA && JSON.parse(TUKANO_DATA.text)
-    const {dt, pos, ...sensors} = tk_data.slice(-1)[0]
-    return sensors
-}
+const compute_sensors = createSelector(
+    state => state.mavlink.TUKANO_DATA,
+    TUKANO_DATA => {
+        if (!TUKANO_DATA) return {}
+        const tk_data = TUKANO_DATA && JSON.parse(TUKANO_DATA.text)
+        const {dt, pos, ...sensors} = tk_data.slice(-1)[0]
+        return sensors
+    }
+)
+
+const mapStateToProps = (state, props) => ({
+    sensors: compute_sensors(state)
+})
 
 export const TukanoPanel = reduxify({
-    mapStateToProps: ({mavlink}, props) => {
-        return compute_props(mavlink || {})
-    },
+    mapStateToProps,
     mapDispatchToProps: {},
     render: (props) =>
-         Object.keys(props).length > 0 && <TukanoPanelComponent {...props} />
+         Object.keys(props.sensors).length > 0 && <TukanoPanelComponent {...props} />
 })

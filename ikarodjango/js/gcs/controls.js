@@ -1,5 +1,6 @@
 import React, {PureComponent} from 'react'
 import {reduxify} from '@/util/reduxify'
+import {createSelector} from 'reselect'
 
 import Switch from 'react-switch'
 
@@ -24,15 +25,18 @@ class ControlsComponent extends PureComponent {
     }
 }
 
-const compute_props = ({HEARTBEAT}) => {
-    if (!HEARTBEAT) return {}
 
-    const armed = Boolean(HEARTBEAT.base_mode & 10**7)
-    return {armed}
-}
+const compute_armed = createSelector(
+    state => state.mavlink.HEARTBEAT,
+    HEARTBEAT => HEARTBEAT && Boolean(HEARTBEAT.base_mode & 10**7)
+)
+
+const mapStateToProps = (state, props) => ({
+    armed: compute_armed(state)
+})
 
 export const Controls = reduxify({
-    mapStateToProps: ({mavlink}, props) => compute_props(mavlink || {}),
+    mapStateToProps,
     mapDispatchToProps: {},
     render: (props) => <ControlsComponent {...props} />
 })
