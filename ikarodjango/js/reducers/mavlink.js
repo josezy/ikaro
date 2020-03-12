@@ -1,7 +1,7 @@
 import {ALLOWED_MAVLINK_MSGS} from '@/util/constants'
 
 export const initial_state = {
-    // message: ''
+    message: undefined,
 }
 
 export const mavlink = (state=initial_state, action) => {

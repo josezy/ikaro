@@ -33,4 +33,7 @@ class PanelConsumer(AsyncConsumer):
         })
 
     async def websocket_disconnect(self, event):
+        await self.send({
+            "type": "websocket.close"
+        })
         print("disconnected", event)
