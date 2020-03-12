@@ -9,6 +9,7 @@ import {mavlink} from '@/reducers/mavlink'
 import {SocketRouter} from '@/components/websocket'
 import {MapContainer} from '@/gcs/maps'
 import {TukanoPanel} from '@/gcs/panels'
+import {Controls} from '@/gcs/controls'
 
 
 export const FlightPanel = {
@@ -37,6 +38,7 @@ export const FlightPanel = {
             <Provider store={store}>
                 <MapContainer />
                 <TukanoPanel />
+                <Controls />
             </Provider>
         )
     },

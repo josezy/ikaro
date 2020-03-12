@@ -30,3 +30,14 @@
     position: absolute;
     left: 200px;
 }
+
+/*    Controls div    */
+.controls-div {
+    width: 40vw;
+    max-width: 400px;
+    height: 100vh;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 20;
+    display: flex;
+}

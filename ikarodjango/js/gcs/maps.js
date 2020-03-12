@@ -1,9 +1,7 @@
 import React, {PureComponent} from 'react'
 import {reduxify} from '@/util/reduxify'
 
-import ReactMapboxGl, {
-    Marker, RotationControl, ZoomControl
-} from 'react-mapbox-gl'
+import ReactMapboxGl, {Marker} from 'react-mapbox-gl'
 
 import {
     MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM
@@ -18,15 +16,13 @@ class MapContainerComponent extends PureComponent {
     render() {
         const {vehicle_center} = this.props
 
-        return <div style={{width: '100vw', height: '100vh'}}>
+        return <div style={{width:'100vw', height:'100vh', position:'absolute'}}>
             <Mapbox
                 style="mapbox://styles/mapbox/navigation-guidance-night-v4"
                 center={vehicle_center || MAP_INITIAL_CENTER}
                 zoom={MAP_INITIAL_ZOOM}
                 className="mapbox-component"
             >
-                <RotationControl />
-                <ZoomControl />
                 {vehicle_center &&
                     <Marker coordinates={vehicle_center} anchor="center">
                         <img src="/static/img/map_marker.png" />
