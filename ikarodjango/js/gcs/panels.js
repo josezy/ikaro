@@ -44,10 +44,10 @@ const compute_props = ({TUKANO_DATA}) => {
 }
 
 export const TukanoPanel = reduxify({
-    mapStateToProps: (state, props) => {
-        return compute_props(state.mavlink || {})
+    mapStateToProps: ({mavlink}, props) => {
+        return compute_props(mavlink || {})
     },
     mapDispatchToProps: {},
     render: (props) =>
-        <TukanoPanelComponent {...props} />
+         Object.keys(props).length > 0 && <TukanoPanelComponent {...props} />
 })
