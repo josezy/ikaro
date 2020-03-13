@@ -32,9 +32,9 @@ export class SocketRouter {
         }
         this.socket.onmessage = this._onmessage.bind(this)
     }
-    send_mavlink(message_name, params = {}) {
-        console.log("Sending mavlink: ", message_name, params)
-        this.socket.send({mavpackettype: message_name, ...params})
+    send_mavlink_command(command, params) {
+        this.socket.send(JSON.stringify({command, ...params}))
+        console.log("Mavlink command sent: ", {command, ...params})
     }
     close(reopen=false) {
         const noop = () => {}
@@ -59,8 +59,11 @@ export class SocketRouter {
         if (message.mavpackettype){
             const {mavpackettype, ...mav_msg} = message
             this.store.dispatch({
-                type: mavpackettype,
-                message: mav_msg
+                type: 'MAVMSG',
+                args: {
+                    mavtype: mavpackettype,
+                    message: mav_msg
+                }
             })
         }
     }
