@@ -1,7 +1,7 @@
 import {ALLOWED_MAVLINK_MSGS, VEHICLE_TYPES} from '@/util/constants'
 
 
-export const send_mavcmd = (command, params) => ({
+export const send_mavcmd = (command, params={}) => ({
     type: 'MAVCMD',
     args: {command, params}
 })

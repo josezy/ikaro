@@ -3,11 +3,12 @@ import {reduxify} from '@/util/reduxify'
 import {createSelector} from 'reselect'
 
 import Switch from 'react-switch'
+import Button from 'react-bootstrap/Button'
 
 import {send_mavcmd} from '@/reducers/mavlink'
 
 
-const ArmedSwitch = ({armed, send_mavcmd}) => <div>
+const ArmedSwitch = ({armed, send_mavcmd}) => <div style={{marginRight:'auto'}}>
     <label style={{transform:'scale(0.7)', display:'flex'}}>
         <span style={{fontSize:'1.2rem', marginRight:5, color:'white'}}>
             {armed ? 'ARMED' : 'DISARMED'}
@@ -19,12 +20,19 @@ const ArmedSwitch = ({armed, send_mavcmd}) => <div>
     </label>
 </div>
 
+const HookButton = ({send_mavcmd}) => <div style={{marginLeft:'auto'}}>
+    <Button variant="outline-warning" onClick={() => send_mavcmd(
+        'TUKANO_RELEASE_HOOK'
+    )}>Release Hook</Button>
+</div>
+
 class ControlsComponent extends PureComponent {
     render() {
         const {armed, send_mavcmd} = this.props
         return <div className="controls-div">
-            <div style={{margin: '0 auto'}}>
+            <div style={{width:'100%', height:'fit-content', display:'flex', padding:5}}>
                 <ArmedSwitch armed={armed || false} send_mavcmd={send_mavcmd} />
+                <HookButton send_mavcmd={send_mavcmd} />
             </div>
         </div>
     }
