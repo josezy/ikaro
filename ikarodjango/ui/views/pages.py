@@ -3,8 +3,8 @@ from django.conf import settings
 from ui.views.base_views import BaseView, PublicReactView
 
 
-class Home(BaseView):
-    title = "Home"
+class Looby(BaseView):
+    title = "Looby"
     template = 'ui/home.html'
 
 
