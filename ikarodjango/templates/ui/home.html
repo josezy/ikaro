@@ -6,6 +6,11 @@
 
 {% block inner %}
     <div class="d-flex" style="height: 100vh">
-        <div class="m-auto" style="font-size: 5rem">The Looby</div>
+        <div class="m-auto">
+            <div style="font-size: 5rem">The Looby</div>
+            <a class="btn btn-secondary"
+                style="color:white; float:right"
+                href="{% url 'flight_panel' %}">PANEL</a>
+        </div>
     </div>
 {% endblock %}
