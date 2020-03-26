@@ -33,7 +33,10 @@ class PanelConsumer(AsyncConsumer):
         })
 
     async def websocket_disconnect(self, event):
+        await self.channel_layer.group_discard(
+            self.flight_room,
+            self.channel_name
+        )
         await self.send({
             "type": "websocket.close"
         })
-        print("disconnected", event)
