@@ -20,6 +20,12 @@ const ArmedSwitch = ({armed, send_mavcmd}) => <div style={{marginRight:'auto'}}>
     </label>
 </div>
 
+const RTLButton = ({send_mavcmd}) => <div style={{marginLeft:'auto'}}>
+    <Button variant="outline-warning" onClick={() => send_mavcmd(
+        'MAV_CMD_NAV_RETURN_TO_LAUNCH'
+    )}>Return to launch</Button>
+</div>
+
 const HookButton = ({send_mavcmd}) => <div style={{marginLeft:'auto'}}>
     <Button variant="outline-warning" onClick={() => send_mavcmd(
         'TUKANO_RELEASE_HOOK'
@@ -48,6 +54,7 @@ class ControlsComponent extends PureComponent {
         return <div className="controls-div">
             <div className="controls-row">
                 <ArmedSwitch armed={armed || false} send_mavcmd={send_mavcmd} />
+                <RTLButton send_mavcmd={send_mavcmd} />
                 <HookButton send_mavcmd={send_mavcmd} />
             </div>
             <div className="controls-row">
