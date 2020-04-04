@@ -31,13 +31,13 @@ const TakeoffButton = ({send_mavcmd, send_mavmsg}) => <div style={{margin:'auto'
         send_mavmsg('SET_MODE', {target_system : 1, base_mode : 81, custom_mode : 4})
         send_mavcmd('MAV_CMD_COMPONENT_ARM_DISARM', {param1: 1})
         send_mavcmd('MAV_CMD_NAV_TAKEOFF', {param7: 10})
-    }}>Take off</Button>
+    }}><img src="/static/img/takeoff.png" width="100"/></Button>
 </div>
 
 const LandButton = ({send_mavcmd}) => <div style={{margin:'auto'}}>
     <Button variant="outline-warning" onClick={
         () => send_mavcmd('MAV_CMD_NAV_LAND')
-    }>Land</Button>
+    }><img src="/static/img/land.png" width="100"/></Button>
 </div>
 
 
