@@ -1,8 +1,13 @@
 import {ALLOWED_MAVLINK_MSGS, VEHICLE_TYPES} from '@/util/constants'
 
 
+export const send_mavmsg = (message, params={}) => ({
+    type: 'SEND_MAVMSG',
+    args: {message, params}
+})
+
 export const send_mavcmd = (command, params={}) => ({
-    type: 'MAVCMD',
+    type: 'SEND_MAVCMD',
     args: {command, params}
 })
 
@@ -26,9 +31,15 @@ export const mavlink = (state={}, action) => {
             }
         }
 
-        case 'MAVCMD': {
+        case 'SEND_MAVCMD': {
             const {command, params} = action.args
-            global.page.socket.send_mavlink_command(command, params)
+            global.page.socket.send_mavlink({command, ...params})
+            return state
+        }
+
+        case 'SEND_MAVMSG': {
+            const {message, params} = action.args
+            global.page.socket.send_mavlink({message, ...params})
             return state
         }
 

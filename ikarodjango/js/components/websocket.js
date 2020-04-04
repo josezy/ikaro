@@ -32,9 +32,9 @@ export class SocketRouter {
         }
         this.socket.onmessage = this._onmessage.bind(this)
     }
-    send_mavlink_command(command, params) {
-        this.socket.send(JSON.stringify({command, ...params}))
-        console.log("Mavlink command sent: ", {command, ...params})
+    send_mavlink(payload) {
+        this.socket.send(JSON.stringify(payload))
+        console.log("Mavlink sent: ", payload)
     }
     close(reopen=false) {
         const noop = () => {}
