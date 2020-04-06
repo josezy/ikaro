@@ -14,44 +14,37 @@ const Mapbox = ReactMapboxGl({
     accessToken: global.props.map_key,
 })
 
-class MapContainerComponent extends PureComponent {
-    render() {
-        const {vehicle_center} = this.props
-
-        return <div style={{width:'100vw', height:'100vh', position:'absolute'}}>
-            <Mapbox
-                // style="mapbox://styles/mapbox/navigation-guidance-night-v4"
-                style="mapbox://styles/mapbox/satellite-v9"
-                center={vehicle_center || MAP_INITIAL_CENTER}
-                zoom={MAP_INITIAL_ZOOM}
-                className="mapbox-component"
-            >
-                {vehicle_center &&
-                    <Marker coordinates={vehicle_center} anchor="center">
-                        <img src="/static/img/map_marker.png" />
-                    </Marker>
-                }
-            </Mapbox>
-        </div>
-    }
-}
+export const MapContainer = () =>
+    <div style={{width:'100vw', height:'100vh', position:'absolute'}}>
+        <Mapbox
+            style="mapbox://styles/mapbox/satellite-v9"
+            center={MAP_INITIAL_CENTER}
+            zoom={MAP_INITIAL_ZOOM}
+            className="mapbox-component"
+        >
+            <MarkerComponent />
+        </Mapbox>
+    </div>
 
 
 const compute_center = createSelector(
     state => state.mavlink.GLOBAL_POSITION_INT,
-    GLOBAL_POSITION_INT => GLOBAL_POSITION_INT && {
-        lat: GLOBAL_POSITION_INT.lat / 10**7,
-        lon: GLOBAL_POSITION_INT.lon / 10**7,
-    }
+    GLOBAL_POSITION_INT => GLOBAL_POSITION_INT && [
+        GLOBAL_POSITION_INT.lon / 10**7,
+        GLOBAL_POSITION_INT.lat / 10**7
+    ]
 )
 
 const mapStateToProps = (state, props) => ({
     vehicle_center: compute_center(state)
 })
 
-export const MapContainer = reduxify({
+const MarkerComponent = reduxify({
     mapStateToProps,
     mapDispatchToProps: {},
-    render: (props) =>
-        <MapContainerComponent {...props} />
+    render: props => {
+        return <Marker coordinates={props.vehicle_center} anchor="center">
+            <img src="/static/img/map_marker.png" />
+        </Marker>
+    }
 })
