@@ -35,9 +35,9 @@ const HookButton = ({send_mavcmd}) => <div style={{marginLeft:'auto'}}>
 </div>
 
 
-const TakeoffButton = ({send_mavcmd, send_mavmsg}) => <div style={{margin:'auto'}}>
+const TakeoffButton = ({send_mavcmd, send_mavmsg, target_system}) => <div style={{margin:'auto'}}>
     <Button variant="outline-warning" onClick={() => {
-        send_mavmsg('SET_MODE', {target_system : 1, base_mode : 81, custom_mode : 4})
+        send_mavmsg('SET_MODE', {target_system, base_mode: 81, custom_mode: 4})
         send_mavcmd('MAV_CMD_COMPONENT_ARM_DISARM', {param1: 1})
         send_mavcmd('MAV_CMD_NAV_TAKEOFF', {param7: 10})
     }}><img src="/static/img/takeoff.png" width="100"/></Button>
@@ -53,7 +53,7 @@ const LandButton = ({send_mavcmd}) => <div style={{margin:'auto'}}>
 
 class ControlsComponent extends PureComponent {
     render() {
-        const {armed, position} = this.props
+        const {target_system, armed, position} = this.props
         const {send_mavcmd, send_mavmsg} = this.props
         return <div className="controls-div">
             <div className="controls-row">
@@ -62,7 +62,11 @@ class ControlsComponent extends PureComponent {
                 <HookButton send_mavcmd={send_mavcmd} />
             </div>
             <div className="controls-row">
-                <TakeoffButton send_mavcmd={send_mavcmd} send_mavmsg={send_mavmsg} />
+                <TakeoffButton
+                    send_mavcmd={send_mavcmd}
+                    send_mavmsg={send_mavmsg}
+                    target_system={target_system}
+                />
                 <LandButton send_mavcmd={send_mavcmd} />
             </div>
             <div className="controls-row" style={{
@@ -97,6 +101,7 @@ const compute_position = createSelector(
 )
 
 const mapStateToProps = (state, props) => ({
+    target_system: state.mavlink.target_system,
     armed: compute_armed(state),
     position: compute_position(state),
 })
