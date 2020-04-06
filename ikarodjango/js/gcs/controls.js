@@ -39,7 +39,7 @@ const TakeoffButton = ({send_mavcmd, send_mavmsg, target_system}) => <div style=
     <Button variant="outline-warning" onClick={() => {
         send_mavmsg('SET_MODE', {target_system, base_mode: 81, custom_mode: 4})
         send_mavcmd('MAV_CMD_COMPONENT_ARM_DISARM', {param1: 1})
-        send_mavcmd('MAV_CMD_NAV_TAKEOFF', {param7: 10})
+        setTimeout(() => send_mavcmd('MAV_CMD_NAV_TAKEOFF', {param7: 10}), 500)
     }}><img src="/static/img/takeoff.png" width="100"/></Button>
 </div>
 
