@@ -49,7 +49,7 @@ const LandButton = ({send_mavcmd}) => <div style={{margin:'auto'}}>
 
 class ControlsComponent extends PureComponent {
     render() {
-        const {armed, position} = this.props
+        const {armed, position, flight} = this.props
         const {send_mavcmd, send_mavmsg} = this.props
         return <div className="controls-div">
             <div className="controls-row">
@@ -71,12 +71,33 @@ class ControlsComponent extends PureComponent {
                     <div>Altitude: {position.alt}m</div>
                     <div>Latitude: {position.lat}</div>
                     <div>Longitude: {position.lon}</div>
+                    <div>Flight Time: {flight.time}</div>
                 </>}
             </div>
         </div>
     }
 }
 
+
+function format_time(duration){
+    let milliseconds = parseInt((duration % 1000) / 100),
+    seconds = Math.floor((duration / 1000) % 60),
+    minutes = Math.floor((duration / (1000 * 60)) % 60),
+    hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+
+    hours = (hours < 10) ? "0" + hours : hours;
+    minutes = (minutes < 10) ? "0" + minutes : minutes;
+    seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+    return hours + ":" + minutes + ":" + seconds;
+}
+
+const compute_time = createSelector(
+    state => state.mavlink.GLOBAL_POSITION_INT,
+    GLOBAL_POSITION_INT => GLOBAL_POSITION_INT && {
+        time: format_time(GLOBAL_POSITION_INT.time_boot_ms),
+    }
+)
 
 const compute_armed = createSelector(
     state => state.mavlink.HEARTBEAT,
@@ -95,6 +116,7 @@ const compute_position = createSelector(
 const mapStateToProps = (state, props) => ({
     armed: compute_armed(state),
     position: compute_position(state),
+    flight: compute_time(state),
 })
 
 export const Controls = reduxify({
