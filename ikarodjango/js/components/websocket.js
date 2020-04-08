@@ -57,10 +57,12 @@ export class SocketRouter {
     _onmessage(le_message) {
         const message = JSON.parse(le_message.data)
         if (message.mavpackettype){
-            const {mavpackettype, ...mav_msg} = message
+            const {mavpackettype, srcSystem, srcComponent, ...mav_msg} = message
             this.store.dispatch({
                 type: 'MAVMSG',
                 args: {
+                    srcSystem,
+                    srcComponent,
                     mavtype: mavpackettype,
                     message: mav_msg
                 }

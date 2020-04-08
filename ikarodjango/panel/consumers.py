@@ -1,6 +1,7 @@
 import asyncio
 
 from channels.consumer import AsyncConsumer
+from channels.exceptions import StopConsumer
 
 
 class PanelConsumer(AsyncConsumer):
@@ -40,3 +41,4 @@ class PanelConsumer(AsyncConsumer):
         await self.send({
             "type": "websocket.close"
         })
+        raise StopConsumer()

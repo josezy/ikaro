@@ -15,7 +15,7 @@
     "babel-plugin-transform-function-bind": "^6.8.0",
     "babelify": "^10.0.0",
     "bootstrap": "^4.4.1",
-    "core-js": "2",
+    "core-js": "^3.6.4",
     "css-loader": "^3.0.0",
     "eslint-config-react-app": "^3.0.8",
     "mapbox-gl": "^1.1.1",
@@ -40,7 +40,7 @@
         "@babel/preset-env",
         {
           "useBuiltIns": "usage",
-          "corejs": "2",
+          "corejs": "3",
           "targets": [
             "last 5 versions",
             "> 0.25%",

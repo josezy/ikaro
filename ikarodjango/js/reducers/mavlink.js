@@ -24,6 +24,8 @@ export const mavlink = (state={}, action) => {
             if (valid_mavmsg(mavmsg)) {
                 return {
                     ...state,
+                    target_system: mavmsg.srcSystem,
+                    target_component: mavmsg.srcComponent,
                     [mavmsg.mavtype]: mavmsg.message,
                 }
             } else {
@@ -33,7 +35,13 @@ export const mavlink = (state={}, action) => {
 
         case 'SEND_MAVCMD': {
             const {command, params} = action.args
-            global.page.socket.send_mavlink({command, ...params})
+            const {target_system, target_component} = state
+            global.page.socket.send_mavlink({
+                target_system,
+                target_component,
+                command,
+                ...params
+            })
             return state
         }
 
