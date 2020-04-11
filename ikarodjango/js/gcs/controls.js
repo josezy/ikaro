@@ -6,6 +6,7 @@ import Switch from 'react-switch'
 import Button from 'react-bootstrap/Button'
 
 import {send_mavcmd, send_mavmsg} from '@/reducers/mavlink'
+import {format_ms} from '@/util/javascript'
 
 
 const ArmedSwitch = ({armed, send_mavcmd}) => <div style={{marginRight:'auto'}}>
@@ -53,7 +54,7 @@ const LandButton = ({send_mavcmd}) => <div style={{margin:'auto'}}>
 
 class ControlsComponent extends PureComponent {
     render() {
-        const {target_system, armed, position} = this.props
+        const {target_system, armed, position, flight} = this.props
         const {send_mavcmd, send_mavmsg} = this.props
         return <div className="controls-div">
             <div className="controls-row">
@@ -79,12 +80,20 @@ class ControlsComponent extends PureComponent {
                     <div>Altitude: {position.alt}m</div>
                     <div>Latitude: {position.lat}</div>
                     <div>Longitude: {position.lon}</div>
+                    <div>Flight Time: {flight.time}</div>
                 </>}
             </div>
         </div>
     }
 }
 
+
+const compute_time = createSelector(
+    state => state.mavlink.GLOBAL_POSITION_INT,
+    GLOBAL_POSITION_INT => GLOBAL_POSITION_INT && {
+        time: format_ms(GLOBAL_POSITION_INT.time_boot_ms),
+    }
+)
 
 const compute_armed = createSelector(
     state => state.mavlink.HEARTBEAT,
@@ -104,6 +113,7 @@ const mapStateToProps = (state, props) => ({
     target_system: state.mavlink.target_system,
     armed: compute_armed(state),
     position: compute_position(state),
+    flight: compute_time(state),
 })
 
 export const Controls = reduxify({
