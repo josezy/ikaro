@@ -42,9 +42,9 @@ const mapStateToProps = (state, props) => ({
 const MarkerComponent = reduxify({
     mapStateToProps,
     mapDispatchToProps: {},
-    render: props => {
-        return <Marker coordinates={props.vehicle_center} anchor="center">
+    render: props => props.vehicle_center ?
+        <Marker coordinates={props.vehicle_center} anchor="center">
             <img src="/static/img/map_marker.png" />
         </Marker>
-    }
+        : null
 })
