@@ -54,7 +54,7 @@ const LandButton = ({send_mavcmd}) => <div style={{margin:'auto'}}>
 
 class ControlsComponent extends PureComponent {
     render() {
-        const {target_system, armed, position, flight} = this.props
+        const {target_system, armed, position, flight, battery} = this.props
         const {send_mavcmd, send_mavmsg} = this.props
         return <div className="controls-div">
             <div className="controls-row">
@@ -72,7 +72,7 @@ class ControlsComponent extends PureComponent {
             </div>
             <div className="controls-row" style={{
                 marginTop:'auto',
-                height:120,
+                height:150,
                 display:'block',
                 color:'white',
             }}>
@@ -80,6 +80,7 @@ class ControlsComponent extends PureComponent {
                     <div>Altitude: {position.alt}m</div>
                     <div>Latitude: {position.lat}</div>
                     <div>Longitude: {position.lon}</div>
+                    <div>Battery: {battery}%</div>
                     <div>Flight Time: {flight.time}</div>
                 </>}
             </div>
@@ -87,6 +88,10 @@ class ControlsComponent extends PureComponent {
     }
 }
 
+const compute_battery = createSelector(
+    state => state.mavlink.SYS_STATUS,
+    SYS_STATUS => SYS_STATUS && SYS_STATUS.battery_remaining
+)
 
 const compute_time = createSelector(
     state => state.mavlink.GLOBAL_POSITION_INT,
@@ -114,6 +119,7 @@ const mapStateToProps = (state, props) => ({
     armed: compute_armed(state),
     position: compute_position(state),
     flight: compute_time(state),
+    battery: compute_battery(state),
 })
 
 export const Controls = reduxify({
