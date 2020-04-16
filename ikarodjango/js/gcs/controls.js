@@ -6,6 +6,7 @@ import Switch from 'react-switch'
 import Button from 'react-bootstrap/Button'
 
 import {send_mavcmd, send_mavmsg} from '@/reducers/mavlink'
+import {format_ms} from '@/util/javascript'
 
 
 const ArmedSwitch = ({armed, send_mavcmd}) => <div style={{marginRight:'auto'}}>
@@ -92,23 +93,10 @@ const compute_battery = createSelector(
     SYS_STATUS => SYS_STATUS && SYS_STATUS.battery_remaining
 )
 
-function format_time(duration){
-    let milliseconds = parseInt((duration % 1000) / 100),
-    seconds = Math.floor((duration / 1000) % 60),
-    minutes = Math.floor((duration / (1000 * 60)) % 60),
-    hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
-
-    hours = (hours < 10) ? "0" + hours : hours;
-    minutes = (minutes < 10) ? "0" + minutes : minutes;
-    seconds = (seconds < 10) ? "0" + seconds : seconds;
-
-    return hours + ":" + minutes + ":" + seconds;
-}
-
 const compute_time = createSelector(
     state => state.mavlink.GLOBAL_POSITION_INT,
     GLOBAL_POSITION_INT => GLOBAL_POSITION_INT && {
-        time: format_time(GLOBAL_POSITION_INT.time_boot_ms),
+        time: format_ms(GLOBAL_POSITION_INT.time_boot_ms),
     }
 )
 
