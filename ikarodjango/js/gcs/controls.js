@@ -58,15 +58,13 @@ const TakeoffButton = reduxify({
         target_system: state.mavlink.target_system,
     }),
     mapDispatchToProps: {send_mavcmd, send_mavmsg},
-    render: ({send_mavcmd, send_mavmsg, target_system}) => {
-        console.log("RENDER", target_system)
-        return <div style={{margin:'auto'}}>
+    render: ({send_mavcmd, send_mavmsg, target_system}) => <div style={{margin:'auto'}}>
         <Button variant="outline-warning" onClick={() => {
             send_mavmsg('SET_MODE', {target_system, base_mode: 81, custom_mode: 4})
             send_mavcmd('MAV_CMD_COMPONENT_ARM_DISARM', {param1: 1})
             setTimeout(() => send_mavcmd('MAV_CMD_NAV_TAKEOFF', {param7: 10}), 700)
         }}><img src="/static/img/takeoff.png" width="100"/></Button>
-    </div>}
+    </div>
 })
 
 
@@ -107,7 +105,7 @@ const NerdInfo = reduxify({
         <div>Altitude: {position ? position.alt : '--'}</div>
         <div>Latitude: {position ? position.lat : '--'}</div>
         <div>Longitude: {position ? position.lon : '--'}</div>
-        <div>Flight Time: {flight.time}</div>
+        <div>Flight Time: {flight ? flight.time : '--'}</div>
         <div>Battery: {battery}%</div>
     </>
 })
