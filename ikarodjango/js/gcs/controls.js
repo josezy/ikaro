@@ -97,13 +97,18 @@ const NerdInfo = reduxify({
                 alt: GLOBAL_POSITION_INT.alt / 10**3,
             }
         )(state),
+        battery: createSelector(
+            state => state.mavlink.SYS_STATUS,
+            SYS_STATUS => SYS_STATUS && SYS_STATUS.battery_remaining
+        )(state)
     }),
     mapDispatchToProps: {},
-    render: ({flight, position}) => position ? <>
+    render: ({flight, position, battery}) => position ? <>
         <div>Altitude: {position.alt}m</div>
         <div>Latitude: {position.lat}</div>
         <div>Longitude: {position.lon}</div>
         <div>Flight Time: {flight.time}</div>
+        <div>Battery: {battery}%</div>
     </> : null
 })
 
@@ -121,7 +126,7 @@ export const Controls = () => <>
         </div>
         <div className="controls-row" style={{
             marginTop:'auto',
-            height:120,
+            height:150,
             display:'block',
             color:'white',
         }}>
