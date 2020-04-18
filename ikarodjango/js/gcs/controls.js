@@ -103,13 +103,13 @@ const NerdInfo = reduxify({
         )(state)
     }),
     mapDispatchToProps: {},
-    render: ({flight, position, battery}) => position ? <>
-        <div>Altitude: {position.alt}m</div>
-        <div>Latitude: {position.lat}</div>
-        <div>Longitude: {position.lon}</div>
+    render: ({flight, position, battery}) => <>
+        <div>Altitude: {position ? position.alt : '--'}</div>
+        <div>Latitude: {position ? position.lat : '--'}</div>
+        <div>Longitude: {position ? position.lon : '--'}</div>
         <div>Flight Time: {flight.time}</div>
         <div>Battery: {battery}%</div>
-    </> : null
+    </>
 })
 
 
