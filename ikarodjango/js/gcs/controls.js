@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react'
+import React from 'react'
 import {reduxify} from '@/util/reduxify'
 import {createSelector} from 'reselect'
 
@@ -52,39 +52,38 @@ const LandButton = ({send_mavcmd}) => <div style={{margin:'auto'}}>
 </div>
 
 
-class ControlsComponent extends PureComponent {
-    render() {
-        const {target_system, armed, position, flight} = this.props
-        const {send_mavcmd, send_mavmsg} = this.props
-        return <div className="controls-div">
-            <div className="controls-row">
-                <ArmedSwitch armed={armed || false} send_mavcmd={send_mavcmd} />
-                <RTLButton send_mavcmd={send_mavcmd} />
-                <HookButton send_mavcmd={send_mavcmd} />
-            </div>
-            <div className="controls-row">
-                <TakeoffButton
-                    send_mavcmd={send_mavcmd}
-                    send_mavmsg={send_mavmsg}
-                    target_system={target_system}
-                />
-                <LandButton send_mavcmd={send_mavcmd} />
-            </div>
-            <div className="controls-row" style={{
-                marginTop:'auto',
-                height:120,
-                display:'block',
-                color:'white',
-            }}>
-                {position && <>
-                    <div>Altitude: {position.alt}m</div>
-                    <div>Latitude: {position.lat}</div>
-                    <div>Longitude: {position.lon}</div>
-                    <div>Flight Time: {flight.time}</div>
-                </>}
-            </div>
+const ControlsComponent = (props) => {
+    const {target_system, armed, position, flight} = props
+    const {send_mavcmd, send_mavmsg} = props
+
+    return <div className="controls-div">
+        <div className="controls-row">
+            <ArmedSwitch armed={armed || false} send_mavcmd={send_mavcmd} />
+            <RTLButton send_mavcmd={send_mavcmd} />
+            <HookButton send_mavcmd={send_mavcmd} />
         </div>
-    }
+        <div className="controls-row">
+            <TakeoffButton
+                send_mavcmd={send_mavcmd}
+                send_mavmsg={send_mavmsg}
+                target_system={target_system}
+            />
+            <LandButton send_mavcmd={send_mavcmd} />
+        </div>
+        <div className="controls-row" style={{
+            marginTop:'auto',
+            height:120,
+            display:'block',
+            color:'white',
+        }}>
+            {position && <>
+                <div>Altitude: {position.alt}m</div>
+                <div>Latitude: {position.lat}</div>
+                <div>Longitude: {position.lon}</div>
+                <div>Flight Time: {flight.time}</div>
+            </>}
+        </div>
+    </div>
 }
 
 
