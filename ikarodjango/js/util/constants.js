@@ -45,3 +45,15 @@ export const VEHICLE_TYPES = [
     // 32, // MAV_TYPE_FLARM
     // 33, // MAV_TYPE_SERVO
 ]
+
+export const GPS_FIX_TYPE = [
+    'NO GPS',
+    'NO FIX',
+    '2D FIX',
+    '3D FIX',
+    'DGPS',
+    'RTK FLOAT',
+    'RTK FIXED',
+    'STATIC',
+    'PPP',
+]
