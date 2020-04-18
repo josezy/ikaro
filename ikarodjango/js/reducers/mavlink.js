@@ -22,10 +22,14 @@ export const mavlink = (state={}, action) => {
         case 'MAVMSG': {
             const mavmsg = action.args
             if (valid_mavmsg(mavmsg)) {
-                return {
+                if (mavmsg == 'HEARTBEAT') return {
                     ...state,
                     target_system: mavmsg.srcSystem,
                     target_component: mavmsg.srcComponent,
+                    [mavmsg.mavtype]: mavmsg.message,
+                }
+                return {
+                    ...state,
                     [mavmsg.mavtype]: mavmsg.message,
                 }
             } else {
