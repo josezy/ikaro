@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/Button'
 
 import {send_mavcmd, send_mavmsg} from '@/reducers/mavlink'
 import {format_ms} from '@/util/javascript'
-
+import {GPS_FIX_TYPE} from '@/util/constants'
 
 const ArmedSwitch = reduxify({
     mapStateToProps: (state, props) => ({
@@ -98,15 +98,36 @@ const NerdInfo = reduxify({
         battery: createSelector(
             state => state.mavlink.SYS_STATUS,
             SYS_STATUS => SYS_STATUS && SYS_STATUS.battery_remaining
-        )(state)
+        )(state),
+        gps: createSelector(
+            state => state.mavlink.GPS_RAW_INT,
+            GPS_RAW_INT => GPS_RAW_INT && {
+                satellites_visible: GPS_RAW_INT.satellites_visible,
+                eph: GPS_RAW_INT.eph == 65535 ? '--' : GPS_RAW_INT.eph,
+                epv: GPS_RAW_INT.epv == 65535 ? '--' : GPS_RAW_INT.epv,
+                type: GPS_FIX_TYPE[GPS_RAW_INT.fix_type],
+                velocity: GPS_RAW_INT.vel/100,
+            }
+        )(state),
     }),
     mapDispatchToProps: {},
-    render: ({flight, position, battery}) => <>
-        <div>Altitude: {position ? position.alt : '--'}</div>
-        <div>Latitude: {position ? position.lat : '--'}</div>
-        <div>Longitude: {position ? position.lon : '--'}</div>
-        <div>Flight Time: {flight ? flight.time : '--'}</div>
-        <div>Battery: {battery}%</div>
+    render: ({flight, position, battery, gps}) => <>
+        <div className="row">
+            <div className="col-sm-6">
+                <div>Altitude: {position ? position.alt : '--'}m</div>
+                <div>Latitude: {position ? position.lat : '--'}</div>
+                <div>Longitude: {position ? position.lon : '--'}</div>
+                <div>Flight Time: {flight ? flight.time : '--'}</div>
+                <div>Battery: {battery}%</div>
+            </div>
+            <div className="col-sm-6">
+                <div>Velocity: {gps ? gps.velocity : '--'} m/s</div>
+                <div>GPS Count: {gps ? gps.satellites_visible : 0}</div>
+                <div>VDOP:{gps ? gps.epv : '--'}</div>
+                <div>HDOP:{gps ? gps.eph : '--'}</div>
+                <div>Type:{gps ? gps.type : '--'}</div>
+            </div>
+        </div>
     </>
 })
 
