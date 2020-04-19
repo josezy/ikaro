@@ -58,15 +58,13 @@ const TakeoffButton = reduxify({
         target_system: state.mavlink.target_system,
     }),
     mapDispatchToProps: {send_mavcmd, send_mavmsg},
-    render: ({send_mavcmd, send_mavmsg, target_system}) => {
-        console.log("RENDER", target_system)
-        return <div style={{margin:'auto'}}>
+    render: ({send_mavcmd, send_mavmsg, target_system}) => <div style={{margin:'auto'}}>
         <Button variant="outline-warning" onClick={() => {
             send_mavmsg('SET_MODE', {target_system, base_mode: 81, custom_mode: 4})
             send_mavcmd('MAV_CMD_COMPONENT_ARM_DISARM', {param1: 1})
             setTimeout(() => send_mavcmd('MAV_CMD_NAV_TAKEOFF', {param7: 10}), 700)
         }}><img src="/static/img/takeoff.png" width="100"/></Button>
-    </div>}
+    </div>
 })
 
 
@@ -108,29 +106,29 @@ const NerdInfo = reduxify({
                 eph: GPS_RAW_INT.eph == 65535 ? '--' : GPS_RAW_INT.eph,
                 epv: GPS_RAW_INT.epv == 65535 ? '--' : GPS_RAW_INT.epv,
                 type: GPS_FIX_TYPE[GPS_RAW_INT.fix_type],
-                velocity: GPS_RAW_INT.vel,
+                velocity: GPS_RAW_INT.vel/100,
             }
         )(state),
     }),
     mapDispatchToProps: {},
-    render: ({flight, position, battery, gps}) => position && gps ? <>
+    render: ({flight, position, battery, gps}) => <>
         <div className="row">
             <div className="col-sm-6">
-                <div>Altitude: {position.alt}m</div>
-                <div>Latitude: {position.lat}</div>
-                <div>Longitude: {position.lon}</div>
-                <div>Flight Time: {flight.time}</div>
-                <div>Velocity: {gps.velocity} cm/s</div>
+                <div>Altitude: {position ? position.alt : '--'}m</div>
+                <div>Latitude: {position ? position.lat : '--'}</div>
+                <div>Longitude: {position ? position.lon : '--'}</div>
+                <div>Flight Time: {flight ? flight.time : '--'}</div>
+                <div>Battery: {battery}%</div>
             </div>
             <div className="col-sm-6">
-                <div>Battery: {battery}%</div>
-                <div>GPS Count: {gps.satellites_visible}</div>
-                <div>VDOP:{gps.epv}</div>
-                <div>HDOP:{gps.eph}</div>
-                <div>Type:{gps.type}</div>
+                <div>Velocity: {gps ? gps.velocity : '--'} m/s</div>
+                <div>GPS Count: {gps ? gps.satellites_visible : 0}</div>
+                <div>VDOP:{gps ? gps.epv : '--'}</div>
+                <div>HDOP:{gps ? gps.eph : '--'}</div>
+                <div>Type:{gps ? gps.type : '--'}</div>
             </div>
         </div>
-    </> : null
+    </>
 })
 
 
