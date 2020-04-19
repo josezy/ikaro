@@ -10,6 +10,7 @@ import {SocketRouter} from '@/components/websocket'
 import {MapContainer} from '@/gcs/maps'
 import {TukanoPanel} from '@/gcs/panels'
 import {Controls} from '@/gcs/controls'
+import {Indicators} from '@/gcs/indicators'
 
 
 export const FlightPanel = {
@@ -39,6 +40,7 @@ export const FlightPanel = {
                 <MapContainer />
                 <TukanoPanel />
                 <Controls />
+                <Indicators />
             </Provider>
         )
     },

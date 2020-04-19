@@ -1,0 +1,72 @@
+import React from 'react'
+import {reduxify} from '@/util/reduxify'
+import {createSelector} from 'reselect'
+
+
+const Attitude = reduxify({
+    mapStateToProps: (state, props) => ({
+        roll: createSelector(
+            state => state.mavlink.NAV_CONTROLLER_OUTPUT,
+            NAV_CONTROLLER_OUTPUT => NAV_CONTROLLER_OUTPUT && NAV_CONTROLLER_OUTPUT.nav_roll
+        )(state),
+        pitch: createSelector(
+            state => state.mavlink.NAV_CONTROLLER_OUTPUT,
+            NAV_CONTROLLER_OUTPUT => NAV_CONTROLLER_OUTPUT && NAV_CONTROLLER_OUTPUT.nav_pitch
+        )(state),
+    }),
+    mapDispatchToProps: {},
+    render: ({roll, pitch}) => {
+        let _pitch = pitch
+        if (_pitch > 30) _pitch = 30
+        else if (_pitch < -30) _pitch = -30
+
+        _pitch *= 0.7
+
+        return <span id="attitude">
+            <div className="instrument attitude" style={{height:150, width:150}}>
+                {/* <img src="/static/img/indicators/fi_box.svg" className="background box" /> */}
+                <div className="roll box" style={{ transform: `rotate(${roll}deg)` }}>
+                    <img src="/static/img/indicators/horizon_back.svg" className="box" />
+                    <div className="pitch box" style={{ top: `${_pitch}%` }}>
+                        <img src="/static/img/indicators/horizon_ball.svg" className="box" />
+                    </div>
+                    <img src="/static/img/indicators/horizon_circle.svg" className="box" />
+                </div>
+                <div className="mechanics box">
+                    <img src="/static/img/indicators/horizon_mechanics.svg" className="box" />
+                    <img src="/static/img/indicators/fi_circle.svg" className="box" />
+                </div>
+            </div>
+        </span>
+    }
+})
+
+
+const Heading = reduxify({
+    mapStateToProps: (state, props) => ({
+        heading: createSelector(
+            state => state.mavlink.VFR_HUD,
+            VFR_HUD => VFR_HUD && VFR_HUD.heading
+        )(state),
+    }),
+    mapDispatchToProps: {},
+    render: ({heading}) => <span id="heading">
+        <div className="instrument heading" style={{width:150, height:150}}>
+            {/* <img src={`${images_path}/fi_box.svg`} className="background box" /> */}
+            <div className="heading box">
+                <img src="/static/img/indicators/heading_yaw.svg" className="box" />
+            </div>
+            <div className="mechanics box" style={{transform:`rotate(${heading}deg)`}}>
+                <img src="/static/img/indicators/heading_mechanics.svg" className="box" />
+                <img src="/static/img/indicators/fi_circle.svg" className="box" />
+            </div>
+        </div>
+    </span>
+})
+
+export const Indicators = () => <>
+    <div style={{position:'absolute',right:0}}>
+        <Attitude />
+        <Heading />
+    </div>
+</>

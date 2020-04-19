@@ -3,7 +3,9 @@ export const ALLOWED_MAVLINK_MSGS = [
     'HEARTBEAT',
     'GLOBAL_POSITION_INT',
     'TUKANO_DATA',
-    'SYS_STATUS'
+    'SYS_STATUS',
+    'VFR_HUD',
+    'NAV_CONTROLLER_OUTPUT',
 ]
 
 export const MAP_INITIAL_CENTER = [-75.393921, 6.149080]
