@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/Button'
 
 import {send_mavcmd, send_mavmsg} from '@/reducers/mavlink'
 import {format_ms} from '@/util/javascript'
-
+import {GPS_FIX_TYPE} from '@/util/constants'
 
 const ArmedSwitch = reduxify({
     mapStateToProps: (state, props) => ({
@@ -100,15 +100,36 @@ const NerdInfo = reduxify({
         battery: createSelector(
             state => state.mavlink.SYS_STATUS,
             SYS_STATUS => SYS_STATUS && SYS_STATUS.battery_remaining
-        )(state)
+        )(state),
+        gps: createSelector(
+            state => state.mavlink.GPS_RAW_INT,
+            GPS_RAW_INT => GPS_RAW_INT && {
+                satellites_visible: GPS_RAW_INT.satellites_visible,
+                eph: GPS_RAW_INT.eph == 65535 ? '--' : GPS_RAW_INT.eph,
+                epv: GPS_RAW_INT.epv == 65535 ? '--' : GPS_RAW_INT.epv,
+                type: GPS_FIX_TYPE[GPS_RAW_INT.fix_type],
+                velocity: GPS_RAW_INT.vel,
+            }
+        )(state),
     }),
     mapDispatchToProps: {},
-    render: ({flight, position, battery}) => position ? <>
-        <div>Altitude: {position.alt}m</div>
-        <div>Latitude: {position.lat}</div>
-        <div>Longitude: {position.lon}</div>
-        <div>Flight Time: {flight.time}</div>
-        <div>Battery: {battery}%</div>
+    render: ({flight, position, battery, gps}) => position && gps ? <>
+        <div className="row">
+            <div className="col-sm-6">
+                <div>Altitude: {position.alt}m</div>
+                <div>Latitude: {position.lat}</div>
+                <div>Longitude: {position.lon}</div>
+                <div>Flight Time: {flight.time}</div>
+                <div>Velocity: {gps.velocity} cm/s</div>
+            </div>
+            <div className="col-sm-6">
+                <div>Battery: {battery}%</div>
+                <div>GPS Count: {gps.satellites_visible}</div>
+                <div>VDOP:{gps.epv}</div>
+                <div>HDOP:{gps.eph}</div>
+                <div>Type:{gps.type}</div>
+            </div>
+        </div>
     </> : null
 })
 
