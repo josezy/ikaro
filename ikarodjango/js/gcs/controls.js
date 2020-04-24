@@ -93,7 +93,7 @@ const NerdInfo = reduxify({
             GLOBAL_POSITION_INT => GLOBAL_POSITION_INT && {
                 lat: GLOBAL_POSITION_INT.lat / 10**7,
                 lon: GLOBAL_POSITION_INT.lon / 10**7,
-                alt: GLOBAL_POSITION_INT.alt / 10**3
+                alt: GLOBAL_POSITION_INT.alt / 10**3,
             }
         )(state),
         battery: createSelector(
@@ -112,16 +112,14 @@ const NerdInfo = reduxify({
         )(state),
     }),
     mapDispatchToProps: {},
-    render: (props) => <NerdInfoComponent{...props} />
+    render: props => <NerdInfoComponent {...props} />
 })
 
 
 const NerdInfoComponent = ({flight, position, battery, gps}) => {
     const [path, setPath] = useState([]);
-    useEffect( () => {
-        if( position){
-            setPath([...path, {latitude: position.lat, longitude: position.lon}])
-        }
+    useEffect(() => {
+        if (position) setPath([...path, {latitude: position.lat, longitude: position.lon}])
     }, [position && position.lat, position && position.lon])
 
     return <>
