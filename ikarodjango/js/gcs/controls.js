@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import {reduxify} from '@/util/reduxify'
 import {createSelector} from 'reselect'
 
@@ -8,6 +8,7 @@ import Button from 'react-bootstrap/Button'
 import {send_mavcmd, send_mavmsg} from '@/reducers/mavlink'
 import {format_ms} from '@/util/javascript'
 import {GPS_FIX_TYPE} from '@/util/constants'
+import {getPathLength} from 'geolib'
 
 const ArmedSwitch = reduxify({
     mapStateToProps: (state, props) => ({
@@ -111,7 +112,17 @@ const NerdInfo = reduxify({
         )(state),
     }),
     mapDispatchToProps: {},
-    render: ({flight, position, battery, gps}) => <>
+    render: props => <NerdInfoComponent {...props} />
+})
+
+
+const NerdInfoComponent = ({flight, position, battery, gps}) => {
+    const [path, setPath] = useState([]);
+    useEffect(() => {
+        if (position) setPath([...path, {latitude: position.lat, longitude: position.lon}])
+    }, [position && position.lat, position && position.lon])
+
+    return <>
         <div className="row">
             <div className="col-sm-6">
                 <div>Altitude: {position ? position.alt : '--'}m</div>
@@ -126,11 +137,11 @@ const NerdInfo = reduxify({
                 <div>VDOP:{gps ? gps.epv : '--'}</div>
                 <div>HDOP:{gps ? gps.eph : '--'}</div>
                 <div>Type:{gps ? gps.type : '--'}</div>
+                <div>Flight distance: {getPathLength(path)}m</div>
             </div>
         </div>
     </>
-})
-
+}
 
 export const Controls = () => <>
     <div className="controls-div">
