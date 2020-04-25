@@ -106,7 +106,7 @@ const NerdInfo = reduxify({
                 eph: GPS_RAW_INT.eph == 65535 ? '--' : GPS_RAW_INT.eph,
                 epv: GPS_RAW_INT.epv == 65535 ? '--' : GPS_RAW_INT.epv,
                 type: GPS_FIX_TYPE[GPS_RAW_INT.fix_type],
-                velocity: GPS_RAW_INT.vel/100,
+                velocity: GPS_RAW_INT.vel / 100,
             }
         )(state),
     }),
@@ -114,18 +114,18 @@ const NerdInfo = reduxify({
     render: ({flight, position, battery, gps}) => <>
         <div className="row">
             <div className="col-sm-6">
-                <div>Altitude: {position ? position.alt : '--'}m</div>
+                <div>Altitude: {position ? `${position.alt}m` : '--'}</div>
                 <div>Latitude: {position ? position.lat : '--'}</div>
                 <div>Longitude: {position ? position.lon : '--'}</div>
                 <div>Flight Time: {flight ? flight.time : '--'}</div>
                 <div>Battery: {battery}%</div>
             </div>
             <div className="col-sm-6">
-                <div>Velocity: {gps ? gps.velocity : '--'} m/s</div>
+                <div>Ground speed: {gps ? `${gps.velocity}m/s` : '--'}</div>
                 <div>GPS Count: {gps ? gps.satellites_visible : 0}</div>
-                <div>VDOP:{gps ? gps.epv : '--'}</div>
-                <div>HDOP:{gps ? gps.eph : '--'}</div>
-                <div>Type:{gps ? gps.type : '--'}</div>
+                <div>VDOP: {gps ? gps.epv : '--'}</div>
+                <div>HDOP: {gps ? gps.eph : '--'}</div>
+                <div>Type: {gps ? gps.type : '--'}</div>
             </div>
         </div>
     </>
