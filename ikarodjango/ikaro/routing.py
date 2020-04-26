@@ -3,13 +3,14 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
 from channels.security.websocket import AllowedHostsOriginValidator
 
-from panel.consumers import PanelConsumer
+from panel.consumers import PanelConsumer, VideoConsumer
 
 application = ProtocolTypeRouter({
     'websocket': AllowedHostsOriginValidator(
         AuthMiddlewareStack(
             URLRouter([
-                path("flight", PanelConsumer)
+                path("mavlink", PanelConsumer),
+                path("video", VideoConsumer),
             ])
         )
     )

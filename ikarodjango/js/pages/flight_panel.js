@@ -5,6 +5,7 @@ import {createStore, combineReducers} from 'redux'
 import {Provider} from 'react-redux'
 
 import {mavlink} from '@/reducers/mavlink'
+import {video} from '@/reducers/video'
 
 import {SocketRouter} from '@/components/websocket'
 import {MapContainer} from '@/gcs/maps'
@@ -19,13 +20,15 @@ export const FlightPanel = {
     init(props) {
         const initial_state = {}
         const store = this.setupStore({
-            mavlink
+            mavlink,
+            video
         }, initial_state)
 
-        const socket = new SocketRouter(store, '/flight')
+        const mav_socket = new SocketRouter(store, '/mavlink')
+        const video_socket = new SocketRouter(store, '/video')
 
         // this group of references define everything available to a Page
-        return {props, store, socket}
+        return {props, store, mav_socket, video_socket}
     },
     setupStore(reducers, initial_state) {
         // create the redux store for the page
