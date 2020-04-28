@@ -9,7 +9,7 @@ import Button from 'react-bootstrap/Button'
 import {send_mavcmd, send_mavmsg} from '@/reducers/mavlink'
 import {format_ms} from '@/util/javascript'
 import {GPS_FIX_TYPE} from '@/util/constants'
-
+import {send_command} from '@/gcs/command_sender'
 
 const Video = reduxify({
     mapStateToProps: (state, props) => ({
@@ -77,6 +77,10 @@ const TakeoffButton = reduxify({
         <Button variant="outline-warning" onClick={() => {
             send_mavmsg('SET_MODE', {target_system, base_mode: 81, custom_mode: 4})
             send_mavcmd('MAV_CMD_COMPONENT_ARM_DISARM', {param1: 1})
+            send_command([{'key':'MAV_CMD_COMPONENT_ARM_DISARM',
+                           'params':{param1:1}},
+                           {'key':'MAV_CMD_COMPONENT_ARM_DISARM',
+                           'params':{param1:1}}])
             setTimeout(() => send_mavcmd('MAV_CMD_NAV_TAKEOFF', {param7: 10}), 700)
         }}><img src="/static/img/takeoff.png" width="100"/></Button>
     </div>
