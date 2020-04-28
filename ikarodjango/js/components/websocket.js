@@ -32,9 +32,8 @@ export class SocketRouter {
         }
         this.socket.onmessage = this._onmessage.bind(this)
     }
-    send_mavlink(payload) {
+    send(payload) {
         this.socket.send(JSON.stringify(payload))
-        console.log("Mavlink sent: ", payload)
     }
     close(reopen=false) {
         const noop = () => {}
@@ -55,17 +54,25 @@ export class SocketRouter {
         this.socket = null
     }
     _onmessage(le_message) {
-        const message = JSON.parse(le_message.data)
-        if (message.mavpackettype){
-            const {mavpackettype, srcSystem, srcComponent, ...mav_msg} = message
+        try {
+            const message = JSON.parse(le_message.data)
+            if (message.mavpackettype){
+                const {mavpackettype, srcSystem, srcComponent, ...mav_msg} = message
+                this.store.dispatch({
+                    type: 'MAVMSG',
+                    args: {
+                        srcSystem,
+                        srcComponent,
+                        mavtype: mavpackettype,
+                        message: mav_msg
+                    }
+                })
+            }
+        } catch (e) {
+            console.log("Frame length", le_message.data.length)
             this.store.dispatch({
-                type: 'MAVMSG',
-                args: {
-                    srcSystem,
-                    srcComponent,
-                    mavtype: mavpackettype,
-                    message: mav_msg
-                }
+                type: 'VIDEO_FRAME',
+                b64frame: le_message.data
             })
         }
     }

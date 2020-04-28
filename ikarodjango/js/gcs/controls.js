@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import {reduxify} from '@/util/reduxify'
 import {createSelector} from 'reselect'
+import {getPathLength} from 'geolib'
 
 import Switch from 'react-switch'
 import Button from 'react-bootstrap/Button'
@@ -8,7 +9,20 @@ import Button from 'react-bootstrap/Button'
 import {send_mavcmd, send_mavmsg} from '@/reducers/mavlink'
 import {format_ms} from '@/util/javascript'
 import {GPS_FIX_TYPE} from '@/util/constants'
-import {getPathLength} from 'geolib'
+
+
+const Video = reduxify({
+    mapStateToProps: (state, props) => ({
+        b64frame: state.video.b64frame
+    }),
+    mapDispatchToProps: {},
+    render: ({b64frame}) => {
+        const img_src = b64frame ? `data:image/jpg;base64,${b64frame}` : "/static/img/no-signal.jpg"
+        return <div>
+            <img src={img_src} style={{maxWidth:"100%"}}/>
+        </div>
+    }
+})
 
 const ArmedSwitch = reduxify({
     mapStateToProps: (state, props) => ({
@@ -153,6 +167,9 @@ export const Controls = () => <>
         <div className="controls-row">
             <TakeoffButton />
             <LandButton />
+        </div>
+        <div className="controls-row">
+            <Video />
         </div>
         <div className="controls-row" style={{
             marginTop:'auto',

@@ -40,7 +40,7 @@ export const mavlink = (state={}, action) => {
         case 'SEND_MAVCMD': {
             const {command, params} = action.args
             const {target_system, target_component} = state
-            global.page.socket.send_mavlink({
+            global.page.mav_socket.send({
                 target_system,
                 target_component,
                 command,
@@ -51,7 +51,7 @@ export const mavlink = (state={}, action) => {
 
         case 'SEND_MAVMSG': {
             const {message, params} = action.args
-            global.page.socket.send_mavlink({message, ...params})
+            global.page.mav_socket.send({message, ...params})
             return state
         }
 
