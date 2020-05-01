@@ -60,3 +60,8 @@ export const GPS_FIX_TYPE = [
     'STATIC',
     'PPP',
 ]
+
+export const MAVLINK_IDS = {
+    22: 'MAV_CMD_NAV_TAKEOFF',
+    400: 'MAV_CMD_COMPONENT_ARM_DISARM',
+}
