@@ -7,6 +7,7 @@ export const ALLOWED_MAVLINK_MSGS = [
     'GPS_RAW_INT',
     'VFR_HUD',
     'NAV_CONTROLLER_OUTPUT',
+    'COMMAND_ACK',
 ]
 
 export const MAP_INITIAL_CENTER = [-75.393921, 6.149080]
