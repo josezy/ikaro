@@ -8,7 +8,7 @@ export class CommandSender {
     send(...commands) {
         this.commands = commands
         this.cmd_index = 0
-        this.unsubscribe = this.store.subscribe(this._subscribe)
+        this.unsubscribe = this.store.subscribe(this._subscribe.bind(this))
         this.store.dispatch(send_mavcmd(
             this.commands[this.cmd_index].command,
             this.commands[this.cmd_index].params

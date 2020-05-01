@@ -69,7 +69,6 @@ export class SocketRouter {
                 })
             }
         } catch (e) {
-            console.log("Frame length", le_message.data.length)
             this.store.dispatch({
                 type: 'VIDEO_FRAME',
                 b64frame: le_message.data
