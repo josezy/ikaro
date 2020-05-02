@@ -4,8 +4,8 @@ import ReactDOM from 'react-dom'
 import {createStore, combineReducers} from 'redux'
 import {Provider} from 'react-redux'
 
-import {mavlink} from '@/reducers/mavlink'
-import {video} from '@/reducers/video'
+import {mavlink, onmessage_mavlink} from '@/reducers/mavlink'
+import {video, onmessage_video} from '@/reducers/video'
 
 import {SocketRouter} from '@/components/websocket'
 import {CommandSender} from '@/components/command_sender'
@@ -25,8 +25,8 @@ export const FlightPanel = {
             video
         }, initial_state)
 
-        const mav_socket = new SocketRouter(store, '/mavlink')
-        const video_socket = new SocketRouter(store, '/video')
+        const mav_socket = new SocketRouter(store, '/mavlink', onmessage_mavlink)
+        const video_socket = new SocketRouter(store, '/video', onmessage_video)
 
         const command_sender = new CommandSender(store)
 

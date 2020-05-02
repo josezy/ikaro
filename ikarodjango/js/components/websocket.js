@@ -1,9 +1,10 @@
 
 export class SocketRouter {
-    constructor(store, socket_path) {
+    constructor(store, socket_path, onmessage) {
         this.socket_url = this._socketURL(socket_path)
         this.store = store || {dispatch: () => {}}
         this.disconnected_timeout = null
+        this._onmessage = onmessage
         this._setupSocket()
         global.addEventListener('unload', this.close.bind(this, false))  // send proper disconnect when page is closed
     }
@@ -30,7 +31,7 @@ export class SocketRouter {
             clearTimeout(this.disconnected_timeout)
             this.disconnected_timeout = null
         }
-        this.socket.onmessage = this._onmessage.bind(this)
+        this.socket.onmessage = this._onmessage
     }
     send(payload) {
         this.socket.send(JSON.stringify(payload))
@@ -52,27 +53,5 @@ export class SocketRouter {
         }
         this.socket.close()
         this.socket = null
-    }
-    _onmessage(le_message) {
-        try {
-            const message = JSON.parse(le_message.data)
-            if (message.mavpackettype){
-                const {mavpackettype, srcSystem, srcComponent, ...mav_msg} = message
-                this.store.dispatch({
-                    type: 'MAVMSG',
-                    args: {
-                        srcSystem,
-                        srcComponent,
-                        mavtype: mavpackettype,
-                        message: mav_msg
-                    }
-                })
-            }
-        } catch (e) {
-            this.store.dispatch({
-                type: 'VIDEO_FRAME',
-                b64frame: le_message.data
-            })
-        }
     }
 }
