@@ -8,6 +8,7 @@ export class CommandSender {
     send(...commands) {
         this.commands = commands
         this.cmd_index = 0
+        if (this.unsubscribe) this.unsubscribe()
         this.unsubscribe = this.store.subscribe(this._subscribe.bind(this))
         this._send_command()
     }
@@ -18,7 +19,8 @@ export class CommandSender {
         ))
     }
     _subscribe() {
-        if (this.cmd_index >= this.commands.length || this.cmd_index < 0) this._end()
+        if (this.cmd_index >= this.commands.length || this.cmd_index < 0) return this._end()
+        if (!this.commands) return this._end()
 
         const state = this.store.getState()
         const current_ack = state.mavlink && state.mavlink.COMMAND_ACK
