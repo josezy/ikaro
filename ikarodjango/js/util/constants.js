@@ -62,7 +62,12 @@ export const GPS_FIX_TYPE = [
     'PPP',
 ]
 
-export const MAVLINK_IDS = {
-    22: 'MAV_CMD_NAV_TAKEOFF',
-    400: 'MAV_CMD_COMPONENT_ARM_DISARM',
+export const MAVLINK_MESSAGES = {
+    MAV_CMD_NAV_WAYPOINT:               16,
+    MAV_CMD_NAV_TAKEOFF:                22,
+    MAV_CMD_COMPONENT_ARM_DISARM:       400,
 }
+
+export const MAVLINK_IDS = Object.entries(MAVLINK_MESSAGES).reduce(
+    (acc, entry) => ({...acc, [entry[1]]: entry[0]})
+, {})

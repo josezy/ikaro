@@ -44,14 +44,14 @@ export const mavlink = (state={}, action) => {
                 target_system,
                 target_component,
                 command,
-                ...params
+                params
             })
             return state
         }
 
         case 'SEND_MAVMSG': {
             const {message, params} = action.args
-            global.page.mav_socket.send({message, ...params})
+            global.page.mav_socket.send({message, params})
             return state
         }
 
