@@ -6,7 +6,7 @@ export const ALLOWED_MAVLINK_MSGS = [
     'SYS_STATUS',
     'GPS_RAW_INT',
     'VFR_HUD',
-    'NAV_CONTROLLER_OUTPUT',
+    'ATTITUDE',
     'COMMAND_ACK',
 ]
 
