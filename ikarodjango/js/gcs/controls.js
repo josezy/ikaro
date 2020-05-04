@@ -76,8 +76,12 @@ const TakeoffButton = reduxify({
     render: ({send_mavcmd, send_mavmsg, target_system}) => <div style={{margin:'auto'}}>
         <Button variant="outline-warning" onClick={() => {
             send_mavmsg('SET_MODE', {target_system, base_mode: 81, custom_mode: 4})
-            send_mavcmd('MAV_CMD_COMPONENT_ARM_DISARM', {param1: 1})
-            setTimeout(() => send_mavcmd('MAV_CMD_NAV_TAKEOFF', {param7: 10}), 700)
+            // send_mavcmd('MAV_CMD_COMPONENT_ARM_DISARM', {param1: 1})
+            // setTimeout(() => send_mavcmd('MAV_CMD_NAV_TAKEOFF', {param7: 10}), 700)
+            global.page.command_sender.send(
+                {command: 'MAV_CMD_COMPONENT_ARM_DISARM', params: {param1: 1}},
+                {command: 'MAV_CMD_NAV_TAKEOFF', params: {param7: 10}}
+            )
         }}><img src="/static/img/takeoff.png" width="100"/></Button>
     </div>
 })
