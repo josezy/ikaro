@@ -6,12 +6,12 @@ import {createSelector} from 'reselect'
 const Attitude = reduxify({
     mapStateToProps: (state, props) => ({
         roll: createSelector(
-            state => state.mavlink.NAV_CONTROLLER_OUTPUT,
-            NAV_CONTROLLER_OUTPUT => NAV_CONTROLLER_OUTPUT && NAV_CONTROLLER_OUTPUT.nav_roll
+            state => state.mavlink.ATTITUDE,
+            ATTITUDE => ATTITUDE && ATTITUDE.roll * 180 / 3.14159,
         )(state),
         pitch: createSelector(
-            state => state.mavlink.NAV_CONTROLLER_OUTPUT,
-            NAV_CONTROLLER_OUTPUT => NAV_CONTROLLER_OUTPUT && NAV_CONTROLLER_OUTPUT.nav_pitch
+            state => state.mavlink.ATTITUDE,
+            ATTITUDE => ATTITUDE && ATTITUDE.pitch * 180 / 3.14159,
         )(state),
     }),
     mapDispatchToProps: {},
