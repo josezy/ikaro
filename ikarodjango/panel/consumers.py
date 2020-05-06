@@ -61,7 +61,6 @@ class VideoConsumer(AsyncConsumer):
     async def websocket_receive(self, event):
         encoded_frame = event.get('text', None)
         if encoded_frame is not None:
-            print("Video frame. Length:", len(encoded_frame))
             await self.channel_layer.group_send(
                 self.flight_room,
                 {

@@ -6,7 +6,8 @@ export const ALLOWED_MAVLINK_MSGS = [
     'SYS_STATUS',
     'GPS_RAW_INT',
     'VFR_HUD',
-    'NAV_CONTROLLER_OUTPUT',
+    'ATTITUDE',
+    'COMMAND_ACK',
 ]
 
 export const MAP_INITIAL_CENTER = [-75.393921, 6.149080]
@@ -60,3 +61,13 @@ export const GPS_FIX_TYPE = [
     'STATIC',
     'PPP',
 ]
+
+export const MAVLINK_MESSAGES = {
+    MAV_CMD_NAV_WAYPOINT:               16,
+    MAV_CMD_NAV_TAKEOFF:                22,
+    MAV_CMD_COMPONENT_ARM_DISARM:       400,
+}
+
+export const MAVLINK_IDS = Object.entries(MAVLINK_MESSAGES).reduce(
+    (acc, entry) => ({...acc, [entry[1]]: entry[0]})
+, {})

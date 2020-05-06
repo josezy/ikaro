@@ -44,19 +44,35 @@ export const mavlink = (state={}, action) => {
                 target_system,
                 target_component,
                 command,
-                ...params
+                params
             })
             return state
         }
 
         case 'SEND_MAVMSG': {
             const {message, params} = action.args
-            global.page.mav_socket.send({message, ...params})
+            global.page.mav_socket.send({message, params})
             return state
         }
 
         default: {
             return state
         }
+    }
+}
+
+export const onmessage_mavlink = (le_message) => {
+    const message = JSON.parse(le_message.data)
+    if (message.mavpackettype){
+        const {mavpackettype, srcSystem, srcComponent, ...mav_msg} = message
+        global.page.store.dispatch({
+            type: 'MAVMSG',
+            args: {
+                srcSystem,
+                srcComponent,
+                mavtype: mavpackettype,
+                message: mav_msg
+            }
+        })
     }
 }

@@ -11,3 +11,10 @@ export const video = (state={b64frame: null}, action) => {
         }
     }
 }
+
+export const onmessage_video = (le_message) => {
+    global.page.store.dispatch({
+        type: 'VIDEO_FRAME',
+        b64frame: le_message.data
+    })
+}
