@@ -9,7 +9,6 @@ import Button from 'react-bootstrap/Button'
 import {send_mavcmd, send_mavmsg} from '@/reducers/mavlink'
 import {format_ms} from '@/util/javascript'
 import {GPS_FIX_TYPE} from '@/util/constants'
-import {send_command} from '@/gcs/command_sender'
 
 const Log = reduxify({
     mapStateToProps: (state, props) => ({

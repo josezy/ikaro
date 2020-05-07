@@ -46,6 +46,18 @@
     padding: 5px;
 }
 
+/*   Logs   */
+.log-div {
+    width: 90%;
+    height: fit-content;
+    display: flex;
+    padding: 5px;
+    background: rgba(0, 0, 0, 0.6);
+    margin: auto;
+    color: 'white';
+    overflow-y: scroll;
+    scroll-behavior: auto;
+}
 
 /*   Indicators   */
 div.instrument {
