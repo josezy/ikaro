@@ -8,6 +8,7 @@ export const ALLOWED_MAVLINK_MSGS = [
     'VFR_HUD',
     'ATTITUDE',
     'COMMAND_ACK',
+    'STATUSTEXT',
 ]
 
 export const MAP_INITIAL_CENTER = [-75.393921, 6.149080]
