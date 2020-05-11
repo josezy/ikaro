@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import ReactMapboxGl, {Marker} from 'react-mapbox-gl'
+import ReactMapboxGl, {Marker, MapContext} from 'react-mapbox-gl'
 import {createSelector} from 'reselect'
 import {reduxify} from '@/util/reduxify'
 
@@ -31,6 +31,28 @@ const MapComponent = ({goto_point}) => {
             >
                 <MarkerComponent />
                 <GotoMarker center={goto_coords} />
+                <MapContext.Consumer>
+                    {map => {
+                        global.page.map = map
+                        setInterval(() => {
+                            const bounds = map.getBounds()
+                            const {mavlink} = global.page.store.getState()
+                            if (!mavlink) return
+
+                            const {GLOBAL_POSITION_INT} = mavlink
+                            if (!GLOBAL_POSITION_INT) return
+
+                            const [lngVeh, latVeh] = [
+                                GLOBAL_POSITION_INT.lon / 10**7,
+                                GLOBAL_POSITION_INT.lat / 10**7
+                            ]
+                            const latOut = latVeh < bounds._sw.lat || latVeh > bounds._ne.lat
+                            const lngOut = lngVeh < bounds._sw.lng || lngVeh > bounds._ne.lng
+
+                            if (latOut || lngOut) map.setCenter([lngVeh, latVeh])
+                        }, 10000)
+                    }}
+                </MapContext.Consumer>
             </Mapbox>
         </div>
     </>
