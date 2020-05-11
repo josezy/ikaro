@@ -26,14 +26,12 @@ const LogComponent = ({status}) => {
     useEffect(() => {
         if (status) setLog([...log.slice(-100), status])
     }, [status])
-    console.log(log)
-    return <>
-        <div style={{height:60}}>
-            <div style={{width:"100%"}}>{log.map(text => <div style={{color:'white'}}>{text}</div>)}</div>
-        </div>
-    </>
 
-    }
+    return <div className='log-div'>
+        {log.map((text, i) => <div key={i}>{text}</div>)}
+    </div>
+}
+
 
 const Video = reduxify({
     mapStateToProps: (state, props) => ({
@@ -206,12 +204,10 @@ export const Controls = () => <>
                 <Log />
             </div>
         </div>
-        <div className="controls-row" style={{
-            marginTop:'auto',
-            height:180,
-            display:'block',
-            color:'white',
-        }}>
+        <div className="controls-row">
+            <Log />
+        </div>
+        <div className="controls-row" style={{color:'white', marginTop:'auto'}}>
             <NerdInfo />
         </div>
     </div>
