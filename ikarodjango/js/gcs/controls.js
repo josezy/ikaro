@@ -25,9 +25,13 @@ const LogComponent = ({status}) => {
     const [log, setLog] = useState([]);
     useEffect(() => {
         if (status) setLog([...log.slice(-100), status])
+        setTimeout(() => {
+            const log_elem = document.getElementById('log')
+            log_elem.scrollTop = log_elem.scrollHeight
+        }, 500)
     }, [status])
 
-    return <div className='log-div'>
+    return <div id='log' className='log-div'>
         {log.map((text, i) => <div key={i}>{text}</div>)}
     </div>
 }
