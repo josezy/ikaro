@@ -204,9 +204,6 @@ export const Controls = () => <>
                 <Log />
             </div>
         </div>
-        <div className="controls-row">
-            <Log />
-        </div>
         <div className="controls-row" style={{color:'white', marginTop:'auto'}}>
             <NerdInfo />
         </div>
