@@ -1,5 +1,33 @@
-import {ALLOWED_MAVLINK_MSGS, VEHICLE_TYPES} from '@/util/constants'
+import {ALLOWED_MAVLINK_MSGS, VEHICLE_TYPES, MAVLINK_MESSAGES} from '@/util/constants'
 
+
+export const goto_point = (lat, lng) => (dispatch, getState) => {
+    const {target_system, target_component} = getState().mavlink
+    const {alt} = getState().mavlink.GLOBAL_POSITION_INT
+
+    if (
+        target_system == undefined
+        || target_component == undefined
+        || alt == undefined
+    ) return null
+
+    return dispatch(send_mavmsg('MISSION_ITEM', {
+        target_system,
+        target_component,
+        seq: 0,
+        frame: 3,
+        command: MAVLINK_MESSAGES['MAV_CMD_NAV_WAYPOINT'],
+        current: 2,
+        autocontinue: 1,
+        param1: 0.0,
+        param2: 0.0,
+        param3: 0.0,
+        param4: 0.0,
+        x: lat,
+        y: lng,
+        z: alt / 10**3
+    }))
+}
 
 export const send_mavmsg = (message, params={}) => ({
     type: 'SEND_MAVMSG',

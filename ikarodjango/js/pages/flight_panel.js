@@ -1,7 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import {createStore, combineReducers} from 'redux'
+import {createStore, combineReducers, applyMiddleware} from 'redux'
+import thunk from 'redux-thunk'
 import {Provider} from 'react-redux'
 
 import {mavlink, onmessage_mavlink} from '@/reducers/mavlink'
@@ -38,7 +39,7 @@ export const FlightPanel = {
         return createStore(combineReducers(
             reducers,
             initial_state,
-        ))
+        ), applyMiddleware(thunk))
     },
     render({store}) {
         return (
