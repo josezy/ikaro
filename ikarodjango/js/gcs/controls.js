@@ -49,7 +49,7 @@ const ArmedSwitch = reduxify({
 const RTLButton = reduxify({
     mapStateToProps: (state, props) => ({}),
     mapDispatchToProps: {send_mavcmd},
-    render: ({send_mavcmd}) => <div style={{marginLeft:'auto'}}>
+    render: ({send_mavcmd}) => <div className='m-auto p-1'>
         <Button variant="outline-warning" onClick={
             () => send_mavcmd('MAV_CMD_NAV_RETURN_TO_LAUNCH')
         }>Return to launch</Button>
@@ -60,7 +60,7 @@ const RTLButton = reduxify({
 const HookButton = reduxify({
     mapStateToProps: (state, props) => ({}),
     mapDispatchToProps: {send_mavcmd},
-    render: ({send_mavcmd}) => <div style={{marginLeft:'auto'}}>
+    render: ({send_mavcmd}) => <div className='m-auto p-1'>
         <Button variant="outline-warning" onClick={
             () => send_mavcmd('TUKANO_RELEASE_HOOK')
         }>Release Hook</Button>
@@ -73,7 +73,7 @@ const TakeoffButton = reduxify({
         target_system: state.mavlink.target_system,
     }),
     mapDispatchToProps: {send_mavcmd, send_mavmsg},
-    render: ({send_mavcmd, send_mavmsg, target_system}) => <div style={{margin:'auto'}}>
+    render: ({send_mavcmd, send_mavmsg, target_system}) => <div className='m-auto p-1'>
         <Button variant="outline-warning" style={{maxWidth: '100%'}} onClick={() => {
             send_mavmsg('SET_MODE', {target_system, base_mode: 81, custom_mode: 4})
             // send_mavcmd('MAV_CMD_COMPONENT_ARM_DISARM', {param1: 1})
@@ -90,7 +90,7 @@ const TakeoffButton = reduxify({
 const LandButton = reduxify({
     mapStateToProps: (state, props) => ({}),
     mapDispatchToProps: {send_mavcmd},
-    render: ({send_mavcmd}) => <div style={{margin:'auto'}}>
+    render: ({send_mavcmd}) => <div className='m-auto p-1'>
         <Button variant="outline-warning" style={{maxWidth: '100%'}} onClick={
             () => send_mavcmd('MAV_CMD_NAV_LAND')
         }><img src="/static/img/land.png" width="100" style={{maxWidth: '100%'}}/></Button>
@@ -141,15 +141,15 @@ const NerdInfoComponent = ({flight, position, battery, gps}) => {
     }, [position && position.lat, position && position.lon])
 
     return <>
-        <div className="row">
-            <div className="col-sm-6">
+        <div className="row" style={{height:150}}>
+            <div className="col">
                 <div>Altitude: {position ? `${position.alt}m` : '--'}</div>
                 <div>Latitude: {position ? position.lat : '--'}</div>
                 <div>Longitude: {position ? position.lon : '--'}</div>
                 <div>Flight Time: {flight ? flight.time : '--'}</div>
                 <div>Battery: {battery}%</div>
             </div>
-            <div className="col-sm-6">
+            <div className="col">
                 <div>Ground speed: {gps ? `${gps.velocity}m/s` : '--'}</div>
                 <div>GPS Count: {gps ? gps.satellites_visible : 0}</div>
                 <div>VDOP: {gps ? gps.epv : '--'}</div>
@@ -165,22 +165,19 @@ export const Controls = () => <>
     <div className="controls-div">
         <div className="controls-row">
             <ArmedSwitch />
-            <RTLButton />
-            <HookButton />
         </div>
         <div className="controls-row">
             <TakeoffButton />
             <LandButton />
         </div>
         <div className="controls-row">
+            <RTLButton />
+            <HookButton />
+        </div>
+        <div className="controls-row">
             <Video />
         </div>
-        <div className="controls-row" style={{
-            marginTop:'auto',
-            height:150,
-            display:'block',
-            color:'white',
-        }}>
+        <div className="controls-row" style={{color:'white'}}>
             <NerdInfo />
         </div>
     </div>
