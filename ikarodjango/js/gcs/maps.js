@@ -19,6 +19,7 @@ const MapComponent = ({goto_point}) => {
     return <>
         <div style={{width:'100vw', height:'100vh', position:'absolute'}}>
             <Mapbox
+                // style="mapbox://styles/mapbox/navigation-guidance-night-v4"
                 style="mapbox://styles/mapbox/satellite-v9"
                 center={MAP_INITIAL_CENTER}
                 zoom={MAP_INITIAL_ZOOM}
