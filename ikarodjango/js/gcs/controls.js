@@ -10,6 +10,30 @@ import {send_mavcmd, send_mavmsg} from '@/reducers/mavlink'
 import {format_ms} from '@/util/javascript'
 import {GPS_FIX_TYPE} from '@/util/constants'
 
+const Log = reduxify({
+    mapStateToProps: (state, props) => ({
+        status: createSelector(
+            state => state.mavlink.STATUSTEXT,
+            STATUSTEXT => STATUSTEXT && STATUSTEXT.text
+        )(state),
+    }),
+    mapDispatchToProps: {},
+    render: props => <LogComponent {...props} />
+})
+
+const LogComponent = ({status}) => {
+    const [log, setLog] = useState([]);
+    useEffect(() => {
+        if (status) setLog([...log.slice(-100), status])
+    }, [status])
+    console.log(log)
+    return <>
+        <div style={{height:60}}>
+            <div style={{width:"100%"}}>{log.map(text => <div style={{color:'white'}}>{text}</div>)}</div>
+        </div>
+    </>
+
+    }
 
 const Video = reduxify({
     mapStateToProps: (state, props) => ({
@@ -176,6 +200,11 @@ export const Controls = () => <>
         </div>
         <div className="controls-row">
             <Video />
+        </div>
+        <div>
+            <div className="log-div">
+                <Log />
+            </div>
         </div>
         <div className="controls-row" style={{color:'white', marginTop:'auto'}}>
             <NerdInfo />
