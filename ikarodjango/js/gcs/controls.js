@@ -28,7 +28,7 @@ const LogComponent = ({status}) => {
     }, [status])
 
     return <div className='log-div'>
-        {log.map(text => <div>{text}</div>)}
+        {log.map((text, i) => <div key={i}>{text}</div>)}
     </div>
 }
 
