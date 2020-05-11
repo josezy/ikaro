@@ -5,7 +5,7 @@ import {createStore, combineReducers, applyMiddleware} from 'redux'
 import thunk from 'redux-thunk'
 import {Provider} from 'react-redux'
 
-import {mavlink, onmessage_mavlink} from '@/reducers/mavlink'
+import {mavlink, onmessage_mavlink, send_mavmsg} from '@/reducers/mavlink'
 import {video, onmessage_video} from '@/reducers/video'
 
 import {SocketRouter} from '@/components/websocket'
@@ -14,7 +14,6 @@ import {MapContainer} from '@/gcs/maps'
 import {TukanoPanel} from '@/gcs/panels'
 import {Controls} from '@/gcs/controls'
 import {Indicators} from '@/gcs/indicators'
-
 
 export const FlightPanel = {
     view: 'ui.views.pages.FlightPanel',
@@ -26,13 +25,23 @@ export const FlightPanel = {
             video
         }, initial_state)
 
-        const mav_socket = new SocketRouter(store, '/mavlink', onmessage_mavlink)
-        const video_socket = new SocketRouter(store, '/video', onmessage_video)
+        const mav_socket = new SocketRouter('/mavlink', onmessage_mavlink, this.onopen_mavlink)
+        const video_socket = new SocketRouter('/video', onmessage_video)
 
         const command_sender = new CommandSender(store)
 
         // this group of references define everything available to a Page
         return {props, store, mav_socket, video_socket, command_sender}
+    },
+    onopen_mavlink() {
+        setInterval( () => global.page.store.dispatch(send_mavmsg('HEARTBEAT', {
+            type: 6, // MAV_TYPE_GCS
+            autopilot: 8, // MAV_AUTOPILOT_INVALID
+            base_mode: 0,
+            custom_mode: 0,
+            system_status: 0,
+            mavlink_version: 3,
+        })), 1000)
     },
     setupStore(reducers, initial_state) {
         // create the redux store for the page
