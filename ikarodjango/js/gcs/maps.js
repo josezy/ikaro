@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react'
+import React, {useState} from 'react'
 import ReactMapboxGl, {Marker} from 'react-mapbox-gl'
 import {createSelector} from 'reselect'
 import {reduxify} from '@/util/reduxify'
@@ -14,35 +14,54 @@ const Mapbox = ReactMapboxGl({
     accessToken: global.props.map_key,
 })
 
-export const MapContainer = reduxify({
-    mapStateToProps: (state, props) => ({}),
-    mapDispatchToProps: {goto_point},
-    render: ({goto_point}) => <>
+const MapComponent = ({goto_point}) => {
+    const [goto_coords, setGotoCoords] = useState(null)
+    return <>
         <div style={{width:'100vw', height:'100vh', position:'absolute'}}>
             <Mapbox
                 style="mapbox://styles/mapbox/satellite-v9"
                 center={MAP_INITIAL_CENTER}
                 zoom={MAP_INITIAL_ZOOM}
                 className='mapbox-component'
-                onClick={(map, e) => goto_point(e.lngLat.lat, e.lngLat.lng)}
+                onClick={(map, e) => {
+                    setGotoCoords([e.lngLat.lng, e.lngLat.lat])
+                    goto_point(e.lngLat.lat, e.lngLat.lng)
+                }}
             >
                 <MarkerComponent />
+                <GotoMarker center={goto_coords} />
             </Mapbox>
         </div>
     </>
+}
+
+export const MapContainer = reduxify({
+    mapStateToProps: (state, props) => ({}),
+    mapDispatchToProps: {
+        goto_point
+    },
+    render: props => <MapComponent {...props} />
 })
 
+const GotoMarker = ({center}) => center ? <>
+    <Marker coordinates={center}>
+        <span className="material-icons" style={{color:'gold', fontSize:'2rem'}}>place</span>
+    </Marker>
+</> : null
 
-const compute_center = createSelector(
-    state => state.mavlink.GLOBAL_POSITION_INT,
-    GLOBAL_POSITION_INT => GLOBAL_POSITION_INT && [
-        GLOBAL_POSITION_INT.lon / 10**7,
-        GLOBAL_POSITION_INT.lat / 10**7
-    ]
-)
 
 const mapStateToProps = (state, props) => ({
-    vehicle_center: compute_center(state)
+    vehicle_center: createSelector(
+        state => state.mavlink.GLOBAL_POSITION_INT,
+        GLOBAL_POSITION_INT => GLOBAL_POSITION_INT && [
+            GLOBAL_POSITION_INT.lon / 10**7,
+            GLOBAL_POSITION_INT.lat / 10**7
+        ]
+    )(state),
+    heading: createSelector(
+        state => state.mavlink.VFR_HUD,
+        VFR_HUD => VFR_HUD && VFR_HUD.heading
+    )(state),
 })
 
 const MarkerComponent = reduxify({
@@ -50,7 +69,11 @@ const MarkerComponent = reduxify({
     mapDispatchToProps: {},
     render: props => props.vehicle_center ?
         <Marker coordinates={props.vehicle_center} anchor="center">
-            <img src="/static/img/map_marker.png" />
+            <span className="material-icons" style={{
+                color:'red',
+                fontSize:'5rem',
+                transform:`rotate(${props.heading}deg)`
+            }}>navigation</span>
         </Marker>
         : null
 })
