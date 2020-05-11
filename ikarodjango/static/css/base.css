@@ -46,45 +46,54 @@
     padding: 5px;
 }
 
+/*   Logs   */
+.log-div {
+    width: 100%;
+    padding: 5px;
+    background: rgba(0, 0, 0, 0.6);
+    overflow-y: scroll;
+    height: 70px;
+    color: white;
+}
 
 /*   Indicators   */
 div.instrument {
-  width: 250px;
-  height: 250px;
-  position: relative;
-  display: inline-block;
-  overflow: hidden;
+    width: 250px;
+    height: 250px;
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
 }
 
 div.instrument .box {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
 div.instrument.attitude div.roll {
-  transform: rotate(0deg);
+    transform: rotate(0deg);
 }
 div.instrument.attitude div.roll div.pitch {
-  top: 0%;
+    top: 0%;
 }
 div.instrument.heading div.yaw {
-  transform: rotate(0deg);
+    transform: rotate(0deg);
 }
 div.instrument.vario div.vario {
-  transform: rotate(0deg);
+    transform: rotate(0deg);
 }
 div.instrument.speed div.airspeed {
-  transform: rotate(90deg);
+    transform: rotate(90deg);
 }
 div.instrument.altimeter div.pressure {
-  transform: rotate(40deg);
+    transform: rotate(40deg);
 }
 div.instrument.altimeter div.needle {
-  transform: rotate(90deg);
+    transform: rotate(90deg);
 }
 div.instrument.altimeter div.needleSmall {
-  transform: rotate(90deg);
+    transform: rotate(90deg);
 }
