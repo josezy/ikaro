@@ -141,7 +141,7 @@ const NerdInfoComponent = ({flight, position, battery, gps}) => {
     }, [position && position.lat, position && position.lon])
 
     return <>
-        <div className="row" style={{height:150}}>
+        <div className="row">
             <div className="col">
                 <div>Altitude: {position ? `${position.alt}m` : '--'}</div>
                 <div>Latitude: {position ? position.lat : '--'}</div>
@@ -177,7 +177,7 @@ export const Controls = () => <>
         <div className="controls-row">
             <Video />
         </div>
-        <div className="controls-row" style={{color:'white'}}>
+        <div className="controls-row" style={{color:'white', marginTop:'auto'}}>
             <NerdInfo />
         </div>
     </div>

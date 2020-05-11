@@ -12,6 +12,7 @@ import {
 
 const Mapbox = ReactMapboxGl({
     accessToken: global.props.map_key,
+    logoPosition: 'bottom-right',
 })
 
 const MapComponent = ({goto_point}) => {
