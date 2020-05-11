@@ -37,43 +37,40 @@ const MapComponent = ({goto_point}) => {
 
 export const MapContainer = reduxify({
     mapStateToProps: (state, props) => ({}),
-    mapDispatchToProps: {
-        goto_point
-    },
+    mapDispatchToProps: {goto_point},
     render: props => <MapComponent {...props} />
 })
 
-const GotoMarker = ({center}) => center ? <>
+const GotoMarker = ({center}) => center ?
     <Marker coordinates={center}>
         <span className="material-icons" style={{color:'gold', fontSize:'2rem'}}>place</span>
     </Marker>
-</> : null
+    : null
 
 
 const mapStateToProps = (state, props) => ({
     vehicle_center: createSelector(
-        state => state.mavlink.GLOBAL_POSITION_INT,
-        GLOBAL_POSITION_INT => GLOBAL_POSITION_INT && [
-            GLOBAL_POSITION_INT.lon / 10**7,
-            GLOBAL_POSITION_INT.lat / 10**7
-        ]
+        state => state.mavlink.GLOBAL_POSITION_INT
+            && state.mavlink.GLOBAL_POSITION_INT.lon,
+        state => state.mavlink.GLOBAL_POSITION_INT
+            && state.mavlink.GLOBAL_POSITION_INT.lat,
+        (lon, lat) => lon && lat && [lon / 10**7, lat / 10**7]
     )(state),
-    heading: createSelector(
-        state => state.mavlink.VFR_HUD,
-        VFR_HUD => VFR_HUD && VFR_HUD.heading
-    )(state),
+    heading: state.mavlink.VFR_HUD && state.mavlink.VFR_HUD.heading,
 })
 
 const MarkerComponent = reduxify({
     mapStateToProps,
     mapDispatchToProps: {},
-    render: props => props.vehicle_center ?
-        <Marker coordinates={props.vehicle_center} anchor="center">
-            <span className="material-icons" style={{
-                color:'red',
-                fontSize:'5rem',
-                transform:`rotate(${props.heading}deg)`
-            }}>navigation</span>
-        </Marker>
-        : null
+    render: ({vehicle_center, heading}) => {
+        return vehicle_center ?
+            <Marker coordinates={vehicle_center} anchor="center">
+                <span className="material-icons" style={{
+                    color:'red',
+                    fontSize:'5rem',
+                    transform:`rotate(${heading}deg)`
+                }}>navigation</span>
+            </Marker>
+            : null
+    }
 })

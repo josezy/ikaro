@@ -74,7 +74,7 @@ const TakeoffButton = reduxify({
     }),
     mapDispatchToProps: {send_mavcmd, send_mavmsg},
     render: ({send_mavcmd, send_mavmsg, target_system}) => <div style={{margin:'auto'}}>
-        <Button variant="outline-warning" onClick={() => {
+        <Button variant="outline-warning" style={{maxWidth: '100%'}} onClick={() => {
             send_mavmsg('SET_MODE', {target_system, base_mode: 81, custom_mode: 4})
             // send_mavcmd('MAV_CMD_COMPONENT_ARM_DISARM', {param1: 1})
             // setTimeout(() => send_mavcmd('MAV_CMD_NAV_TAKEOFF', {param7: 10}), 700)
@@ -82,7 +82,7 @@ const TakeoffButton = reduxify({
                 {command: 'MAV_CMD_COMPONENT_ARM_DISARM', params: {param1: 1}},
                 {command: 'MAV_CMD_NAV_TAKEOFF', params: {param7: 10}}
             )
-        }}><img src="/static/img/takeoff.png" width="100"/></Button>
+        }}><img src="/static/img/takeoff.png" width="100" style={{maxWidth: '100%'}}/></Button>
     </div>
 })
 
@@ -91,9 +91,9 @@ const LandButton = reduxify({
     mapStateToProps: (state, props) => ({}),
     mapDispatchToProps: {send_mavcmd},
     render: ({send_mavcmd}) => <div style={{margin:'auto'}}>
-        <Button variant="outline-warning" onClick={
+        <Button variant="outline-warning" style={{maxWidth: '100%'}} onClick={
             () => send_mavcmd('MAV_CMD_NAV_LAND')
-        }><img src="/static/img/land.png" width="100"/></Button>
+        }><img src="/static/img/land.png" width="100" style={{maxWidth: '100%'}}/></Button>
     </div>
 })
 
