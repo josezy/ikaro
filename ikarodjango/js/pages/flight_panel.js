@@ -35,11 +35,11 @@ export const FlightPanel = {
     },
     onopen_mavlink() {
         setInterval( () => global.page.store.dispatch(send_mavmsg('HEARTBEAT', {
-            type: 6,
-            autopilot: 8,
-            base_mode: 192,
+            type: 6, // MAV_TYPE_GCS
+            autopilot: 8, // MAV_AUTOPILOT_INVALID
+            base_mode: 0,
             custom_mode: 0,
-            system_status: 4,
+            system_status: 0,
             mavlink_version: 3,
         })), 1000)
     },
