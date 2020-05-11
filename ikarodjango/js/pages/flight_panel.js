@@ -26,14 +26,17 @@ export const FlightPanel = {
             video
         }, initial_state)
 
-        const mav_socket = new SocketRouter(store, '/mavlink', onmessage_mavlink)
-        const video_socket = new SocketRouter(store, '/video', onmessage_video)
+        const mav_socket = new SocketRouter('/mavlink', onmessage_mavlink, onopen_mavlink)
+        const video_socket = new SocketRouter('/video', onmessage_video)
 
         const command_sender = new CommandSender(store)
 
         // this group of references define everything available to a Page
         return {props, store, mav_socket, video_socket, command_sender}
     },
+    onopen_mavlink() {
+        // start sending heartbeat
+    }
     setupStore(reducers, initial_state) {
         // create the redux store for the page
         return createStore(combineReducers(

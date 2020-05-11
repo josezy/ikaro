@@ -1,10 +1,10 @@
 
 export class SocketRouter {
-    constructor(store, socket_path, onmessage) {
+    constructor(socket_path, onmessage, onopen) {
         this.socket_url = this._socketURL(socket_path)
-        this.store = store || {dispatch: () => {}}
         this.disconnected_timeout = null
         this._onmessage = onmessage
+        this.custom_onopen = onopen
         this._setupSocket()
         global.addEventListener('unload', this.close.bind(this, false))  // send proper disconnect when page is closed
     }
@@ -32,6 +32,7 @@ export class SocketRouter {
             this.disconnected_timeout = null
         }
         this.socket.onmessage = this._onmessage
+        if (this.custom_onopen) this.custom_onopen()
     }
     send(payload) {
         this.socket.send(JSON.stringify(payload))
