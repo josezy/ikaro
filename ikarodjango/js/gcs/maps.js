@@ -1,9 +1,9 @@
 import React, {PureComponent} from 'react'
+import ReactMapboxGl, {Marker} from 'react-mapbox-gl'
+import {createSelector} from 'reselect'
 import {reduxify} from '@/util/reduxify'
 
-import {createSelector} from 'reselect'
-
-import ReactMapboxGl, {Marker} from 'react-mapbox-gl'
+import {goto_point} from '@/reducers/mavlink'
 
 import {
     MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM
@@ -14,17 +14,23 @@ const Mapbox = ReactMapboxGl({
     accessToken: global.props.map_key,
 })
 
-export const MapContainer = () =>
-    <div style={{width:'100vw', height:'100vh', position:'absolute'}}>
-        <Mapbox
-            style="mapbox://styles/mapbox/satellite-v9"
-            center={MAP_INITIAL_CENTER}
-            zoom={MAP_INITIAL_ZOOM}
-            className="mapbox-component"
-        >
-            <MarkerComponent />
-        </Mapbox>
-    </div>
+export const MapContainer = reduxify({
+    mapStateToProps: (state, props) => ({}),
+    mapDispatchToProps: {goto_point},
+    render: ({goto_point}) => <>
+        <div style={{width:'100vw', height:'100vh', position:'absolute'}}>
+            <Mapbox
+                style="mapbox://styles/mapbox/satellite-v9"
+                center={MAP_INITIAL_CENTER}
+                zoom={MAP_INITIAL_ZOOM}
+                className='mapbox-component'
+                onClick={(map, e) => goto_point(e.lngLat.lat, e.lngLat.lng)}
+            >
+                <MarkerComponent />
+            </Mapbox>
+        </div>
+    </>
+})
 
 
 const compute_center = createSelector(
