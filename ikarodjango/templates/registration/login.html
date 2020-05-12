@@ -1,0 +1,42 @@
+{% extends 'admin/login.html' %}
+{% load static %}
+
+{% block branding %}
+    <style>
+        #header {
+            background-color: rgba(160, 164, 179, 0.04);
+        }
+        .foot-info {
+            float: left;
+            text-align: center;
+            width: 100%;
+            opacity: 0.8;
+            margin-top: 40px;
+        }
+        input[type=submit] {
+            background-color: #00a4fc;
+        }
+    </style>
+
+    <link rel="style" href="{% static 'vendor/bootstrap-4.2.1/css/bootstrap.min.css' %}" crossorigin>
+
+    <h1 id="site-name">
+        <a href="{% url 'admin:index' %}">Tucano AI Account Login</a>
+    </h1>
+{% endblock %}
+
+{% block content_title %}
+    <center>
+        <br/>
+        Log in with your username or email address to access your TUCANO account.
+        <br/><br/><br/>
+    </center>
+{% endblock %}
+
+{% block sidebar %}
+    <center class="foot-info">
+        <hr/>
+        <br/>
+        <a href="{% url 'password_reset' %}">Reset password</a>
+    </center>
+{% endblock %}
