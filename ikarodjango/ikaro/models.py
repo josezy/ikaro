@@ -16,6 +16,8 @@ class User(AbstractUser, BaseModel):
     # last_login
     # date_joined
 
+    # USERNAME_FIELD = 'email'
+
     def __json__(self, *attrs):
         return {
             **self.attrs(
