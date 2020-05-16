@@ -56,6 +56,7 @@ INSTALLED_APPS = [
 
     'channels',
     'django_extensions',
+    'debug_toolbar',
 
     'ikaro',
     'ui',
@@ -69,6 +70,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'ikaro.urls'
@@ -147,3 +150,5 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+INTERNAL_IPS = ['127.0.0.1']
