@@ -67,7 +67,7 @@ export const MapContainer = reduxify({
 
 const GotoMarker = ({center}) => center ?
     <Marker coordinates={center}>
-        <span className="material-icons" style={{color:'gold', fontSize:'2rem'}}>place</span>
+        <span className="material-icons" style={{color:'#e4cf77', fontSize:'2rem'}}>place</span>
     </Marker>
     : null
 
