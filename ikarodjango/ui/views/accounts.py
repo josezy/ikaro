@@ -33,7 +33,7 @@ def safe_next_url(next_url: str) -> str:
 
 class Logout(View):
     def get(self, request):
-        next_url = safe_next_url(request.GET.get('next', reverse('login')))
+        next_url = safe_next_url(request.GET.get('next', reverse('home')))
 
         if request.user.is_authenticated:
             logout(request)

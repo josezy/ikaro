@@ -54,13 +54,12 @@
             window.GIT_SHA = '{{GIT_SHA}}'
         </script>
 
-
         {% block head %}{% endblock %}
     </head>
-    <body class="{{body_classes}} body-{{page_id}} {{body_theme}}-theme">
-
+    <body>
         {% block outer %}
             {% block header %}
+                {% include 'ui/nav.html' %}
             {% endblock %}
 
             {% block inner %}

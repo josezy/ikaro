@@ -1,0 +1,15 @@
+<nav class="bg-light navbar navbar-expand-lg p-0">
+    <a href="{% url 'home' %}">
+        <h1 class="d-none d-md-inline ml-1" style="font-size: 26px">
+            <span style="color:#e4cf77"><i class="fa fa-fw fa-feather-alt"></i>&nbsp;Tucano&nbsp;</span>AR
+        </h1>
+    </a>
+
+    <div class="ml-auto">
+        {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}" class="lead mx-2">Logout</a>
+        {% else %}
+            <a href="{% url 'login' %}" class="lead mx-2">Login</a>
+        {% endif %}
+    </div>
+</nav>
