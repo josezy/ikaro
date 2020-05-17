@@ -1,3 +1,4 @@
+from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 from ikaro.model_utils import BaseModel
@@ -7,7 +8,6 @@ class User(AbstractUser, BaseModel):
     # id = models.UUIDField
     # username
     # password
-    # email
     # first_name
     # last_name
     # is_active
@@ -15,8 +15,10 @@ class User(AbstractUser, BaseModel):
     # is_superuser
     # last_login
     # date_joined
+    email = models.EmailField('email address', unique=True)
 
-    # USERNAME_FIELD = 'email'
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
 
     def __json__(self, *attrs):
         return {

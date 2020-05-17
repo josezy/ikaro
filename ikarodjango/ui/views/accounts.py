@@ -10,16 +10,6 @@ from django.contrib.auth.password_validation import validate_password
 from ikaro.models import User
 
 
-# We dont want people getting a username like "mavlink" or "drone"
-BANNED_USERNAMES = {
-    'mavlink', 'drone', 'dji', 'pixhawk', 'px4', 'ardupilot', 'autopilot',
-    'username', 'admin', 'administrator', 'password', 'system', 'beta',
-    'prod', 'dev', 'ikaro', 'hack', 'hacker'
-}
-ALLOWED_USERNAME_SYMBOLS = '-_.'
-MAX_USERNAME_LEN = 15
-
-
 def safe_next_url(next_url: str) -> str:
     # send them to the homepage if no next is specified
     next_url = next_url or '/'
@@ -53,23 +43,23 @@ class Login(View):
         return render(request, self.template, {'next': next_url})
 
     def post(self, request):
-        username = request.POST.get('username')
+        email = request.POST.get('email')
         password = request.POST.get('password')
         next_url = safe_next_url(request.POST.get('next'))
 
         if request.user.is_authenticated:
             return redirect(next_url)
 
-        if not (username and password):
+        if not (email and password):
             return render(request, self.template, {
-                'login_errors': 'Missing username or password.',
+                'login_errors': 'Missing email or password.',
                 'next': next_url,
             })
 
-        user = authenticate(username=username, password=password)
+        user = authenticate(email=email, password=password)
         if not user:
             return render(request, self.template, {
-                'login_errors': 'Incorrect username or password',
+                'login_errors': 'Incorrect email or password',
                 'next': next_url,
             })
 
@@ -90,10 +80,9 @@ class Signup(View):
         return render(request, self.template, {'next': next_url})
 
     def post(self, request):
-        username = request.POST.get('username')
+        email = request.POST.get('email')
         password = request.POST.get('password')
         password2 = request.POST.get('password2')
-        email = request.POST.get('email')
         next_url = safe_next_url(request.POST.get('next'))
 
         # they're already logged in
@@ -101,23 +90,22 @@ class Signup(View):
             return redirect(next_url)
 
         # they tried to log in using the signup page
-        user = authenticate(username=username, password=password)
+        user = authenticate(email=email, password=password)
         if user:
             login(request, user)
             return redirect(next_url)
 
-        error = validate_signup_form(username, password, password2, email)
+        error = validate_signup_form(email, password, password2)
         if error:
             return render(request, self.template, {
                 'signup_errors': error,
-                'username': username,
                 'email': email,
                 'next': next_url,
             })
 
         # create a new user account and log them in
         user = User.objects.create_user(
-            username=username,
+            username=email,
             email=email or '',
             password=password
         )
@@ -127,71 +115,14 @@ class Signup(View):
         return redirect(next_url)
 
 
-def validate_username(username: str):
-    if '@' in username:
-        raise ValidationError(
-            'Username cannot contain @ symbol to avoid confusion '
-            'with emails.'
-        )
-
-    if not (2 < len(username) <= MAX_USERNAME_LEN):
-        raise ValidationError(
-            'Username must be between 3 and '
-            f'{MAX_USERNAME_LEN} characters long.'
-        )
-    # reserved or confusing word
-    if username.lower() in BANNED_USERNAMES:
-        raise ValidationError(
-            'That username is not allowed because it could cause '
-            'confusion for players.'
-        )
-    # only letters, nums, -, or _
-    if not all(char.isalnum() or char in ALLOWED_USERNAME_SYMBOLS
-               for char in username):
-        raise ValidationError(
-            'Username can only contain characters a-Z 0-9 - and _.'
-        )
-    # has characters other than symbols
-    if len(username) == sum(username.count(s)
-                            for s in ALLOWED_USERNAME_SYMBOLS):
-        raise ValidationError(
-            "Username must contain at least one character "
-            "that isn't a symbol."
-        )
-    return True
-
-
-def validate_signup_form(username, password, password2, email):
-    # they're missing a username or password
-    if not (username and password):
-        return 'Missing username or password.'
-
-    if username in ('cowpig', 'squash'):
-        # blitzka manage create_superuser
-        return 'Hah, nice try. You can only create these users from the CLI.'
-
-    # they're missing an email address
-    if (not settings.DEBUG) and not email:
-        return 'Missing an email address.'
+def validate_signup_form(email, password, password2):
+    # they're missing a email or password
+    if not (email and password):
+        return 'Missing email or password.'
 
     # re-typed password dont match
     if (not settings.DEBUG) and (not password == password2):
         return 'Passwords do not match.'
-
-    # their username choice is invalid
-    try:
-        for validator in [validate_username]:
-            validator(username)
-    except ValidationError as e:
-        return e.message
-
-    # user already exists with that username
-    if User.objects.filter(username__iexact=username).exists():
-        return mark_safe(
-            'That username is already taken, try a different username.\n'
-            'Or, log in <a href="/accounts/login/">here</a> '
-            'if you already have an account.'
-        )
 
     # user already exists with that email
     if User.objects.filter(email=email).exists():
@@ -202,7 +133,7 @@ def validate_signup_form(username, password, password2, email):
         )
 
     # check the password validity
-    user = User(username=username, email=(email or ''))
+    user = User(username=email, email=(email or ''))
     try:
         if not settings.DEBUG:
             validate_password(password, user=user)
