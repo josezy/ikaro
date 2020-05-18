@@ -3,7 +3,6 @@ import logging
 from django.views import View
 from django.conf import settings
 from django.template import loader
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse, HttpResponse
 
 from ikaro.utils import ExtendedEncoder
@@ -12,11 +11,11 @@ logger = logging.getLogger()
 
 
 class BaseContextMixin(object):
-    title = None               # type: str
-    template = 'ui/base.html'  # type: str
-    component = None           # type: str
-    custom_stylesheet = None   # type: str
-    login_required = False     # type: bool
+    title = None
+    template = 'ui/base.html'
+    component = None
+    custom_stylesheet = None
+    login_required = False
 
     def user_json(self, request):
         user = request.user
@@ -30,10 +29,7 @@ class BaseContextMixin(object):
 
         return {
             'DEBUG': settings.DEBUG,
-            # SHA is used to tell sentry which release is running on prod
             'GIT_SHA': settings.GIT_SHA,
-            # refers to which set of database settings are used
-            # (aka which env is active)
             'ENVIRONMENT': settings.IKARO_ENV,
             'TIME_ZONE': settings.TIME_ZONE,
             'LANGUAGE_CODE': settings.LANGUAGE_CODE,
@@ -132,10 +128,7 @@ class PublicReactView(BaseView):
             'domain': request.META.get('HTTP_HOST', ''),
             'view': '.'.join((self.__module__, self.__class__.__name__)),
             'DEBUG': settings.DEBUG,
-            # used to tell sentry which release is running on prod
             'GIT_SHA': settings.GIT_SHA,
-            # refers to which set of database settings are used
-            # (aka which env is active)
             'ENVIRONMENT': settings.IKARO_ENV,
             'TIME_ZONE': settings.TIME_ZONE,
             'user': self.user_json(request),
@@ -174,8 +167,3 @@ class PublicReactView(BaseView):
         return HttpResponseWithCallback(content,
                                         request=request,
                                         callback=self.after_response)
-
-
-class ReactView(LoginRequiredMixin, PublicReactView):
-    login_url = settings.LOGIN_URL
-    login_required = True

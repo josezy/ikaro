@@ -1,11 +1,6 @@
 {% load utils %}
 
 <style>
-    #login-form h3 {
-        font-family: Questa;
-        color: #333;
-    }
-
     #login-form .input-group > span {
         transition: border 500ms ease-out;
         -webkit-transition: border 500ms ease-out;
@@ -13,6 +8,8 @@
         -o-transition: border 500ms ease-out;
     }
     #login-form {
+        max-width: 400px;
+        margin: auto;
         text-align: center;
         background-color: #f4f4f2;
         padding: 15px;
@@ -34,10 +31,7 @@
     #login-form span.login-errors {
         color: red;
     }
-    .field-narrow {
-        width: 64px;
-        text-align: left;
-    }
+
     @media (max-width: 767px) {
         #login-form div.username-input {
             margin-top: 10px;
@@ -49,17 +43,14 @@
 <div id="login-form">
     <br/>
     <form action="{% url 'login' %}" method="POST">{% csrf_token %}
-        <h3 style="text-align: center">
-            Log In
-            <br/><br/>
-        </h3>
-        If you've played here before and have an account,<br/>log in using the form below.
+        <h3 style="text-align: center" class="aller">Log In</h3>
+        <div>Use this form to login if you already have an account.</div>
         <div id="username-login-field" class="input-group username-input">
-            <span class="input-group-addon" id="username-label"><div class="field-narrow">Username</div></span>
-            <input type="text" name="username" id="username-field" class="form-control" placeholder="Username or email" aria-describedby="username-label">
+            <span class="input-group-addon" id="username-label"><div class="float-left">Email</div></span>
+            <input type="text" name="email" id="username-field" class="form-control" placeholder="Email address" aria-describedby="username-label">
         </div>
         <div id="password-login-field" class="input-group">
-            <span class="input-group-addon" id="password-label"><div class="field-narrow">Password</div></span>
+            <span class="input-group-addon" id="password-label"><div class="float-left">Password</div></span>
             <input type="password" name="password" class="form-control" placeholder="••••••••" aria-describedby="password-label">
         </div>
         <br/>
@@ -73,13 +64,14 @@
             <br/><br/>
         {% endif %}
 
-        <button class="btn btn-lg btn-default" type="submit">
-            Log In
-            &nbsp;&nbsp;&nbsp;<i class="fa fa-angle-double-right"></i>
+        <button class="btn btn-lg btn-success" type="submit">
+            Log In&nbsp;&nbsp;<i class="fa fa-angle-double-right"></i>
         </button>
 
         <br/><br/>
-        <a href="/accounts/password/reset/">Forgot password?</a>
+        <a href="http://fb.com/tucanorobotics" target="_blank">
+            Forgot password? Talk to us on our social networks
+        </a>
     </form>
     <script>
         function preventIllegalCharacters(event) {

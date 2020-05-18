@@ -80,6 +80,7 @@ class Signup(View):
         return render(request, self.template, {'next': next_url})
 
     def post(self, request):
+        first_name = request.POST.get('first_name')
         email = request.POST.get('email')
         password = request.POST.get('password')
         password2 = request.POST.get('password2')
@@ -99,12 +100,14 @@ class Signup(View):
         if error:
             return render(request, self.template, {
                 'signup_errors': error,
+                'first_name': first_name,
                 'email': email,
                 'next': next_url,
             })
 
         # create a new user account and log them in
         user = User.objects.create_user(
+            first_name=first_name,
             username=email,
             email=email or '',
             password=password
