@@ -53,14 +53,14 @@
     <br/>
     <form action="{% url 'signup' %}" method="POST">{% csrf_token %}
 
-        <h3>Signing Up is Easy!</h3>
+        <h3>Sign Up</h3>
         If this is your first time here,<br/>create an account to check the features.<br/>
         <br/>
 
 
         <div id="username-field" class="input-group" style="margin-bottom: 5px">
             <span id="username-label"><div class="float-left">Name</div></span>
-            <input type="text" name="first_name" class="form-control" placeholder="A public display name" value="{{first_name}}" aria-describedby="username-label">
+            <input type="text" name="first_name" class="form-control" placeholder="Public visible name" value="{{first_name}}" aria-describedby="username-label">
         </div>
 
         <div id="email-field" class="input-group">
@@ -95,7 +95,7 @@
 
         <br/><br/>
         <button class="btn btn-lg btn-secondary" style="width:100%" type="submit">
-            Sign Up &amp; Start flying!
+            Take off!
             &nbsp;&nbsp;<i class="fa fa-angle-double-right"></i>
         </button>
 
