@@ -14,6 +14,33 @@ body {
   font-weight: normal;
   font-style: normal;
 }
+@font-face {
+  font-family: 'Aller';
+  src: url('fonts/Aller.ttf') format('truetype'),
+       url('fonts/Aller.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Aller_Rg';
+  src: url('fonts/Aller_Rg.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'FranklinGothic-Book';
+  src: url('fonts/FranklinGothic-Book.ttf') format('truetype'),
+       url('fonts/FranklinGothic-Book.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'frabk';
+  src: url('fonts/frabk.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
 
 /*    Variables    */
 :root {
@@ -24,6 +51,12 @@ body {
 }
 .aquatico {
     font-family: "Aquatico-Regular"
+}
+.aller {
+    font-family: "Aller"
+}
+.franklin {
+    font-family: "FranklinGothic-Book"
 }
 
 /*    Mapbox    */
