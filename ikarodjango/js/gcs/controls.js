@@ -58,7 +58,7 @@ const ArmedSwitch = reduxify({
         )(state),
     }),
     mapDispatchToProps: {send_mavcmd},
-    render: ({armed, send_mavcmd}) => <div style={{marginRight:'auto'}}>
+    render: ({armed, send_mavcmd}) => <div style={{marginLeft:'auto'}}>
         <label style={{transform:'scale(0.7)', display:'flex'}}>
             <span style={{fontSize:'1.2rem', marginRight:5, color:'white'}}>
                 {armed ? 'ARMED' : 'DISARMED'}
@@ -187,9 +187,21 @@ const NerdInfoComponent = ({flight, position, battery, gps}) => {
     </>
 }
 
+const LobbyButton = () => (
+    <div
+        onClick={() => window.location.href = '/'}
+        className="d-flex"
+        style={{color:'#e4cf77', cursor:'pointer'}}
+    >
+        <span className="material-icons m-auto">arrow_back_ios</span>
+        <span className="m-auto">Lobby</span>
+    </div>
+)
+
 export const Controls = () => <>
     <div className="controls-div">
         <div className="controls-row">
+            <LobbyButton />
             <ArmedSwitch />
         </div>
         <div className="controls-row">

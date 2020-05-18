@@ -1,3 +1,64 @@
+/*    Body    */
+body {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/*    Fonts    */
+@font-face {
+  font-family: 'Aquatico-Regular';
+  src: url('fonts/Aquatico-Regular.ttf') format('truetype'),
+       url('fonts/Aquatico-Regular.woff') format('woff'),
+       url('fonts/Aquatico-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Aller';
+  src: url('fonts/Aller.ttf') format('truetype'),
+       url('fonts/Aller.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Aller_Rg';
+  src: url('fonts/Aller_Rg.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'FranklinGothic-Book';
+  src: url('fonts/FranklinGothic-Book.ttf') format('truetype'),
+       url('fonts/FranklinGothic-Book.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'frabk';
+  src: url('fonts/frabk.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+/*    Variables    */
+:root {
+    --gold:#e4cf77;
+}
+.gold {
+    color: var(--gold)
+}
+.aquatico {
+    font-family: "Aquatico-Regular"
+}
+.aller {
+    font-family: "Aller"
+}
+.franklin {
+    font-family: "FranklinGothic-Book"
+}
+
 /*    Mapbox    */
 .mapbox-component {
     height: 100%;

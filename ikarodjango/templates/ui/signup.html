@@ -1,0 +1,21 @@
+{% extends 'ui/base.html' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block inner %}
+    <div class="login-page">
+        <br>
+        <center>
+            <h1 class="aquatico">
+                <span class="gold">Tucano</span>AR<br>
+                <span style="text-shadow: 2px 2px 6px rgba(0,0,0,0.3); font-size: 2rem;">
+                    Drones for humans
+                </span>
+            </h1>
+        </center>
+
+        {% include 'ui/forms/signup.html' %}
+
+        <script>$('#username-field').focus().click();</script>
+    </div>
+{% endblock %}

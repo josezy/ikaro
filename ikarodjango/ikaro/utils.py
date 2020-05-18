@@ -3,11 +3,62 @@ import re
 import uuid
 
 from enum import Enum
+from functools import wraps
 
+from django.urls import reverse
+from django.http import HttpResponseRedirect
+from django.utils.http import urlencode
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import (
     DecimalField, CharField, IntegerField, AutoField, QuerySet
 )
+
+
+def optional_arg_decorator(fn):
+    """
+    wrap a decorator so that it can optionally take args/kwargs
+    when decorating a func
+    """
+    # http://stackoverflow.com/a/32292739/2156113
+    @wraps(fn)
+    def wrapped_decorator(*args, **kwargs):
+        is_bound_method = hasattr(args[0], fn.__name__) if args else False
+
+        if is_bound_method:
+            klass = args[0]
+            args = args[1:]
+
+        # If no arguments were passed...
+        if len(args) == 1 and len(kwargs) == 0 and callable(args[0]):
+            if is_bound_method:
+                return fn(klass, args[0])
+            else:
+                return fn(args[0])
+
+        else:
+            def real_decorator(decoratee):
+                if is_bound_method:
+                    return fn(klass, decoratee, *args, **kwargs)
+                else:
+                    return fn(decoratee, *args, **kwargs)
+            return real_decorator
+    return wrapped_decorator
+
+
+@optional_arg_decorator
+def require_login(view_func, redirect_url=None):
+    """decorates a view to redirect when the user is not authenticated"""
+
+    @wraps(view_func)
+    def protected_view_func(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            request_path = redirect_url or request.get_full_path()
+            return HttpResponseRedirect(
+                f"{reverse('login')}?{urlencode({'next': request_path})}"
+            )
+        return view_func(self, request, *args, **kwargs)
+
+    return protected_view_func
 
 
 def sanitize_html(text, strip=False, allow_safe=True):
