@@ -101,6 +101,11 @@ CHANNEL_LAYERS = {
     },
 }
 
+DEBUG_TOOLBAR_CONFIG = {
+    "SHOW_TOOLBAR_CALLBACK": lambda request:
+        request.user.is_authenticated and request.user.debug_toolbar,
+}
+
 STATICFILES_DIRS = [STATICFILES_DIR]
 
 # WSGI_APPLICATION = 'ikaro.wsgi.application'

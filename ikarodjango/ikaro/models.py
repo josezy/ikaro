@@ -16,6 +16,7 @@ class User(AbstractUser, BaseModel):
     # last_login
     # date_joined
     email = models.EmailField('email address', unique=True)
+    debug_toolbar = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
