@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
-from core.system import (
+from ikaro.system import (
     PLACEHOLDER_FOR_SECRET,
     load_env_settings,
 )
