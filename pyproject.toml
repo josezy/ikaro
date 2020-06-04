@@ -17,6 +17,7 @@ daphne = "^2.4.1"
 django-extensions = "^2.2.9"
 ipdb = "^0.13.2"
 django-debug-toolbar = "^2.2"
+python-dotenv = "^0.13.0"
 
 [tool.poetry.dev-dependencies]
 
