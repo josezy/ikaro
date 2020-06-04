@@ -35,14 +35,14 @@ GIT_SHA = "someshafornow"
 SECRET_KEY = PLACEHOLDER_FOR_SECRET
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = SERVER_ENV == 'DEV'
+DEBUG = False
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
 ALLOWED_HOSTS = ['*']
 
 IPYTHON_ARGUMENTS = ['--no-confirm-exit', '--no-banner']
-
+ENABLE_DEBUG_TOOLBAR = False
 
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 STATICFILES_DIR = os.path.join(BASE_DIR, 'static')
@@ -90,7 +90,6 @@ INSTALLED_APPS = [
 
     'channels',
     'django_extensions',
-    'debug_toolbar',
 
     'ikaro',
     'ui',
@@ -104,8 +103,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'ikaro.urls'
@@ -154,6 +151,12 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+if ENABLE_DEBUG_TOOLBAR:
+    INSTALLED_APPS = ["debug_toolbar", ] + INSTALLED_APPS
+    MIDDLEWARE = MIDDLEWARE + [
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+    ]
 
 
 AUTH_USER_MODEL = 'ikaro.User'
