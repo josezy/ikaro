@@ -12,12 +12,19 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
-IKARO_ENV = os.getenv('IKARO_ENV', 'DEV').upper()
+from core.system import (
+    PLACEHOLDER_FOR_SECRET,
+    load_env_settings,
+)
+
+SERVER_ENV = os.getenv('SERVER_ENV', 'DEV').upper()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO_DIR = os.path.dirname(BASE_DIR)
 DATA_DIR = os.path.abspath(os.path.join(REPO_DIR, 'data'))
+ENV_DIR = os.path.join(REPO_DIR, 'env')
+ENV_SECRETS_FILE = os.path.join(ENV_DIR, 'secrets.env')
 
 GIT_SHA = "someshafornow"
 
@@ -25,10 +32,10 @@ GIT_SHA = "someshafornow"
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'i2h^x(1n$qwa(k1dcvt4($n)jj919ji&4b*usyw(=jbzaf-pbw'
+SECRET_KEY = PLACEHOLDER_FOR_SECRET
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = SERVER_ENV == 'DEV'
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
@@ -43,6 +50,33 @@ MEDIA_ROOT = os.path.join(DATA_DIR, 'media')
 STATIC_ROOT = os.path.join(DATA_DIR, 'static')
 
 REDIS_URL = "redis://localhost:6379"
+
+MAP_KEY = PLACEHOLDER_FOR_SECRET
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Load Settings Overrides from Environment Config Files
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+# settings defined above in this file (settings.py)
+SETTINGS_DEFAULTS = load_env_settings(env=globals())
+
+# settings set via env/secrets.env
+ENV_SECRETS = load_env_settings(
+    dotenv_path=ENV_SECRETS_FILE, defaults=globals())
+globals().update(ENV_SECRETS)
+
+# settings set via environemtn variables
+ENV_OVERRIDES = load_env_settings(env=dict(os.environ), defaults=globals())
+globals().update(ENV_OVERRIDES)
+SETTINGS_SOURCES = {
+    'settings.py': SETTINGS_DEFAULTS,
+    ENV_SECRETS_FILE: ENV_SECRETS,
+    'os.environ': ENV_OVERRIDES,
+}
+# To track down where a specific setting is being imported from:
+# print('Setting sources: \n{SETTINGS_SOURCES}')
+# print(config.system.get_setting_source(SETTING_NAME))
+
 
 # Application definition
 
@@ -141,19 +175,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-MAP_KEY = "pk.eyJ1Ijoiam9zZXp5IiwiYSI6ImNrM2VxcWNlZDAwN2EzYm03NHV1ODgxYTIifQ.z-I55SfhO8A1kob8p9kdSQ"
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
-
 INTERNAL_IPS = ['127.0.0.1']
