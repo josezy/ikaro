@@ -126,6 +126,7 @@ const LandButton = reduxify({
 
 const NerdInfo = reduxify({
     mapStateToProps: (state, props) => ({
+        heartbeat: state.mavlink.HEARTBEAT,
         flight: createSelector(
             state => state.mavlink.GLOBAL_POSITION_INT,
             GLOBAL_POSITION_INT => GLOBAL_POSITION_INT && {
@@ -160,11 +161,20 @@ const NerdInfo = reduxify({
 })
 
 
-const NerdInfoComponent = ({flight, position, battery, gps}) => {
-    const [path, setPath] = useState([]);
+let heartbeat_timeout = null
+const NerdInfoComponent = ({flight, position, battery, gps, heartbeat}) => {
+    const [path, setPath] = useState([])
+    const [alive, setAlive] = useState(false)
+
     useEffect(() => {
         if (position) setPath([...path, {latitude: position.lat, longitude: position.lon}])
     }, [position && position.lat, position && position.lon])
+
+    useEffect(() => {
+        setAlive(true)
+        if (heartbeat_timeout) clearTimeout(heartbeat_timeout)
+        heartbeat_timeout = setTimeout(() => setAlive(false), 2000)
+    }, [heartbeat])
 
     return <>
         <div className="row">
@@ -174,6 +184,10 @@ const NerdInfoComponent = ({flight, position, battery, gps}) => {
                 <div>Longitude: {position ? position.lon : '--'}</div>
                 <div>Flight Time: {flight ? flight.time : '--'}</div>
                 <div>Battery: {battery}%</div>
+                <div>
+                    <div className={`${alive ? 'green' : 'red'} dot`}></div>&nbsp;
+                    {alive ? 'Alive' : 'Dead'}
+                </div>
             </div>
             <div className="col">
                 <div>Ground speed: {gps ? `${gps.velocity}m/s` : '--'}</div>

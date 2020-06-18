@@ -64,6 +64,21 @@ body {
     height: 100%;
 }
 
+/*    General purpose    */
+.dot {
+    height: 10px;
+    width: 10px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+}
+.green {
+    background-color: #0f0;
+}
+.red {
+    background-color: #f00;
+}
+
 /*    Tukano data div    */
 .tukano-data-div {
     width: 500px;
