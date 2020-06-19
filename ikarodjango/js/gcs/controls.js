@@ -109,6 +109,49 @@ const HookButton = reduxify({
 })
 
 
+const PauseButton = reduxify({
+    mapStateToProps: (state, props) => ({
+        target_system: state.mavlink.target_system,
+        target_component: state.mavlink.target_component,
+    }),
+    mapDispatchToProps: {send_mavcmd, send_mavmsg},
+    render: ({send_mavcmd, send_mavmsg, target_system, target_component}) => (
+        <div className='m-auto p-1'>
+            <Button variant="outline-warning" onClick={() => {
+                send_mavmsg('SET_MODE', {
+                    target_system,
+                    base_mode: 217,
+                    custom_mode: 17
+                })
+                setTimeout(() => send_mavmsg('SET_MODE', {
+                    target_system,
+                    base_mode: 217,
+                    custom_mode: 4
+                }), 1000)
+                setTimeout(() => send_mavcmd('SET_POSITION_TARGET_LOCAL_NED', {
+                    time_boot_ms: 0,
+                    target_system,
+                    target_component,
+                    coordinate_frame: 7,
+                    type_mask: 65528,
+                    x: 0.0,
+                    y: 0.0,
+                    z: 0.0,
+                    vx: 0.0,
+                    vy: 0.0,
+                    vz: 0.0,
+                    afx: 0.0,
+                    afy: 0.0,
+                    afz: 0.0,
+                    yaw: 0.0,
+                    yaw_rate: 0.0
+                }), 2000)
+            }}>Pause</Button>
+        </div>
+    )
+})
+
+
 const TakeoffButton = reduxify({
     mapStateToProps: (state, props) => ({
         target_system: state.mavlink.target_system,
@@ -240,6 +283,7 @@ export const Controls = () => <>
         <div className="controls-row">
             <RTLButton />
             <HookButton />
+            <PauseButton />
         </div>
         <div className="controls-row">
             <Video />
