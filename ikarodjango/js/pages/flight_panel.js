@@ -14,6 +14,7 @@ import {MapContainer} from '@/gcs/maps'
 import {TukanoPanel} from '@/gcs/panels'
 import {Controls} from '@/gcs/controls'
 import {Indicators} from '@/gcs/indicators'
+import {request_data_stream} from '@/util/mavutil'
 
 export const FlightPanel = {
     view: 'ui.views.pages.FlightPanel',
@@ -42,6 +43,14 @@ export const FlightPanel = {
             system_status: 0,
             mavlink_version: 3,
         })), 1000)
+        const rds_interval = setInterval(() => {
+            const state = global.page.store.getState()
+            const {target_system, target_component} = state.mavlink
+            if (target_system && target_component) {
+                request_data_stream(target_system, target_component)
+                clearInterval(rds_interval)
+            }
+        }, 500)
     },
     setupStore(reducers, initial_state) {
         // create the redux store for the page

@@ -4,6 +4,7 @@ import {
     mode_mapping_tracker, mode_mapping_sub
 } from '@/util/constants'
 
+import {send_mavmsg} from '@/reducers/mavlink'
 
 const mode_mapping_bynumber = type => {
     /**
@@ -35,4 +36,56 @@ export const flightmode_from_heartbeat = HEARTBEAT => {
         flightmode = mode_mapping_bynumber(type)[custom_mode]
     }
     return flightmode
+}
+
+export const request_data_stream = (target_system, target_component) => {
+    global.page.store.dispatch(send_mavmsg('REQUEST_DATA_STREAM', {
+        target_system,
+        target_component,
+        req_stream_id: 1,
+        req_message_rate: 2,
+        start_stop: 1
+    }))
+    global.page.store.dispatch(send_mavmsg('REQUEST_DATA_STREAM', {
+        target_system,
+        target_component,
+        req_stream_id: 2,
+        req_message_rate: 2,
+        start_stop: 1
+    }))
+    global.page.store.dispatch(send_mavmsg('REQUEST_DATA_STREAM', {
+        target_system,
+        target_component,
+        req_stream_id: 3,
+        req_message_rate: 2,
+        start_stop: 1
+    }))
+    global.page.store.dispatch(send_mavmsg('REQUEST_DATA_STREAM', {
+        target_system,
+        target_component,
+        req_stream_id: 6,
+        req_message_rate: 3,
+        start_stop: 1
+    }))
+    global.page.store.dispatch(send_mavmsg('REQUEST_DATA_STREAM', {
+        target_system,
+        target_component,
+        req_stream_id: 10,
+        req_message_rate: 10,
+        start_stop: 1
+    }))
+    global.page.store.dispatch(send_mavmsg('REQUEST_DATA_STREAM', {
+        target_system,
+        target_component,
+        req_stream_id: 11,
+        req_message_rate: 10,
+        start_stop: 1
+    }))
+    global.page.store.dispatch(send_mavmsg('REQUEST_DATA_STREAM', {
+        target_system,
+        target_component,
+        req_stream_id: 12,
+        req_message_rate: 3,
+        start_stop: 1
+    }))
 }
