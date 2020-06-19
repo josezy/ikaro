@@ -7,8 +7,23 @@ import Switch from 'react-switch'
 import Button from 'react-bootstrap/Button'
 
 import {send_mavcmd, send_mavmsg} from '@/reducers/mavlink'
+import {flightmode_from_heartbeat} from '@/util/mavutil'
 import {format_ms} from '@/util/javascript'
 import {GPS_FIX_TYPE} from '@/util/constants'
+
+
+const FlightMode = reduxify({
+    mapStateToProps: (state, props) => ({
+        flight_mode: createSelector(
+            state => state.mavlink.HEARTBEAT,
+            HEARTBEAT => HEARTBEAT && flightmode_from_heartbeat(HEARTBEAT)
+        )(state),
+    }),
+    mapDispatchToProps: {},
+    render: ({flight_mode}) => <div style={{color:'white',width:'100%',textAlign:'center'}}>
+        {flight_mode}
+    </div>
+})
 
 const Log = reduxify({
     mapStateToProps: (state, props) => ({
@@ -231,6 +246,9 @@ export const Controls = () => <>
         </div>
         <div className="controls-row">
             <Log />
+        </div>
+        <div className="controls-row">
+            <FlightMode />
         </div>
         <div className="controls-row" style={{color:'white', marginTop:'auto'}}>
             <NerdInfo />

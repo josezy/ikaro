@@ -1,4 +1,6 @@
 
+// Application constants
+
 export const ALLOWED_MAVLINK_MSGS = [
     'HEARTBEAT',
     'GLOBAL_POSITION_INT',
@@ -15,6 +17,30 @@ export const ALLOWED_MAV_TYPES = ['QUADROTOR']
 export const MAP_INITIAL_CENTER = [-75.393921, 6.149080]
 export const MAP_INITIAL_ZOOM = [16]
 
+// MAVLINK specific constants/enums
+
+export const MAV_AUTOPILOT = [
+    'GENERIC',
+    'RESERVED',
+    'SLUGS',
+    'ARDUPILOTMEGA',
+    'OPENPILOT',
+    'GENERIC_WAYPOINTS_ONLY',
+    'GENERIC_WAYPOINTS_AND_SIMPLE_NAVIGATION_ONLY',
+    'GENERIC_MISSION_FULL',
+    'INVALID',
+    'PPZ',
+    'UDB',
+    'FP',
+    'PX4',
+    'SMACCMPILOT',
+    'AUTOQUAD',
+    'ARMAZILA',
+    'AEROB',
+    'ASLUAV',
+    'SMARTAP',
+    'AIRRAILS',
+]
 
 export const MAV_TYPE = [
     'GENERIC',
@@ -75,3 +101,90 @@ export const MAVLINK_MESSAGES = {
 export const MAVLINK_IDS = Object.entries(MAVLINK_MESSAGES).reduce(
     (acc, entry) => ({...acc, [entry[1]]: entry[0]})
 , {})
+
+
+export const mode_mapping_apm = {
+    0: 'MANUAL',
+    1: 'CIRCLE',
+    2: 'STABILIZE',
+    3: 'TRAINING',
+    4: 'ACRO',
+    5: 'FBWA',
+    6: 'FBWB',
+    7: 'CRUISE',
+    8: 'AUTOTUNE',
+    10: 'AUTO',
+    11: 'RTL',
+    12: 'LOITER',
+    13: 'TAKEOFF',
+    14: 'AVOID_ADSB',
+    15: 'GUIDED',
+    16: 'INITIALISING',
+    17: 'QSTABILIZE',
+    18: 'QHOVER',
+    19: 'QLOITER',
+    20: 'QLAND',
+    21: 'QRTL',
+    22: 'QAUTOTUNE',
+    23: 'QACRO',
+}
+export const mode_mapping_acm = {
+    0: 'STABILIZE',
+    1: 'ACRO',
+    2: 'ALT_HOLD',
+    3: 'AUTO',
+    4: 'GUIDED',
+    5: 'LOITER',
+    6: 'RTL',
+    7: 'CIRCLE',
+    8: 'POSITION',
+    9: 'LAND',
+    10: 'OF_LOITER',
+    11: 'DRIFT',
+    13: 'SPORT',
+    14: 'FLIP',
+    15: 'AUTOTUNE',
+    16: 'POSHOLD',
+    17: 'BRAKE',
+    18: 'THROW',
+    19: 'AVOID_ADSB',
+    20: 'GUIDED_NOGPS',
+    21: 'SMART_RTL',
+    22: 'FLOWHOLD',
+    23: 'FOLLOW',
+    24: 'ZIGZAG',
+}
+export const mode_mapping_rover = {
+    0: 'MANUAL',
+    1: 'ACRO',
+    2: 'LEARNING',
+    3: 'STEERING',
+    4: 'HOLD',
+    5: 'LOITER',
+    6: 'FOLLOW',
+    7: 'SIMPLE',
+    10: 'AUTO',
+    11: 'RTL',
+    12: 'SMART_RTL',
+    15: 'GUIDED',
+    16: 'INITIALISING'
+}
+export const mode_mapping_tracker = {
+    0: 'MANUAL',
+    1: 'STOP',
+    2: 'SCAN',
+    4: 'GUIDED',
+    10: 'AUTO',
+    16: 'INITIALISING'
+}
+export const mode_mapping_sub = {
+    0: 'STABILIZE',
+    1: 'ACRO',
+    2: 'ALT_HOLD',
+    3: 'AUTO',
+    4: 'GUIDED',
+    7: 'CIRCLE',
+    9: 'SURFACE',
+    16: 'POSHOLD',
+    19: 'MANUAL',
+}
