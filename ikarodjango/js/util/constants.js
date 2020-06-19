@@ -52,13 +52,13 @@ export const VEHICLE_TYPES = [
 ]
 
 export const GPS_FIX_TYPE = [
-    'NO GPS',
-    'NO FIX',
-    '2D FIX',
-    '3D FIX',
+    'NO_GPS',
+    'NO_FIX',
+    '2D_FIX',
+    '3D_FIX',
     'DGPS',
-    'RTK FLOAT',
-    'RTK FIXED',
+    'RTK_FLOAT',
+    'RTK_FIXED',
     'STATIC',
     'PPP',
 ]

@@ -151,7 +151,7 @@ const NerdInfo = reduxify({
                 satellites_visible: GPS_RAW_INT.satellites_visible,
                 eph: GPS_RAW_INT.eph == 65535 ? '--' : GPS_RAW_INT.eph,
                 epv: GPS_RAW_INT.epv == 65535 ? '--' : GPS_RAW_INT.epv,
-                type: GPS_FIX_TYPE[GPS_RAW_INT.fix_type],
+                type: GPS_FIX_TYPE[GPS_RAW_INT.fix_type].replace(/_/g, ' '),
                 velocity: GPS_RAW_INT.vel / 100,
             }
         )(state),

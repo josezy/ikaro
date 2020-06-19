@@ -35,7 +35,7 @@ export class SocketRouter {
         if (this.custom_onopen) this.custom_onopen()
     }
     send(payload) {
-        this.socket.send(JSON.stringify(payload))
+        if (this.socket) this.socket.send(JSON.stringify(payload))
     }
     close(reopen=false) {
         const noop = () => {}
