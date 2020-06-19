@@ -1,4 +1,6 @@
-import {ALLOWED_MAVLINK_MSGS, VEHICLE_TYPES, MAVLINK_MESSAGES} from '@/util/constants'
+import {
+    ALLOWED_MAVLINK_MSGS, ALLOWED_MAV_TYPES, MAVLINK_MESSAGES, MAV_TYPE
+} from '@/util/constants'
 
 
 export const goto_point = (lat, lng) => (dispatch, getState) => {
@@ -41,7 +43,7 @@ export const send_mavcmd = (command, params={}) => ({
 
 const valid_mavmsg = (mavmsg) => {
     if (!ALLOWED_MAVLINK_MSGS.includes(mavmsg.mavtype)) return false
-    if (mavmsg.mavtype == 'HEARTBEAT' && !VEHICLE_TYPES.includes(mavmsg.message.type)) return false
+    if (mavmsg.mavtype == 'HEARTBEAT' && !ALLOWED_MAV_TYPES.includes(MAV_TYPE[mavmsg.message.type])) return false
     return true
 }
 
