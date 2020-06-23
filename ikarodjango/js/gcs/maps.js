@@ -47,6 +47,8 @@ const MapComponent = ({goto_point}) => {
                                 GLOBAL_POSITION_INT.lon / 10**7,
                                 GLOBAL_POSITION_INT.lat / 10**7
                             ]
+                            if (lngVeh == 0 && latVeh == 0) return
+
                             const latOut = latVeh < bounds._sw.lat || latVeh > bounds._ne.lat
                             const lngOut = lngVeh < bounds._sw.lng || lngVeh > bounds._ne.lng
 
