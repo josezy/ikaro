@@ -1,5 +1,7 @@
-import React, {useState} from 'react'
-import ReactMapboxGl, {Marker, MapContext} from 'react-mapbox-gl'
+import React, {useState, useEffect} from 'react'
+import ReactMapboxGl, {
+    Marker, MapContext, Source, Layer
+} from 'react-mapbox-gl'
 import {createSelector} from 'reselect'
 import {reduxify} from '@/util/reduxify'
 
@@ -32,6 +34,7 @@ const MapComponent = ({goto_point}) => {
             >
                 <MarkerComponent />
                 <GotoMarker center={goto_coords} />
+                <TraveledPath />
                 <MapContext.Consumer>
                     {map => {
                         global.page.map = map
@@ -73,30 +76,80 @@ const GotoMarker = ({center}) => center ?
     </Marker>
     : null
 
-
-const mapStateToProps = (state, props) => ({
-    vehicle_center: createSelector(
-        state => state.mavlink.GLOBAL_POSITION_INT
-            && state.mavlink.GLOBAL_POSITION_INT.lon,
-        state => state.mavlink.GLOBAL_POSITION_INT
-            && state.mavlink.GLOBAL_POSITION_INT.lat,
-        (lon, lat) => lon && lat && [lon / 10**7, lat / 10**7]
-    )(state),
-    heading: state.mavlink.VFR_HUD && state.mavlink.VFR_HUD.heading,
-})
-
 const MarkerComponent = reduxify({
-    mapStateToProps,
+    mapStateToProps: (state, props) => ({
+        vehicle_center: createSelector(
+            state => state.mavlink.GLOBAL_POSITION_INT
+                && state.mavlink.GLOBAL_POSITION_INT.lon,
+            state => state.mavlink.GLOBAL_POSITION_INT
+                && state.mavlink.GLOBAL_POSITION_INT.lat,
+            (lon, lat) => lon && lat && [lon / 10**7, lat / 10**7]
+        )(state),
+        heading: state.mavlink.VFR_HUD && state.mavlink.VFR_HUD.heading,
+    }),
     mapDispatchToProps: {},
     render: ({vehicle_center, heading}) => {
         return vehicle_center ?
             <Marker coordinates={vehicle_center} anchor="center">
                 <span className="material-icons" style={{
                     color:'red',
-                    fontSize:'5rem',
+                    fontSize:'3.5rem',
                     transform:`rotate(${heading}deg)`
                 }}>navigation</span>
             </Marker>
             : null
     }
 })
+
+const TraveledPath = reduxify({
+    mapStateToProps: (state, props) => ({
+        vehicle_center: createSelector(
+            state => state.mavlink.GLOBAL_POSITION_INT
+                && state.mavlink.GLOBAL_POSITION_INT.lon,
+            state => state.mavlink.GLOBAL_POSITION_INT
+                && state.mavlink.GLOBAL_POSITION_INT.lat,
+            (lon, lat) => lon && lat && [lon / 10**7, lat / 10**7]
+        )(state)
+    }),
+    mapDispatchToProps: {},
+    render: props => <TraveledPathComponent {...props} />
+})
+
+const TraveledPathComponent = ({vehicle_center}) => {
+    const [path, setPath] = useState([])
+    useEffect(() => {
+        const last_coord = path.slice(-1)[0]
+        const same_coord = (
+            last_coord
+            && last_coord[0] == vehicle_center[0]
+            && last_coord[1] == vehicle_center[1]
+        )
+        if (vehicle_center && !same_coord) {
+            setPath([...path.slice(-3000), vehicle_center])
+        }
+    }, [vehicle_center])
+
+    const geoJsonSource = {
+        'type': 'geojson',
+        'data': {
+            'type': 'Feature',
+            'properties': {},
+            'geometry': {
+                'type': 'LineString',
+                'coordinates': path
+            }
+        }
+    }
+    const layout = {
+        'line-join': 'round',
+        'line-cap': 'round'
+    }
+    const paint = {
+        'line-color': '#f00',
+        'line-width': 4
+    }
+    return <>
+        <Source id="traveled_path" geoJsonSource={geoJsonSource} />
+        <Layer type="line" sourceId="traveled_path" layout={layout} paint={paint} />
+    </>
+}

@@ -37,7 +37,7 @@ const Log = reduxify({
 })
 
 const LogComponent = ({status}) => {
-    const [log, setLog] = useState([]);
+    const [log, setLog] = useState([])
     useEffect(() => {
         if (status) setLog([...log.slice(-100), status])
         setTimeout(() => {
