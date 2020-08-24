@@ -156,12 +156,10 @@ const TakeoffButton = reduxify({
     mapStateToProps: (state, props) => ({
         target_system: state.mavlink.target_system,
     }),
-    mapDispatchToProps: {send_mavcmd, send_mavmsg},
-    render: ({send_mavcmd, send_mavmsg, target_system}) => <div className='m-auto p-1'>
+    mapDispatchToProps: {send_mavmsg},
+    render: ({send_mavmsg, target_system}) => <div className='m-auto p-1'>
         <Button variant="outline-warning" style={{maxWidth: '100%'}} onClick={() => {
             send_mavmsg('SET_MODE', {target_system, base_mode: 81, custom_mode: 4})
-            // send_mavcmd('MAV_CMD_COMPONENT_ARM_DISARM', {param1: 1})
-            // setTimeout(() => send_mavcmd('MAV_CMD_NAV_TAKEOFF', {param7: 10}), 700)
             global.page.command_sender.send(
                 {command: 'MAV_CMD_COMPONENT_ARM_DISARM', params: {param1: 1}},
                 {command: 'MAV_CMD_NAV_TAKEOFF', params: {param7: 10}}
