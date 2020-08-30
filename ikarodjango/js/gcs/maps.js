@@ -5,10 +5,10 @@ import ReactMapboxGl, {
 import {createSelector} from 'reselect'
 import {reduxify} from '@/util/reduxify'
 
-import {goto_point} from '@/reducers/mavlink'
+import {goto_point, send_mavmsg} from '@/reducers/mavlink'
 
 import {
-    MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM
+    MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM, MAVLINK_MESSAGES
 } from '@/util/constants'
 
 
@@ -34,6 +34,7 @@ const MapComponent = ({goto_point}) => {
             >
                 <MarkerComponent />
                 <GotoMarker center={goto_coords} />
+                <MissionPath />
                 <TraveledPath />
                 <MapContext.Consumer>
                     {map => {
@@ -151,5 +152,63 @@ const TraveledPathComponent = ({vehicle_center}) => {
     return <>
         <Source id="traveled_path" geoJsonSource={geoJsonSource} />
         <Layer type="line" sourceId="traveled_path" layout={layout} paint={paint} />
+    </>
+}
+
+const MissionPath = reduxify({
+    mapStateToProps: (state, props) => ({
+        target_system: state.mavlink.target_system,
+        target_component: state.mavlink.target_component,
+        mission_count: state.mavlink.MISSION_COUNT,
+        mission_item: state.mavlink.MISSION_ITEM,
+    }),
+    mapDispatchToProps: {send_mavmsg},
+    render: props => <MissionPathComponent {...props} />
+})
+
+const MissionPathComponent = (props) => {
+    const {
+        send_mavmsg, target_system, target_component, mission_count,
+        mission_item
+    } = props
+    const [path, setPath] = useState([])
+    useEffect(() => {
+        send_mavmsg('MISSION_REQUEST_LIST', {target_system, target_component})
+    }, [])
+    useEffect(() => {
+        if (mission_count && mission_count.count > 0){
+            for (let seq = 0; seq < mission_count.count; seq++){
+                send_mavmsg('MISSION_REQUEST', {target_system, target_component, seq})
+            }
+        }
+    }, [mission_count && mission_count.count])
+    useEffect(() => {
+        if (mission_item && mission_item.command == MAVLINK_MESSAGES['MAV_CMD_NAV_WAYPOINT']){
+            setPath([...path, [mission_item.y, mission_item.x]])
+        }
+    }, [mission_item && mission_item.seq])
+
+    const geoJsonSource = {
+        'type': 'geojson',
+        'data': {
+            'type': 'Feature',
+            'properties': {},
+            'geometry': {
+                'type': 'LineString',
+                'coordinates': path
+            }
+        }
+    }
+    const layout = {
+        'line-join': 'round',
+        'line-cap': 'round'
+    }
+    const paint = {
+        'line-color': '#00f',
+        'line-width': 3
+    }
+    return <>
+        <Source id="mission_path" geoJsonSource={geoJsonSource} />
+        <Layer type="line" sourceId="mission_path" layout={layout} paint={paint} />
     </>
 }

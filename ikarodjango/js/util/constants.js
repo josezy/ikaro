@@ -11,6 +11,8 @@ export const ALLOWED_MAVLINK_MSGS = [
     'ATTITUDE',
     'COMMAND_ACK',
     'STATUSTEXT',
+    'MISSION_COUNT',
+    'MISSION_ITEM'
 ]
 export const ALLOWED_MAV_TYPES = ['QUADROTOR']
 
