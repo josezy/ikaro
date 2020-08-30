@@ -283,7 +283,7 @@ export const Controls = () => <>
             <HookButton />
             <PauseButton />
         </div>
-        <div className="controls-row">
+        <div className="controls-row d-none">
             <Video />
         </div>
         <div className="controls-row">
