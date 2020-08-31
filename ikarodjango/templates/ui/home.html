@@ -8,9 +8,11 @@
     <div class="d-flex" style="height: 100%">
         <div class="m-auto">
             <div style="font-size: 5rem">The Looby</div>
+            {% for room in rooms %}
             <a class="btn btn-secondary"
                 style="color:white; float:right"
-                href="{% url 'flight_panel' %}">PANEL</a>
+                href="{% url 'flight_room' room.short_id %}">{{room.name}}</a>
+            {% endfor %}
         </div>
     </div>
 {% endblock %}

@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+from panel.models import Drone, Room
+
+admin.site.register(Drone)
+admin.site.register(Room)

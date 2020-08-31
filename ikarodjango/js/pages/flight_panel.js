@@ -26,7 +26,8 @@ export const FlightPanel = {
             video
         }, initial_state)
 
-        const mav_socket = new SocketRouter('/mavlink', onmessage_mavlink, this.onopen_mavlink)
+        const mavlink_path = window.location.pathname.replace('flight', 'mavlink')
+        const mav_socket = new SocketRouter(mavlink_path, onmessage_mavlink, this.onopen_mavlink)
         const video_socket = new SocketRouter('/video', onmessage_video)
 
         const command_sender = new CommandSender(store)

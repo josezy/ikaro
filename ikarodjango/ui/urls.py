@@ -1,7 +1,8 @@
 from django.urls import path, include
 from django.http import HttpResponse
 
-from ui.views.pages import Looby, FlightPanel
+from panel.views import FlightPanel
+from ui.views.pages import Looby
 from ui.views.accounts import Login, Logout, Signup
 
 
@@ -15,5 +16,5 @@ urlpatterns = [
     path('accounts/logout/', Logout.as_view(), name='logout'),
     path('accounts/', include('django.contrib.auth.urls')),
 
-    path('panel', FlightPanel.as_view(), name='flight_panel'),
+    path('flight/<str:id>', FlightPanel.as_view(), name='flight_room'),
 ]

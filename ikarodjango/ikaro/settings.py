@@ -93,6 +93,7 @@ INSTALLED_APPS = [
 
     'ikaro',
     'ui',
+    'panel',
 ]
 
 MIDDLEWARE = [

@@ -1,24 +1,18 @@
-from django.conf import settings
-
-from ui.views.base_views import BaseView, PublicReactView
-from ikaro.utils import require_login
+from panel.models import Room
+from ui.views.base_views import BaseView
 
 
 class Looby(BaseView):
     title = "Looby"
     template = 'ui/home.html'
 
+    def context(self, request):
+        if not request.user.is_authenticated:
+            return {}
 
-class FlightPanel(PublicReactView):
-    title = "Live Flight"
-    template = "ui/panel.html"
-    component = 'pages/flight_panel.js'
-
-    @require_login
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
-
-    def props(self, request, *args, **kwargs):
         return {
-            'map_key': settings.MAP_KEY
+            "rooms": [{
+                "short_id": room.short_id,
+                "name": room.name or f"Room #{room.short_id}"
+            } for room in Room.objects.filter(host=request.user)]
         }

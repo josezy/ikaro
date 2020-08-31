@@ -2,7 +2,7 @@ import uuid
 
 from django.db import models
 
-from .utils import get_short_uuid
+from ikaro.utils import get_short_uuid
 
 
 class BaseModel(models.Model):

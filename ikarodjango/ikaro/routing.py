@@ -9,6 +9,7 @@ application = ProtocolTypeRouter({
     'websocket': AllowedHostsOriginValidator(
         AuthMiddlewareStack(
             URLRouter([
+                path("mavlink/<str:room_id>", PanelConsumer),
                 path("mavlink", PanelConsumer),
                 path("video", VideoConsumer),
             ])
