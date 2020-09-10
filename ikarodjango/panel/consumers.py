@@ -10,6 +10,8 @@ from panel.models import Drone, Room
 
 
 class PanelConsumer(AsyncConsumer):
+    is_drone = False
+
     @database_sync_to_async
     def get_drone_room(self, plate):
         return Drone.objects.get(plate=plate.upper()).room
@@ -45,6 +47,7 @@ class PanelConsumer(AsyncConsumer):
                     plate = plate_qs[0]
                     drone_room = await self.get_drone_room(plate)
                     if drone_room:
+                        self.is_drone = True
                         self.flight_room = drone_room.short_id
                         await self.channel_layer.group_add(
                             self.flight_room,
