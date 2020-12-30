@@ -1,0 +1,15 @@
+channels-redis
+service-identity
+redis
+channels
+bleach
+asyncio
+django
+daphne
+django-extensions
+ipdb
+django-debug
+python-dotenv
+psycopg2-binary
+django-debug-toolbar
+flake8

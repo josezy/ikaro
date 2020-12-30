@@ -1,18 +1,16 @@
 version: '3'
 
 services:
-  nginx:
-    image: nginx:1.15-alpine
+  redis:
+    image: redis:6-alpine
     volumes:
-      - ./etc/nginx/ikaro.docker.conf:/etc/nginx/conf.d/ikaro.docker.conf
-      - ./data:/opt/ikaro/data
-    ports:
-      - "80:80"
-      - "443:443"
+      - ./data/redis:/data
 
-  web:
+  django:
     build: .
     command: bash -c "python manage.py migrate && python manage.py collectstatic --no-input && python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - 8000:8000
     volumes:
-      - .:/opt/ikaro
+      - ./ikarodjango:/opt/ikaro/ikarodjango
 

@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
 
 from ikaro.models import User
@@ -9,7 +8,7 @@ from ikaro.utils import ExtendedEncoder
 
 class MavlinkMessage(BaseModel):
     mavtype = models.CharField(max_length=64, db_index=True)
-    params = JSONField(encoder=ExtendedEncoder, default=dict)
+    params = models.JSONField(encoder=ExtendedEncoder, default=dict)
 
 
 class Drone(BaseModel):

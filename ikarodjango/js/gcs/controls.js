@@ -242,7 +242,7 @@ const NerdInfoComponent = ({flight, position, battery, gps, heartbeat}) => {
                 <div>Battery: {battery}%</div>
                 <div>
                     <div className={`${alive ? 'green' : 'red'} dot`}></div>&nbsp;
-                    {alive ? 'Alive' : 'Dead'}
+                    {alive ? 'Online' : 'No signal'}
                 </div>
             </div>
             <div className="col">

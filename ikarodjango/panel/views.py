@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
 from django.http import HttpResponseNotFound
 
@@ -16,12 +16,10 @@ class FlightPanel(PublicReactView):
 
     @require_login
     def get(self, request, *args, **kwargs):
-        id = kwargs.get("id", None)
-        room_qs = Room.objects.filter(id__startswith=id)
-        if room_qs.count() != 1:
-            return HttpResponseNotFound()
+        room = get_object_or_404(
+            Room.objects, id__startswith=kwargs.get("id", None)
+        )
 
-        room = room_qs.get()
         kwargs = {"id": room.short_id}
         shortid_path = reverse("flight_room", kwargs=kwargs)
         if request.path != shortid_path:

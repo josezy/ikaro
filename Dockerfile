@@ -5,10 +5,8 @@ WORKDIR /opt/ikaro
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-COPY ./Pipfile /opt/ikaro/Pipfile
+COPY ./requirements.txt /opt/ikaro/requirements.txt
 RUN pip install --upgrade pip &&\
-    pip install pipenv &&\
-    pipenv install --skip-lock --system
+    pip install -r requirements.txt
 
-COPY . /opt/ikaro/
 WORKDIR /opt/ikaro/ikarodjango
