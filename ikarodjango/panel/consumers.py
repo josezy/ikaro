@@ -14,7 +14,10 @@ class PanelConsumer(AsyncConsumer):
 
     @database_sync_to_async
     def get_drone_room(self, plate):
-        return Drone.objects.get(plate=plate.upper()).room
+        drone_qs = Drone.objects.filter(plate=plate.upper())
+        if not drone_qs.exists():
+            return None
+        return drone_qs[0].room
 
     @database_sync_to_async
     def get_room(self, room_id):

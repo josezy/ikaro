@@ -172,9 +172,11 @@ const MissionPathComponent = (props) => {
         mission_item
     } = props
     const [path, setPath] = useState([])
+
     useEffect(() => {
-        send_mavmsg('MISSION_REQUEST_LIST', {target_system, target_component})
-    }, [])
+        if (target_system && target_component)
+            send_mavmsg('MISSION_REQUEST_LIST', {target_system, target_component})
+    }, [target_system, target_component])
     useEffect(() => {
         if (mission_count && mission_count.count > 0){
             for (let seq = 0; seq < mission_count.count; seq++){
