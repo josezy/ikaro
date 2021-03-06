@@ -11,6 +11,10 @@ source .venv/bin/activate
 pip install -r requirements.txt
 
 python ikarodjango/manage.py migrate
+```
+
+Make sure to paste or set your env variables in `env/secrets.env`, then run:
+```
 python ikarodjango/manage.py runserver
 ```
 
