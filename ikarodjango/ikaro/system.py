@@ -8,8 +8,6 @@ in the function, NEVER at the top!!!
 import os
 import re
 import sys
-import pwd
-import getpass
 
 from datetime import datetime
 from typing import Optional, Dict, Union, Set, IO, List, Any
@@ -123,18 +121,6 @@ def get_current_hostname(fqdn=False) -> str:
             print('[!] Warning, tried to get host FQDN, but got short hostname')
         return hostname
     return hostname.split('.', 1)[0]
-
-
-def get_current_user() -> str:
-    """get user running the current process, works on mac, linux, bsd"""
-
-    # different systems propagate ownership from parent->child in different ways
-    # this handles all the cases and correctly gets only the child proccess user
-    return (
-        pwd.getpwuid(os.getuid()).pw_name
-        or getpass.getuser()
-        or os.getlogin()
-    )
 
 
 def get_current_pid() -> int:
