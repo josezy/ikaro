@@ -6,7 +6,6 @@ import thunk from 'redux-thunk'
 import {Provider} from 'react-redux'
 
 import {mavlink, onmessage_mavlink, send_mavmsg} from '@/reducers/mavlink'
-import {video, onmessage_video} from '@/reducers/video'
 
 import {SocketRouter} from '@/components/websocket'
 import {CommandSender} from '@/components/command_sender'
@@ -23,17 +22,15 @@ export const FlightPanel = {
         const initial_state = {}
         const store = this.setupStore({
             mavlink,
-            video
         }, initial_state)
 
         const mavlink_path = window.location.pathname.replace('flight', 'mavlink')
         const mav_socket = new SocketRouter(mavlink_path, onmessage_mavlink, this.onopen_mavlink)
-        const video_socket = new SocketRouter('/video', onmessage_video)
 
         const command_sender = new CommandSender(store)
 
         // this group of references define everything available to a Page
-        return {props, store, mav_socket, video_socket, command_sender}
+        return {props, store, mav_socket, command_sender}
     },
     onopen_mavlink() {
         setInterval( () => global.page.store.dispatch(send_mavmsg('HEARTBEAT', {

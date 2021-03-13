@@ -52,19 +52,6 @@ const LogComponent = ({status}) => {
 }
 
 
-const Video = reduxify({
-    mapStateToProps: (state, props) => ({
-        b64frame: state.video.b64frame
-    }),
-    mapDispatchToProps: {},
-    render: ({b64frame}) => {
-        const img_src = b64frame ? `data:image/jpg;base64,${b64frame}` : "/static/img/no-signal.jpg"
-        return <div>
-            <img src={img_src} style={{maxWidth:"100%"}}/>
-        </div>
-    }
-})
-
 const ArmedSwitch = reduxify({
     mapStateToProps: (state, props) => ({
         armed: createSelector(
@@ -282,9 +269,6 @@ export const Controls = () => <>
             <RTLButton />
             <HookButton />
             <PauseButton />
-        </div>
-        <div className="controls-row d-none">
-            <Video />
         </div>
         <div className="controls-row">
             <Log />
