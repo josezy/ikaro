@@ -1,9 +1,9 @@
-import {send_mavcmd} from '@/reducers/mavlink'
-import {MAVLINK_IDS} from '@/util/constants'
+import { send_mavcmd } from '@/reducers/mavlink'
+import { MAVLINK_IDS } from '@/util/constants'
 
 export class CommandSender {
     constructor(store) {
-        this.store = store || {dispatch: () => {}}
+        this.store = store || { dispatch: () => { } }
     }
     send(...commands) {
         this.commands = commands

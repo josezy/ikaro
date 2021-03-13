@@ -4,8 +4,8 @@ import {
 
 
 export const goto_point = (lat, lng) => (dispatch, getState) => {
-    const {target_system, target_component} = getState().mavlink
-    const {alt} = getState().mavlink.GLOBAL_POSITION_INT
+    const { target_system, target_component } = getState().mavlink
+    const { alt } = getState().mavlink.GLOBAL_POSITION_INT
 
     if (
         target_system == undefined
@@ -27,18 +27,18 @@ export const goto_point = (lat, lng) => (dispatch, getState) => {
         param4: 0.0,
         x: lat,
         y: lng,
-        z: alt / 10**3
+        z: alt / 10 ** 3
     }))
 }
 
-export const send_mavmsg = (message, params={}) => ({
+export const send_mavmsg = (message, params = {}) => ({
     type: 'SEND_MAVMSG',
-    args: {message, params}
+    args: { message, params }
 })
 
-export const send_mavcmd = (command, params={}) => ({
+export const send_mavcmd = (command, params = {}) => ({
     type: 'SEND_MAVCMD',
-    args: {command, params}
+    args: { command, params }
 })
 
 const valid_mavmsg = (mavmsg) => {
@@ -47,7 +47,7 @@ const valid_mavmsg = (mavmsg) => {
     return true
 }
 
-export const mavlink = (state={}, action) => {
+export const mavlink = (state = {}, action) => {
     switch (action.type) {
         case 'MAVMSG': {
             const mavmsg = action.args
@@ -68,8 +68,8 @@ export const mavlink = (state={}, action) => {
         }
 
         case 'SEND_MAVCMD': {
-            const {command, params} = action.args
-            const {target_system, target_component} = state
+            const { command, params } = action.args
+            const { target_system, target_component } = state
             global.page.mav_socket.send({
                 target_system,
                 target_component,
@@ -80,8 +80,8 @@ export const mavlink = (state={}, action) => {
         }
 
         case 'SEND_MAVMSG': {
-            const {message, params} = action.args
-            global.page.mav_socket.send({message, params})
+            const { message, params } = action.args
+            global.page.mav_socket.send({ message, params })
             return state
         }
 
@@ -93,8 +93,8 @@ export const mavlink = (state={}, action) => {
 
 export const onmessage_mavlink = (le_message) => {
     const message = JSON.parse(le_message.data)
-    if (message.mavpackettype){
-        const {mavpackettype, srcSystem, srcComponent, ...mav_msg} = message
+    if (message.mavpackettype) {
+        const { mavpackettype, srcSystem, srcComponent, ...mav_msg } = message
         global.page.store.dispatch({
             type: 'MAVMSG',
             args: {

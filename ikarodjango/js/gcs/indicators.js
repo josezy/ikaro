@@ -1,6 +1,6 @@
 import React from 'react'
-import {reduxify} from '@/util/reduxify'
-import {createSelector} from 'reselect'
+import { reduxify } from '@/util/reduxify'
+import { createSelector } from 'reselect'
 
 
 const Attitude = reduxify({
@@ -15,7 +15,7 @@ const Attitude = reduxify({
         )(state),
     }),
     mapDispatchToProps: {},
-    render: ({roll, pitch}) => {
+    render: ({ roll, pitch }) => {
         let _pitch = pitch
         if (_pitch > 30) _pitch = 30
         else if (_pitch < -30) _pitch = -30
@@ -23,7 +23,7 @@ const Attitude = reduxify({
         _pitch *= 0.7
 
         return <span id="attitude">
-            <div className="instrument attitude" style={{height:150, width:150}}>
+            <div className="instrument attitude" style={{ height: 150, width: 150 }}>
                 {/* <img src="/static/img/indicators/fi_box.svg" className="background box" /> */}
                 <div className="roll box" style={{ transform: `rotate(${roll}deg)` }}>
                     <img src="/static/img/indicators/horizon_back.svg" className="box" />
@@ -50,13 +50,13 @@ const Heading = reduxify({
         )(state),
     }),
     mapDispatchToProps: {},
-    render: ({heading}) => <span id="heading">
-        <div className="instrument heading" style={{width:150, height:150}}>
+    render: ({ heading }) => <span id="heading">
+        <div className="instrument heading" style={{ width: 150, height: 150 }}>
             {/* <img src={`${images_path}/fi_box.svg`} className="background box" /> */}
             <div className="heading box">
                 <img src="/static/img/indicators/heading_yaw.svg" className="box" />
             </div>
-            <div className="mechanics box" style={{transform:`rotate(${heading}deg)`}}>
+            <div className="mechanics box" style={{ transform: `rotate(${heading}deg)` }}>
                 <img src="/static/img/indicators/heading_mechanics.svg" className="box" />
                 <img src="/static/img/indicators/fi_circle.svg" className="box" />
             </div>
@@ -65,7 +65,7 @@ const Heading = reduxify({
 })
 
 export const Indicators = () => <>
-    <div style={{position:'absolute',right:0}}>
+    <div style={{ position: 'absolute', right: 0 }}>
         <Attitude />
         <Heading />
     </div>

@@ -4,7 +4,7 @@ import {
     mode_mapping_tracker, mode_mapping_sub
 } from '@/util/constants'
 
-import {send_mavmsg} from '@/reducers/mavlink'
+import { send_mavmsg } from '@/reducers/mavlink'
 
 const mode_mapping_bynumber = type => {
     /**
@@ -27,7 +27,7 @@ const mode_mapping_bynumber = type => {
 
 export const flightmode_from_heartbeat = HEARTBEAT => {
     let flightmode = null
-    const {base_mode, custom_mode, autopilot, type} = HEARTBEAT
+    const { base_mode, custom_mode, autopilot, type } = HEARTBEAT
 
     if (MAV_AUTOPILOT[autopilot] == 'PX4') {
         // flightmode = mavutil.interpret_px4_mode(base_mode, custom_mode)

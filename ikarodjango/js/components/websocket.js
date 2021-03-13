@@ -13,7 +13,7 @@ export class SocketRouter {
         const port = global.location.port ? ':' + global.location.port : ''
         const prefix = global.location.protocol == 'https:' ? 'wss:' : 'ws:'
         let path = socket_path || global.location.pathname
-        path = path.endsWith('/') ? path.substring(0, path.length-1) : path
+        path = path.endsWith('/') ? path.substring(0, path.length - 1) : path
         return `${prefix}//${host}${port}${path}`
     }
     _setupSocket() {
@@ -37,8 +37,8 @@ export class SocketRouter {
     send(payload) {
         if (this.socket) this.socket.send(JSON.stringify(payload))
     }
-    close(reopen=false) {
-        const noop = () => {}
+    close(reopen = false) {
+        const noop = () => { }
         this.socket = this.socket || {}
         this.socket.close = this.socket.close || noop
         this.socket.onmessage = noop
@@ -46,10 +46,10 @@ export class SocketRouter {
         this.socket.onclose = noop
         if (reopen) {
             // dont hammer the server by having everyone reconnect at the same time
-            const random_wait = 2 + Math.round(Math.random()*4*10)/10
+            const random_wait = 2 + Math.round(Math.random() * 4 * 10) / 10
             console.log(`%c[*] ATTEMPTING TO RECONNECT IN ${random_wait}s...`, 'color:orange')
             if (!this.disconnected_timeout) {
-                this.disconnected_timeout = setTimeout(::this._setupSocket, random_wait * 1000)
+                this.disconnected_timeout = setTimeout(this._setupSocket, random_wait * 1000)
             }
         }
         this.socket.close()

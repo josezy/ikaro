@@ -1,15 +1,15 @@
-import React, {useState, useEffect} from 'react'
-import {reduxify} from '@/util/reduxify'
-import {createSelector} from 'reselect'
-import {getPathLength} from 'geolib'
+import React, { useState, useEffect } from 'react'
+import { reduxify } from '@/util/reduxify'
+import { createSelector } from 'reselect'
+import { getPathLength } from 'geolib'
 
 import Switch from 'react-switch'
 import Button from 'react-bootstrap/Button'
 
-import {send_mavcmd, send_mavmsg} from '@/reducers/mavlink'
-import {flightmode_from_heartbeat} from '@/util/mavutil'
-import {format_ms} from '@/util/javascript'
-import {GPS_FIX_TYPE} from '@/util/constants'
+import { send_mavcmd, send_mavmsg } from '@/reducers/mavlink'
+import { flightmode_from_heartbeat } from '@/util/mavutil'
+import { format_ms } from '@/util/javascript'
+import { GPS_FIX_TYPE } from '@/util/constants'
 
 
 const FlightMode = reduxify({
@@ -20,7 +20,7 @@ const FlightMode = reduxify({
         )(state),
     }),
     mapDispatchToProps: {},
-    render: ({flight_mode}) => <div style={{color:'white',width:'100%',textAlign:'center'}}>
+    render: ({ flight_mode }) => <div style={{ color: 'white', width: '100%', textAlign: 'center' }}>
         {flight_mode}
     </div>
 })
@@ -36,7 +36,7 @@ const Log = reduxify({
     render: props => <LogComponent {...props} />
 })
 
-const LogComponent = ({status}) => {
+const LogComponent = ({ status }) => {
     const [log, setLog] = useState([])
     useEffect(() => {
         if (status) setLog([...log.slice(-100), status])
@@ -56,18 +56,18 @@ const ArmedSwitch = reduxify({
     mapStateToProps: (state, props) => ({
         armed: createSelector(
             state => state.mavlink.HEARTBEAT,
-            HEARTBEAT => HEARTBEAT && Boolean(HEARTBEAT.base_mode & 10**7)
+            HEARTBEAT => HEARTBEAT && Boolean(HEARTBEAT.base_mode & 10 ** 7)
         )(state),
     }),
-    mapDispatchToProps: {send_mavcmd},
-    render: ({armed, send_mavcmd}) => <div style={{marginLeft:'auto'}}>
-        <label style={{transform:'scale(0.7)', display:'flex'}}>
-            <span style={{fontSize:'1.2rem', marginRight:5, color:'white'}}>
+    mapDispatchToProps: { send_mavcmd },
+    render: ({ armed, send_mavcmd }) => <div style={{ marginLeft: 'auto' }}>
+        <label style={{ transform: 'scale(0.7)', display: 'flex' }}>
+            <span style={{ fontSize: '1.2rem', marginRight: 5, color: 'white' }}>
                 {armed ? 'ARMED' : 'DISARMED'}
             </span>
             <Switch onChange={checked => send_mavcmd(
                 'MAV_CMD_COMPONENT_ARM_DISARM',
-                {param1: checked ? 1 : 0, param2: 0}
+                { param1: checked ? 1 : 0, param2: 0 }
             )} checked={armed || false} />
         </label>
     </div>
@@ -76,8 +76,8 @@ const ArmedSwitch = reduxify({
 
 const RTLButton = reduxify({
     mapStateToProps: (state, props) => ({}),
-    mapDispatchToProps: {send_mavcmd},
-    render: ({send_mavcmd}) => <div className='m-auto p-1'>
+    mapDispatchToProps: { send_mavcmd },
+    render: ({ send_mavcmd }) => <div className='m-auto p-1'>
         <Button variant="outline-warning" onClick={
             () => send_mavcmd('MAV_CMD_NAV_RETURN_TO_LAUNCH')
         }>Return to launch</Button>
@@ -87,8 +87,8 @@ const RTLButton = reduxify({
 
 const HookButton = reduxify({
     mapStateToProps: (state, props) => ({}),
-    mapDispatchToProps: {send_mavcmd},
-    render: ({send_mavcmd}) => <div className='m-auto p-1'>
+    mapDispatchToProps: { send_mavcmd },
+    render: ({ send_mavcmd }) => <div className='m-auto p-1'>
         <Button variant="outline-warning" onClick={
             () => send_mavcmd('TUKANO_RELEASE_HOOK')
         }>Release Hook</Button>
@@ -101,8 +101,8 @@ const PauseButton = reduxify({
         target_system: state.mavlink.target_system,
         target_component: state.mavlink.target_component,
     }),
-    mapDispatchToProps: {send_mavmsg},
-    render: ({send_mavmsg, target_system, target_component}) => (
+    mapDispatchToProps: { send_mavmsg },
+    render: ({ send_mavmsg, target_system, target_component }) => (
         <div className='m-auto p-1'>
             <Button variant="outline-warning" onClick={() => {
                 send_mavmsg('SET_MODE', {
@@ -143,26 +143,26 @@ const TakeoffButton = reduxify({
     mapStateToProps: (state, props) => ({
         target_system: state.mavlink.target_system,
     }),
-    mapDispatchToProps: {send_mavmsg},
-    render: ({send_mavmsg, target_system}) => <div className='m-auto p-1'>
-        <Button variant="outline-warning" style={{maxWidth: '100%'}} onClick={() => {
-            send_mavmsg('SET_MODE', {target_system, base_mode: 81, custom_mode: 4})
+    mapDispatchToProps: { send_mavmsg },
+    render: ({ send_mavmsg, target_system }) => <div className='m-auto p-1'>
+        <Button variant="outline-warning" style={{ maxWidth: '100%' }} onClick={() => {
+            send_mavmsg('SET_MODE', { target_system, base_mode: 81, custom_mode: 4 })
             global.page.command_sender.send(
-                {command: 'MAV_CMD_COMPONENT_ARM_DISARM', params: {param1: 1}},
-                {command: 'MAV_CMD_NAV_TAKEOFF', params: {param7: 10}}
+                { command: 'MAV_CMD_COMPONENT_ARM_DISARM', params: { param1: 1 } },
+                { command: 'MAV_CMD_NAV_TAKEOFF', params: { param7: 10 } }
             )
-        }}><img src="/static/img/takeoff.png" width="100" style={{maxWidth: '100%'}}/></Button>
+        }}><img src="/static/img/takeoff.png" width="100" style={{ maxWidth: '100%' }} /></Button>
     </div>
 })
 
 
 const LandButton = reduxify({
     mapStateToProps: (state, props) => ({}),
-    mapDispatchToProps: {send_mavcmd},
-    render: ({send_mavcmd}) => <div className='m-auto p-1'>
-        <Button variant="outline-warning" style={{maxWidth: '100%'}} onClick={
+    mapDispatchToProps: { send_mavcmd },
+    render: ({ send_mavcmd }) => <div className='m-auto p-1'>
+        <Button variant="outline-warning" style={{ maxWidth: '100%' }} onClick={
             () => send_mavcmd('MAV_CMD_NAV_LAND')
-        }><img src="/static/img/land.png" width="100" style={{maxWidth: '100%'}}/></Button>
+        }><img src="/static/img/land.png" width="100" style={{ maxWidth: '100%' }} /></Button>
     </div>
 })
 
@@ -179,9 +179,9 @@ const NerdInfo = reduxify({
         position: createSelector(
             state => state.mavlink.GLOBAL_POSITION_INT,
             GLOBAL_POSITION_INT => GLOBAL_POSITION_INT && {
-                lat: GLOBAL_POSITION_INT.lat / 10**7,
-                lon: GLOBAL_POSITION_INT.lon / 10**7,
-                alt: GLOBAL_POSITION_INT.alt / 10**3,
+                lat: GLOBAL_POSITION_INT.lat / 10 ** 7,
+                lon: GLOBAL_POSITION_INT.lon / 10 ** 7,
+                alt: GLOBAL_POSITION_INT.alt / 10 ** 3,
             }
         )(state),
         battery: createSelector(
@@ -205,12 +205,12 @@ const NerdInfo = reduxify({
 
 
 let heartbeat_timeout = null
-const NerdInfoComponent = ({flight, position, battery, gps, heartbeat}) => {
+const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat }) => {
     const [path, setPath] = useState([])
     const [alive, setAlive] = useState(false)
 
     useEffect(() => {
-        if (position) setPath([...path, {latitude: position.lat, longitude: position.lon}])
+        if (position) setPath([...path, { latitude: position.lat, longitude: position.lon }])
     }, [position && position.lat, position && position.lon])
 
     useEffect(() => {
@@ -248,7 +248,7 @@ const LobbyButton = () => (
     <div
         onClick={() => window.location.href = '/'}
         className="d-flex"
-        style={{color:'#e4cf77', cursor:'pointer'}}
+        style={{ color: '#e4cf77', cursor: 'pointer' }}
     >
         <span className="material-icons m-auto">arrow_back_ios</span>
         <span className="m-auto">Lobby</span>
@@ -276,7 +276,7 @@ export const Controls = () => <>
         <div className="controls-row">
             <FlightMode />
         </div>
-        <div className="controls-row" style={{color:'white', marginTop:'auto'}}>
+        <div className="controls-row" style={{ color: 'white', marginTop: 'auto' }}>
             <NerdInfo />
         </div>
     </div>

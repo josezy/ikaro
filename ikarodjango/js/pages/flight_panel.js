@@ -1,19 +1,19 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import {createStore, combineReducers, applyMiddleware} from 'redux'
+import { createStore, combineReducers, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
-import {Provider} from 'react-redux'
+import { Provider } from 'react-redux'
 
-import {mavlink, onmessage_mavlink, send_mavmsg} from '@/reducers/mavlink'
+import { mavlink, onmessage_mavlink, send_mavmsg } from '@/reducers/mavlink'
 
-import {SocketRouter} from '@/components/websocket'
-import {CommandSender} from '@/components/command_sender'
-import {MapContainer} from '@/gcs/maps'
-import {TukanoPanel} from '@/gcs/panels'
-import {Controls} from '@/gcs/controls'
-import {Indicators} from '@/gcs/indicators'
-import {request_data_stream} from '@/util/mavutil'
+import { SocketRouter } from '@/components/websocket'
+import { CommandSender } from '@/components/command_sender'
+import { MapContainer } from '@/gcs/maps'
+import { TukanoPanel } from '@/gcs/panels'
+import { Controls } from '@/gcs/controls'
+import { Indicators } from '@/gcs/indicators'
+import { request_data_stream } from '@/util/mavutil'
 
 export const FlightPanel = {
     view: 'ui.views.pages.FlightPanel',
@@ -30,10 +30,10 @@ export const FlightPanel = {
         const command_sender = new CommandSender(store)
 
         // this group of references define everything available to a Page
-        return {props, store, mav_socket, command_sender}
+        return { props, store, mav_socket, command_sender }
     },
     onopen_mavlink() {
-        setInterval( () => global.page.store.dispatch(send_mavmsg('HEARTBEAT', {
+        setInterval(() => global.page.store.dispatch(send_mavmsg('HEARTBEAT', {
             type: 6, // MAV_TYPE_GCS
             autopilot: 8, // MAV_AUTOPILOT_INVALID
             base_mode: 0,
@@ -43,7 +43,7 @@ export const FlightPanel = {
         })), 1000)
         const rds_interval = setInterval(() => {
             const state = global.page.store.getState()
-            const {target_system, target_component} = state.mavlink
+            const { target_system, target_component } = state.mavlink
             if (target_system && target_component) {
                 request_data_stream(target_system, target_component)
                 clearInterval(rds_interval)
@@ -57,7 +57,7 @@ export const FlightPanel = {
             initial_state,
         ), applyMiddleware(thunk))
     },
-    render({store}) {
+    render({ store }) {
         return (
             <Provider store={store}>
                 <MapContainer />
