@@ -1,9 +1,9 @@
 const path = require('path');
 
 module.exports = {
-  mode: 'development',
+  mode: 'production',
   entry: {
-    'flight_panel': './pages/flight_panel.js',
+    flight_panel: './pages/flight_panel.js',
   },
   output: {
     path: path.resolve(__dirname, '../static/js/pages'),
@@ -25,7 +25,6 @@ module.exports = {
     ]
   },
   optimization: {
-    // splitChunks: true,
     minimize: true,
   },
   performance: {
