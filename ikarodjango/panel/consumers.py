@@ -27,8 +27,8 @@ class PanelConsumer(AsyncConsumer):
         self.user = self.scope["user"]
 
         # User
-        if self.user.is_authenticated:
-            room_id = self.scope["url_route"]["kwargs"].get("room_id", None)
+        room_id = self.scope["url_route"]["kwargs"].get("room_id", None)
+        if room_id:
             if room_id:
                 room = await self.get_room(room_id)
                 self.flight_room = room.short_id

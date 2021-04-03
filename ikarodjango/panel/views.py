@@ -14,7 +14,6 @@ class FlightPanel(PublicReactView):
     template = "ui/panel.html"
     component = "pages/flight_panel.js"
 
-    @require_login
     def get(self, request, *args, **kwargs):
         room = get_object_or_404(
             Room.objects, id__startswith=kwargs.get("id", None)
@@ -28,6 +27,9 @@ class FlightPanel(PublicReactView):
         return super().get(request, *args, **kwargs)
 
     def props(self, request, *args, **kwargs):
+        room = Room.objects.get(id__startswith=kwargs.get("id", None))
+
         return {
-            "map_key": settings.MAP_KEY
+            "map_key": settings.MAP_KEY,
+            "is_owner": room.drone.owner == request.user
         }

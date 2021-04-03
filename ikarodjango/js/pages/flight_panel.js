@@ -62,7 +62,7 @@ export const FlightPanel = {
             <Provider store={store}>
                 <MapContainer />
                 <TukanoPanel />
-                <Controls />
+                {global.props.is_owner && <Controls />}
                 <Indicators />
             </Provider>
         )

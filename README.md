@@ -32,3 +32,24 @@ cd ikarodjango/js
 yarn install
 webpack --watch --mode development
 ```
+
+## Useful commands
+```
+# Activate env
+. .venv/bin/activate.fish
+
+# Make sure redis is running
+redis-cli ping
+
+# Run server
+python ikarodjango/manage.py runserver
+
+# Run dron simulator, make sure venv is activated
+dronekit-sitl copter --home=6.149014,-75.393962,0,180
+
+# Run tukano service
+python src/tukano_service.py
+
+# Connect to BD - Activate virtual env
+python ikarodjango/manage.py shell_plus
+```
