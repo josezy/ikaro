@@ -14,6 +14,7 @@ class MavlinkMessage(BaseModel):
 class Drone(BaseModel):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     plate = models.CharField(max_length=8, unique=True)
+    alias = models.CharField(max_length=16, null=True)
 
     def save(self, *args, **kwargs):
         if len(self.plate) != 8:
