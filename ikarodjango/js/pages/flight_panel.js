@@ -24,7 +24,7 @@ export const FlightPanel = {
             mavlink,
         }, initial_state)
 
-        const mavlink_path = window.location.pathname.replace('flight', 'mavlink')
+        const mavlink_path = window.location.pathname.replace('flight', 'mavlink/room')
         const mav_socket = new SocketRouter(mavlink_path, onmessage_mavlink, this.onopen_mavlink)
 
         const command_sender = new CommandSender(store)
@@ -45,7 +45,7 @@ export const FlightPanel = {
             const state = global.page.store.getState()
             const { target_system, target_component } = state.mavlink
             if (target_system && target_component) {
-                request_data_stream(target_system, target_component)
+                // request_data_stream(target_system, target_component)
                 clearInterval(rds_interval)
             }
         }, 500)
