@@ -3,13 +3,13 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
 from channels.security.websocket import AllowedHostsOriginValidator
 
-from panel.consumers import PanelConsumer
+from panel.consumers import MavlinkConsumer
 
 application = ProtocolTypeRouter({
     'websocket': AllowedHostsOriginValidator(
         AuthMiddlewareStack(
             URLRouter([
-                path("mavlink/<str:type>/<str:id>", PanelConsumer.as_asgi()),
+                path("mavlink/<str:type>/<str:id>", MavlinkConsumer.as_asgi()),
             ])
         )
     )

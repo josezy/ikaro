@@ -9,7 +9,7 @@ from channels.db import database_sync_to_async
 from panel.models import Drone, Room
 
 
-class PanelConsumer(AsyncConsumer):
+class MavlinkConsumer(AsyncConsumer):
     # is_drone = False
 
     @database_sync_to_async
