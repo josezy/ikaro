@@ -1,7 +1,5 @@
 import asyncio
 
-from urllib import parse
-
 from channels.consumer import AsyncConsumer
 from channels.exceptions import StopConsumer
 from channels.db import database_sync_to_async
@@ -10,7 +8,7 @@ from panel.models import Drone, Room
 
 
 class MavlinkConsumer(AsyncConsumer):
-    # is_drone = False
+    can_receive = False
 
     @database_sync_to_async
     def get_drone_room(self, plate):
@@ -26,9 +24,14 @@ class MavlinkConsumer(AsyncConsumer):
             return None
         return room_qs[0]
 
+    @database_sync_to_async
+    def is_pilot(self):
+        room = Room.objects.get(id__startswith=self.room_id)
+        return room.drone.owner == self.user or room.host == self.user
+
 
     async def websocket_connect(self, event):
-        # self.user = self.scope["user"]
+        self.user = self.scope["user"]
 
         type = self.scope["url_route"]["kwargs"].get("type", None)
         id = self.scope["url_route"]["kwargs"].get("id", None)
@@ -36,7 +39,7 @@ class MavlinkConsumer(AsyncConsumer):
         if type == "room":
             room = await self.get_room(id)
         elif type == "plate":
-            # self.is_drone = True
+            self.can_receive = True
             room = await self.get_drone_room(id)
         else:
             print("REJECTING CONNECTION")
@@ -48,6 +51,9 @@ class MavlinkConsumer(AsyncConsumer):
 
         self.room_id = room.short_id
 
+        if self.user.is_authenticated and self.is_pilot():
+            self.can_receive = True
+
         await self.send({"type": "websocket.accept"})
         await self.channel_layer.group_add(
             self.room_id,
@@ -55,9 +61,8 @@ class MavlinkConsumer(AsyncConsumer):
         )
 
     async def websocket_receive(self, event):
-        # if not (self.is_drone or self.scope["user"].is_authenticated):
-        #     print("REJECTING MESSAGE", event)
-        #     return
+        if not self.can_receive:
+            return
 
         mav_msg = event.get('text', None)
         if mav_msg is not None:
@@ -71,7 +76,6 @@ class MavlinkConsumer(AsyncConsumer):
             )
 
     async def flight_message(self, event):
-        # print("CHANNEL_NAME", self.channel_name)
         if self.channel_name != event.get("sender_channel_name"):
             await self.send({
                 "type": "websocket.send",
