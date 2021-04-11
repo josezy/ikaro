@@ -21,6 +21,10 @@ class User(AbstractUser, BaseModel):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
+    def save(self, *args, **kwargs):
+        self.username = self.email
+        super().save(*args, **kwargs)
+
     def __json__(self, *attrs):
         return {
             **self.attrs(
