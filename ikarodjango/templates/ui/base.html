@@ -28,7 +28,6 @@
         <link rel="preload" as="style" href="{% http2static 'css/shards-dashboards.1.1.0.min.css' '1' %}" crossorigin>
         <link rel="preload" as="style" href="https://fonts.googleapis.com/icon?family=Material+Icons" crossorigin>
         <link rel="preload" as="style" href="{% http2static 'css/base.css' GIT_SHA %}" crossorigin>
-        <link rel="preload" as="style" href="{% http2static 'css/base.mobile.css' GIT_SHA %}" crossorigin>
 
         {% if custom_stylesheet %}
             <link rel="preload" as="style" href="{% http2static 'css/'|add:custom_stylesheet GIT_SHA %}" crossorigin>
@@ -40,7 +39,6 @@
         <link rel="stylesheet" href="{% http2static 'css/shards-dashboards.1.1.0.min.css' '1' %}" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" crossorigin>
         <link rel="stylesheet" href="{% http2static 'css/base.css' GIT_SHA %}" type="text/css" crossorigin>
-        <link rel="stylesheet" href="{% http2static 'css/base.mobile.css' GIT_SHA %}" type="text/css" crossorigin>
         {% if custom_stylesheet %}
             <link rel="stylesheet" href="{% http2static 'css/'|add:custom_stylesheet GIT_SHA %}" type="text/css" crossorigin>
         {% endif %}

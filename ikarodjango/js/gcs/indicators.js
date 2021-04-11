@@ -23,7 +23,7 @@ const Attitude = reduxify({
         _pitch *= 0.7
 
         return <span id="attitude">
-            <div className="instrument attitude" style={{ height: 150, width: 150 }}>
+            <div className="instrument attitude">
                 {/* <img src="/static/img/indicators/fi_box.svg" className="background box" /> */}
                 <div className="roll box" style={{ transform: `rotate(${roll}deg)` }}>
                     <img src="/static/img/indicators/horizon_back.svg" className="box" />
@@ -51,7 +51,7 @@ const Heading = reduxify({
     }),
     mapDispatchToProps: {},
     render: ({ heading }) => <span id="heading">
-        <div className="instrument heading" style={{ width: 150, height: 150 }}>
+        <div className="instrument heading">
             {/* <img src={`${images_path}/fi_box.svg`} className="background box" /> */}
             <div className="heading box">
                 <img src="/static/img/indicators/heading_yaw.svg" className="box" />

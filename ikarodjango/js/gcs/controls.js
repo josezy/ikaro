@@ -62,7 +62,7 @@ const ArmedSwitch = reduxify({
     mapDispatchToProps: { send_mavcmd },
     render: ({ armed, send_mavcmd }) => <div style={{ marginLeft: 'auto' }}>
         <label style={{ transform: 'scale(0.7)', display: 'flex' }}>
-            <span style={{ fontSize: '1.2rem', marginRight: 5, color: 'white' }}>
+            <span style={{ fontSize: '1.2rem', marginRight: 5, color: 'white' }} className="d-none d-lg-block">
                 {armed ? 'ARMED' : 'DISARMED'}
             </span>
             <Switch onChange={checked => send_mavcmd(
@@ -77,8 +77,8 @@ const ArmedSwitch = reduxify({
 const RTLButton = reduxify({
     mapStateToProps: (state, props) => ({}),
     mapDispatchToProps: { send_mavcmd },
-    render: ({ send_mavcmd }) => <div className='m-auto p-1'>
-        <Button variant="outline-warning" onClick={
+    render: ({ send_mavcmd }) => <div className='m-auto p-1 h-100 col-4'>
+        <Button variant="outline-warning" className="secondary-button" onClick={
             () => send_mavcmd('MAV_CMD_NAV_RETURN_TO_LAUNCH')
         }>Return to launch</Button>
     </div>
@@ -88,8 +88,8 @@ const RTLButton = reduxify({
 const HookButton = reduxify({
     mapStateToProps: (state, props) => ({}),
     mapDispatchToProps: { send_mavcmd },
-    render: ({ send_mavcmd }) => <div className='m-auto p-1'>
-        <Button variant="outline-warning" onClick={
+    render: ({ send_mavcmd }) => <div className='m-auto p-1 h-100 col-4'>
+        <Button variant="outline-warning" className="secondary-button" onClick={
             () => send_mavcmd('TUKANO_RELEASE_HOOK')
         }>Release Hook</Button>
     </div>
@@ -103,8 +103,8 @@ const PauseButton = reduxify({
     }),
     mapDispatchToProps: { send_mavmsg },
     render: ({ send_mavmsg, target_system, target_component }) => (
-        <div className='m-auto p-1'>
-            <Button variant="outline-warning" onClick={() => {
+        <div className='m-auto p-1 h-100 col-4'>
+            <Button variant="outline-warning" className="secondary-button" onClick={() => {
                 send_mavmsg('SET_MODE', {
                     target_system,
                     base_mode: 217,
@@ -145,7 +145,7 @@ const TakeoffButton = reduxify({
     }),
     mapDispatchToProps: { send_mavmsg },
     render: ({ send_mavmsg, target_system }) => <div className='m-auto p-1'>
-        <Button variant="outline-warning" style={{ maxWidth: '100%' }} onClick={() => {
+        <Button variant="outline-warning" style={{ maxWidth: '100%' }} className="main-button" onClick={() => {
             send_mavmsg('SET_MODE', { target_system, base_mode: 81, custom_mode: 4 })
             global.page.command_sender.send(
                 { command: 'MAV_CMD_COMPONENT_ARM_DISARM', params: { param1: 1 } },
@@ -160,14 +160,14 @@ const LandButton = reduxify({
     mapStateToProps: (state, props) => ({}),
     mapDispatchToProps: { send_mavcmd },
     render: ({ send_mavcmd }) => <div className='m-auto p-1'>
-        <Button variant="outline-warning" style={{ maxWidth: '100%' }} onClick={
+        <Button variant="outline-warning" style={{ maxWidth: '100%' }} className="main-button" onClick={
             () => send_mavcmd('MAV_CMD_NAV_LAND')
         }><img src="/static/img/land.png" width="100" style={{ maxWidth: '100%' }} /></Button>
     </div>
 })
 
 
-const NerdInfo = reduxify({
+export const NerdInfo = reduxify({
     mapStateToProps: (state, props) => ({
         heartbeat: state.mavlink.HEARTBEAT,
         flight: createSelector(
@@ -219,12 +219,12 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat }) => {
         heartbeat_timeout = setTimeout(() => setAlive(false), 2000)
     }, [heartbeat])
 
-    return <>
-        <div className="row">
-            <div className="col">
+    return <div className="nerdinfo-container">
+        <div className="row nerdinfo-inner">
+            <div className="col-6">
                 <div>Altitude: {position ? `${position.alt}m` : '--'}</div>
-                <div>Latitude: {position ? position.lat : '--'}</div>
-                <div>Longitude: {position ? position.lon : '--'}</div>
+                <div>Lat: {position ? position.lat : '--'}</div>
+                <div>Lon: {position ? position.lon : '--'}</div>
                 <div>Flight Time: {flight ? flight.time : '--'}</div>
                 <div>Battery: {Math.max(battery, 0)}%</div>
                 <div>
@@ -232,7 +232,7 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat }) => {
                     {alive ? 'Online' : 'No signal'}
                 </div>
             </div>
-            <div className="col">
+            <div className="col-6">
                 <div>Ground speed: {gps ? `${gps.velocity}m/s` : '--'}</div>
                 <div>GPS Count: {gps ? gps.satellites_visible : 0}</div>
                 <div>VDOP: {gps ? gps.epv : '--'}</div>
@@ -241,7 +241,7 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat }) => {
                 <div>Flight distance: {getPathLength(path)}m</div>
             </div>
         </div>
-    </>
+    </div>
 }
 
 const LobbyButton = () => (
@@ -275,9 +275,6 @@ export const Controls = () => <>
         </div>
         <div className="controls-row">
             <FlightMode />
-        </div>
-        <div className="controls-row" style={{ color: 'white', marginTop: 'auto' }}>
-            <NerdInfo />
         </div>
     </div>
 </>

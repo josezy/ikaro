@@ -94,4 +94,4 @@ class MavlinkConsumer(AsyncConsumer):
         )
         await self.send({"type": "websocket.close"})
         # await self.add_viewer(-1)
-        raise StopConsumer()
+        # raise StopConsumer()

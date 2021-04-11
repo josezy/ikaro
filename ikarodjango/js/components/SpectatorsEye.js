@@ -14,5 +14,7 @@ export const SpectatorsEye = () => {
         return () => clearInterval(inte)
     }, [])
 
-    return <div className="viewers">👁 {total}</div>
+    return <div className="viewers-container">
+        <div className="viewers-inner">👁 {total}</div>
+    </div>
 }

@@ -12,7 +12,7 @@ import { CommandSender } from '@/components/command_sender'
 import { SpectatorsEye } from '@/components/SpectatorsEye'
 import { MapContainer } from '@/gcs/maps'
 import { TukanoPanel } from '@/gcs/panels'
-import { Controls } from '@/gcs/controls'
+import { Controls, NerdInfo } from '@/gcs/controls'
 import { Indicators } from '@/gcs/indicators'
 import { request_data_stream } from '@/util/mavutil'
 
@@ -66,6 +66,7 @@ export const FlightPanel = {
                 {global.props.is_pilot && <Controls />}
                 <Indicators />
                 <SpectatorsEye />
+                <NerdInfo />
             </Provider>
         )
     },

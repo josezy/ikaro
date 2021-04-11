@@ -120,7 +120,7 @@ body {
     width: 100%;
     height: fit-content;
     display: flex;
-    padding: 5px;
+    padding: 2px;
 }
 
 /*   Logs   */
@@ -135,8 +135,8 @@ body {
 
 /*   Indicators   */
 div.instrument {
-    width: 250px;
-    height: 250px;
+    width: 150px;
+    height: 150px;
     position: relative;
     display: inline-block;
     overflow: hidden;
@@ -175,12 +175,85 @@ div.instrument.altimeter div.needleSmall {
     transform: rotate(90deg);
 }
 
-.viewers {
+.viewers-container {
     position: absolute;
-    bottom: 50px;
-    right: 5px;
+    width: 100%;
+}
+
+.viewers-inner {
+    margin: 5px auto;
     background: rgba(0, 0, 0, 0.5);
     padding: 0 5px;
     border-radius: 4px;
     color: white;
+    width: fit-content;
+}
+
+.secondary-button {
+    width: 100%;
+    height: 100%;
+}
+
+.nerdinfo-container {
+    color: white;
+    width: 100%;
+    bottom: 0;
+    position: absolute;
+}
+
+.nerdinfo-inner {
+    width: fit-content;
+    margin: 0 auto;
+    font-weight: 100;
+    font-size: 0.7rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px 10px 0 0;
+    padding-top: 5px;
+}
+
+
+@media (max-width: 1300px) {
+    div.mw-wrap {
+        width: 100%;
+        min-width: initial;
+    }
+    div.mw-header {
+        display: inline-block;
+    }
+    #geopoint-map-elem {
+        width: 100%;
+    }
+    div.mw-wrap div.mw-adress-input-wrap {
+        float: left;
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+
+    img.d-block.w-100 {
+        height: 200px;
+    }
+    .main-scroll{
+        height: auto;
+        overflow-y: initial;
+    }
+
+    /* Filters */
+    .filter-container .dropdown.dropdown-menu-mobile .dropdown-menu{
+        left: -160% !important;
+    }
+
+    div.instrument {
+        width: 100px;
+        height: 100px;
+    }
+
+    .main-button {
+        padding: 1px;
+    }
+
+    .secondary-button {
+        padding: 5px 1px;
+    }
 }
