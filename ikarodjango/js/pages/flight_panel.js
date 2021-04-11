@@ -66,7 +66,7 @@ export const FlightPanel = {
                 <TukanoPanel />
                 {global.props.is_pilot && <Controls />}
                 <Indicators />
-                <SpectatorsEye />
+                {/* <SpectatorsEye /> */}
                 <NerdInfo />
             </Provider>
         )
