@@ -222,10 +222,9 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat }) => {
     return <div className="nerdinfo-container">
         <div className="row nerdinfo-inner">
             <div className="col-6">
-                <div>Altitude: {position ? `${position.alt}m` : '--'}</div>
+                <div>Alt: {position ? `${position.alt}m` : '--'}</div>
                 <div>Lat: {position ? position.lat : '--'}</div>
                 <div>Lon: {position ? position.lon : '--'}</div>
-                <div>Flight Time: {flight ? flight.time : '--'}</div>
                 <div>Battery: {Math.max(battery, 0)}%</div>
                 <div>
                     <div className={`${alive ? 'green' : 'red'} dot`}></div>&nbsp;
@@ -233,12 +232,13 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat }) => {
                 </div>
             </div>
             <div className="col-6">
-                <div>Ground speed: {gps ? `${gps.velocity}m/s` : '--'}</div>
+                <div>Speed: {gps ? `${gps.velocity}m/s` : '--'}</div>
                 <div>GPS Count: {gps ? gps.satellites_visible : 0}</div>
-                <div>VDOP: {gps ? gps.epv : '--'}</div>
-                <div>HDOP: {gps ? gps.eph : '--'}</div>
+                {/* <div>VDOP: {gps ? gps.epv : '--'}</div> */}
+                {/* <div>HDOP: {gps ? gps.eph : '--'}</div> */}
                 <div>Type: {gps ? gps.type : '--'}</div>
-                <div>Flight distance: {getPathLength(path)}m</div>
+                <div>Flight Time: {flight ? flight.time : '--'}</div>
+                {/* <div>Flight distance: {getPathLength(path)}m</div> */}
             </div>
         </div>
     </div>

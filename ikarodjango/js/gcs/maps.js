@@ -16,6 +16,7 @@ const Mapbox = ReactMapboxGl({
     accessToken: global.props.map_key,
     logoPosition: 'bottom-right',
     attributionControl: false,
+    renderWorldCopies: false,
 })
 
 const MapComponent = ({ goto_point }) => {

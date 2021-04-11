@@ -34,6 +34,7 @@ export const FlightPanel = {
         return { props, store, mav_socket, command_sender }
     },
     onopen_mavlink() {
+        if (!global.props.is_pilot) return
         setInterval(() => global.page.store.dispatch(send_mavmsg('HEARTBEAT', {
             type: 6, // MAV_TYPE_GCS
             autopilot: 8, // MAV_AUTOPILOT_INVALID
