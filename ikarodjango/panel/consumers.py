@@ -5,6 +5,7 @@ from channels.exceptions import StopConsumer
 from channels.db import database_sync_to_async
 
 from panel.models import Drone, Room
+from panel.utils import is_pilot
 
 
 class MavlinkConsumer(AsyncConsumer):
@@ -23,11 +24,6 @@ class MavlinkConsumer(AsyncConsumer):
         if not room_qs.exists():
             return None
         return room_qs[0]
-
-    @database_sync_to_async
-    def is_pilot(self):
-        room = Room.objects.get(id__startswith=self.room_id)
-        return room.drone.owner == self.user or room.host == self.user
 
 
     async def websocket_connect(self, event):
@@ -51,7 +47,8 @@ class MavlinkConsumer(AsyncConsumer):
 
         self.room_id = room.short_id
 
-        if self.user.is_authenticated and self.is_pilot():
+        pilot = await database_sync_to_async(is_pilot)(self.room_id, self.scope["user"].id)
+        if self.user.is_authenticated and pilot:
             self.can_receive = True
 
         await self.send({"type": "websocket.accept"})

@@ -45,7 +45,7 @@ export const FlightPanel = {
             const state = global.page.store.getState()
             const { target_system, target_component } = state.mavlink
             if (target_system && target_component) {
-                // request_data_stream(target_system, target_component)
+                request_data_stream(target_system, target_component)
                 clearInterval(rds_interval)
             }
         }, 500)
@@ -62,7 +62,7 @@ export const FlightPanel = {
             <Provider store={store}>
                 <MapContainer />
                 <TukanoPanel />
-                {global.props.is_owner && <Controls />}
+                {global.props.is_pilot && <Controls />}
                 <Indicators />
             </Provider>
         )

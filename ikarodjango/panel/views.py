@@ -1,9 +1,8 @@
+from ikarodjango.panel.utils import is_pilot
 from django.conf import settings
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
-from django.http import HttpResponseNotFound
 
-from ikaro.utils import require_login
 from ui.views.base_views import PublicReactView
 
 from panel.models import Room
@@ -31,5 +30,5 @@ class FlightPanel(PublicReactView):
 
         return {
             "map_key": settings.MAP_KEY,
-            "is_owner": room.drone.owner == request.user
+            "is_pilot": is_pilot(room.id, request.user.id),
         }
