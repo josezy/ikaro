@@ -28,12 +28,13 @@ const MapComponent = ({ goto_point }) => {
                 zoom={MAP_INITIAL_ZOOM}
                 className='mapbox-component'
                 onClick={(map, e) => {
+                    if (!global.props.is_pilot) return
                     setGotoCoords([e.lngLat.lng, e.lngLat.lat])
                     goto_point(e.lngLat.lat, e.lngLat.lng)
                 }}
             >
                 <MarkerComponent />
-                <GotoMarker center={goto_coords} />
+                {global.props.is_pilot && <GotoMarker center={goto_coords} />}
                 <MissionPath />
                 <TraveledPath />
                 <MapContext.Consumer>

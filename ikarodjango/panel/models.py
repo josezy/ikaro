@@ -44,3 +44,4 @@ class Room(BaseModel):
     name = models.CharField(max_length=128)
     private = models.BooleanField(default=False)
     capacity = models.PositiveIntegerField(default=5)
+    total_viewers = models.PositiveIntegerField(default=0)

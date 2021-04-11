@@ -1,16 +1,15 @@
 import asyncio
 
-from urllib import parse
-
 from channels.consumer import AsyncConsumer
 from channels.exceptions import StopConsumer
 from channels.db import database_sync_to_async
 
 from panel.models import Drone, Room
+from panel.utils import is_pilot
 
 
-class PanelConsumer(AsyncConsumer):
-    is_drone = False
+class MavlinkConsumer(AsyncConsumer):
+    can_receive = False
 
     @database_sync_to_async
     def get_drone_room(self, plate):
@@ -21,54 +20,58 @@ class PanelConsumer(AsyncConsumer):
 
     @database_sync_to_async
     def get_room(self, room_id):
-        return Room.objects.get(id__startswith=room_id)
+        room_qs = Room.objects.filter(id__startswith=room_id)
+        if not room_qs.exists():
+            return None
+        return room_qs[0]
+
+    @database_sync_to_async
+    def add_viewer(self, n):
+        room = Room.objects.get(id__startswith=self.room_id)
+        room.total_viewers += n
+        room.save()
+
 
     async def websocket_connect(self, event):
         self.user = self.scope["user"]
 
-        # User
-        if self.user.is_authenticated:
-            room_id = self.scope["url_route"]["kwargs"].get("room_id", None)
-            if room_id:
-                room = await self.get_room(room_id)
-                self.flight_room = room.short_id
-                await self.channel_layer.group_add(
-                    self.flight_room,
-                    self.channel_name
-                )
-                await self.send({"type": "websocket.accept"})
-            else:
-                await self.send({"type": "websocket.close"})
+        type = self.scope["url_route"]["kwargs"].get("type", None)
+        id = self.scope["url_route"]["kwargs"].get("id", None)
 
-        # Drone
+        if type == "room":
+            room = await self.get_room(id)
+        elif type == "plate":
+            self.can_receive = True
+            room = await self.get_drone_room(id)
         else:
-            query_string = self.scope["query_string"].decode("utf-8")
-            if query_string:
-                parsed_qs = parse.parse_qs(query_string)
-                plate_qs = parsed_qs.get("plate", [])
-                if len(plate_qs) == 1:
-                    plate = plate_qs[0]
-                    drone_room = await self.get_drone_room(plate)
-                    if drone_room:
-                        self.is_drone = True
-                        self.flight_room = drone_room.short_id
-                        await self.channel_layer.group_add(
-                            self.flight_room,
-                            self.channel_name
-                        )
-                        await self.send({'type': 'websocket.accept'})
-                    else:
-                        await self.send({"type": "websocket.close"})
-                else:
-                    await self.send({"type": "websocket.close"})
-            else:
-                await self.send({"type": "websocket.close"})
+            print("REJECTING CONNECTION")
+            return await self.send({"type": "websocket.close"})
+
+        if not room:
+            print("REJECTING CONNECTION: no room")
+            return await self.send({"type": "websocket.close"})
+
+        self.room_id = room.short_id
+
+        pilot = await database_sync_to_async(is_pilot)(self.room_id, self.scope["user"].id)
+        if self.user.is_authenticated and pilot:
+            self.can_receive = True
+
+        await self.send({"type": "websocket.accept"})
+        await self.channel_layer.group_add(
+            self.room_id,
+            self.channel_name
+        )
+        # await self.add_viewer(1)
 
     async def websocket_receive(self, event):
+        if not self.can_receive:
+            return
+
         mav_msg = event.get('text', None)
         if mav_msg is not None:
             await self.channel_layer.group_send(
-                self.flight_room,
+                self.room_id,
                 {
                     "type": "flight_message",
                     "message": mav_msg,
@@ -84,10 +87,11 @@ class PanelConsumer(AsyncConsumer):
             })
 
     async def websocket_disconnect(self, event):
+        print("Gracefully disconnecting....")
         await self.channel_layer.group_discard(
-            self.flight_room,
+            self.room_id,
             self.channel_name
         )
         await self.send({"type": "websocket.close"})
+        # await self.add_viewer(-1)
         raise StopConsumer()
-

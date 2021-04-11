@@ -9,6 +9,7 @@ import { mavlink, onmessage_mavlink, send_mavmsg } from '@/reducers/mavlink'
 
 import { SocketRouter } from '@/components/websocket'
 import { CommandSender } from '@/components/command_sender'
+import { SpectatorsEye } from '@/components/SpectatorsEye'
 import { MapContainer } from '@/gcs/maps'
 import { TukanoPanel } from '@/gcs/panels'
 import { Controls } from '@/gcs/controls'
@@ -24,7 +25,7 @@ export const FlightPanel = {
             mavlink,
         }, initial_state)
 
-        const mavlink_path = window.location.pathname.replace('flight', 'mavlink')
+        const mavlink_path = window.location.pathname.replace('flight', 'mavlink/room')
         const mav_socket = new SocketRouter(mavlink_path, onmessage_mavlink, this.onopen_mavlink)
 
         const command_sender = new CommandSender(store)
@@ -62,8 +63,9 @@ export const FlightPanel = {
             <Provider store={store}>
                 <MapContainer />
                 <TukanoPanel />
-                <Controls />
+                {global.props.is_pilot && <Controls />}
                 <Indicators />
+                <SpectatorsEye />
             </Provider>
         )
     },
