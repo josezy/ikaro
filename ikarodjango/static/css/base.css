@@ -174,3 +174,13 @@ div.instrument.altimeter div.needle {
 div.instrument.altimeter div.needleSmall {
     transform: rotate(90deg);
 }
+
+.viewers {
+    position: absolute;
+    bottom: 50px;
+    right: 5px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 0 5px;
+    border-radius: 4px;
+    color: white;
+}

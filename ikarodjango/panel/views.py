@@ -1,11 +1,11 @@
-from ikarodjango.panel.utils import is_pilot
 from django.conf import settings
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
 
-from ui.views.base_views import PublicReactView
+from ui.views.base_views import PublicReactView, APIView
 
 from panel.models import Room
+from panel.utils import is_pilot
 
 
 class FlightPanel(PublicReactView):
@@ -30,5 +30,15 @@ class FlightPanel(PublicReactView):
 
         return {
             "map_key": settings.MAP_KEY,
-            "is_pilot": is_pilot(room.id, request.user.id),
+            "is_pilot": is_pilot(room.short_id, request.user.id),
         }
+
+
+class Spectators(APIView):
+    def get(self, request, *args, **kwargs):
+        room = get_object_or_404(
+            Room.objects, id__startswith=kwargs.get("id", None)
+        )
+        return self.respond({
+            "total": room.total_viewers,
+        })

@@ -25,6 +25,12 @@ class MavlinkConsumer(AsyncConsumer):
             return None
         return room_qs[0]
 
+    @database_sync_to_async
+    def add_viewer(self, n):
+        room = Room.objects.get(id__startswith=self.room_id)
+        room.total_viewers += n
+        room.save()
+
 
     async def websocket_connect(self, event):
         self.user = self.scope["user"]
@@ -42,7 +48,7 @@ class MavlinkConsumer(AsyncConsumer):
             return await self.send({"type": "websocket.close"})
 
         if not room:
-            print("REJECTING CONNECTION")
+            print("REJECTING CONNECTION: no room")
             return await self.send({"type": "websocket.close"})
 
         self.room_id = room.short_id
@@ -56,6 +62,7 @@ class MavlinkConsumer(AsyncConsumer):
             self.room_id,
             self.channel_name
         )
+        # await self.add_viewer(1)
 
     async def websocket_receive(self, event):
         if not self.can_receive:
@@ -80,9 +87,11 @@ class MavlinkConsumer(AsyncConsumer):
             })
 
     async def websocket_disconnect(self, event):
+        print("Gracefully disconnecting....")
         await self.channel_layer.group_discard(
             self.room_id,
             self.channel_name
         )
         await self.send({"type": "websocket.close"})
+        # await self.add_viewer(-1)
         raise StopConsumer()
