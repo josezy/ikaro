@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import ReactMapboxGl, {
-    Marker, MapContext, Source, Layer
+    Marker, MapContext, Source, Layer, ZoomControl
 } from 'react-mapbox-gl'
 import { createSelector } from 'reselect'
 import { reduxify } from '@/util/reduxify'
@@ -35,6 +35,7 @@ const MapComponent = ({ goto_point }) => {
                     goto_point(e.lngLat.lat, e.lngLat.lng)
                 }}
             >
+                <ZoomControl style={{ top: '40%' }} />
                 <MarkerComponent />
                 {global.props.is_pilot && <GotoMarker center={goto_coords} />}
                 <MissionPath />

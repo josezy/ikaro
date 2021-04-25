@@ -129,8 +129,9 @@ body {
     padding: 5px;
     background: rgba(0, 0, 0, 0.6);
     overflow-y: scroll;
-    height: 70px;
+    min-height: 100px;
     color: white;
+    resize: vertical;
 }
 
 /*   Indicators   */
