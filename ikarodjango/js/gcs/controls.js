@@ -214,7 +214,7 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat }) => {
     }, [position && position.lat, position && position.lon])
 
     useEffect(() => {
-        setAlive(true)
+        if (heartbeat) setAlive(true)
         if (heartbeat_timeout) clearTimeout(heartbeat_timeout)
         heartbeat_timeout = setTimeout(() => setAlive(false), 2000)
     }, [heartbeat])

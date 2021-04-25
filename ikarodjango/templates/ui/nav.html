@@ -1,7 +1,10 @@
+{% load static %}
+
 <nav class="bg-light navbar navbar-expand-lg p-0">
     <a href="{% url 'home' %}">
         <h1 class="d-none d-md-inline ml-1 aquatico" style="font-size: 26px">
-            <span class="gold"><i class="fa fa-fw fa-feather-alt"></i>&nbsp;Tucano&nbsp;</span>AR
+            <img src="{% static 'img/logo-icon.png' %}" class="tucano-logo"/>
+            <span class="gold">IKARO&nbsp;</span><span class="navbar-by">by TucanoRobotics</span>
         </h1>
     </a>
 

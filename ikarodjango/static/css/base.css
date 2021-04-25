@@ -199,7 +199,7 @@ div.instrument.altimeter div.needleSmall {
     bottom: 0;
     position: absolute;
     left: 50%;
-    width: 230px;
+    width: 250px;
     margin-left: -115px;
 }
 
@@ -213,6 +213,15 @@ div.instrument.altimeter div.needleSmall {
     align-items: flex-end;
 }
 
+.tucano-logo {
+    height: 48px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+.navbar-by {
+    font-size: 1rem;
+}
 
 @media (max-width: 1300px) {
     div.mw-wrap {
