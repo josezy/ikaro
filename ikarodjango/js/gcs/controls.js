@@ -47,7 +47,7 @@ const LogComponent = ({ status }) => {
     }, [status])
 
     return <div id='log' className='log-div'>
-        <i class="fa fa-trash" style={{ position: 'absolute', right: 7 }} onClick={_ => setLog([])}></i>
+        <i className="fa fa-trash" style={{ position: 'absolute', right: 7 }} onClick={_ => setLog([])}></i>
         {log.map((text, i) => <div key={i}>{text}</div>)}
     </div>
 }
