@@ -40,6 +40,7 @@ const MapComponent = ({ goto_point }) => {
                 {global.props.is_pilot && <GotoMarker center={goto_coords} />}
                 <MissionPath />
                 <TraveledPath />
+                {/* <Fence /> */}
                 <MapContext.Consumer>
                     {map => {
                         global.page.map = map
@@ -216,5 +217,73 @@ const MissionPathComponent = (props) => {
     return <>
         <Source id="mission_path" geoJsonSource={geoJsonSource} />
         <Layer type="line" sourceId="mission_path" layout={layout} paint={paint} />
+    </>
+}
+
+const Fence = reduxify({
+    mapStateToProps: (state, props) => ({
+        target_system: state.mavlink.target_system,
+        target_component: state.mavlink.target_component,
+        fence_enable: createSelector(
+            state => state.mavlink.PARAM_VALUE
+                && state.mavlink.PARAM_VALUE.param_id,
+            state => state.mavlink.PARAM_VALUE
+                && state.mavlink.PARAM_VALUE.param_value,
+            (param_id, param_value) => param_id == 'FENCE_ENABLE' && param_value
+        )(state),
+    }),
+    mapDispatchToProps: { send_mavmsg },
+    render: props => <FenceComponent {...props} />
+})
+
+const FenceComponent = (props) => {
+    const {
+        send_mavmsg, target_system, target_component, fence_enable
+    } = props
+    // const [path, setPath] = useState([])
+
+    useEffect(() => {
+        if (target_system && target_component)
+            send_mavmsg('PARAM_REQUEST_READ', {
+                target_system,
+                target_component,
+                param_id: 'FENCE_ENABLE',
+                param_index: -1,
+            })
+    }, [target_system, target_component])
+
+    useEffect(() => {
+        if (fence_enable) {
+            send_mavmsg('PARAM_REQUEST_READ', {
+                target_system,
+                target_component,
+                param_id: 'FENCE_ENABLE',
+                param_index: -1,
+            })
+        }
+    }, [fence_enable])
+
+    // const geoJsonSource = {
+    //     'type': 'geojson',
+    //     'data': {
+    //         'type': 'Feature',
+    //         'properties': {},
+    //         'geometry': {
+    //             'type': 'LineString',
+    //             'coordinates': path
+    //         }
+    //     }
+    // }
+    // const layout = {
+    //     'line-join': 'round',
+    //     'line-cap': 'round'
+    // }
+    // const paint = {
+    //     'line-color': '#00f',
+    //     'line-width': 3
+    // }
+    return <>
+        {/* <Source id="mission_path" geoJsonSource={geoJsonSource} />
+        <Layer type="line" sourceId="mission_path" layout={layout} paint={paint} /> */}
     </>
 }
