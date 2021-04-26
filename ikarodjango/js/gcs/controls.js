@@ -4,12 +4,13 @@ import { createSelector } from 'reselect'
 import { getPathLength } from 'geolib'
 
 import Switch from 'react-switch'
-import Button from 'react-bootstrap/Button'
+import { Button } from 'react-bootstrap'
+import { Slider, InputNumber, Modal, Row } from 'antd'
 
 import { send_mavcmd, send_mavmsg } from '@/reducers/mavlink'
 import { flightmode_from_heartbeat } from '@/util/mavutil'
 import { format_ms } from '@/util/javascript'
-import { GPS_FIX_TYPE } from '@/util/constants'
+import { GPS_FIX_TYPE, TAKEOFF_MIN_ALTITUDE, TAKEOFF_MAX_ALTITUDE } from '@/util/constants'
 
 
 const FlightMode = reduxify({
@@ -143,18 +144,69 @@ const PauseButton = reduxify({
 const TakeoffButton = reduxify({
     mapStateToProps: (state, props) => ({
         target_system: state.mavlink.target_system,
+        armed: createSelector(
+            state => state.mavlink.HEARTBEAT,
+            HEARTBEAT => HEARTBEAT && Boolean(HEARTBEAT.base_mode & 10 ** 7)
+        )(state),
     }),
     mapDispatchToProps: { send_mavmsg },
-    render: ({ send_mavmsg, target_system }) => <div className='m-auto p-1'>
-        <Button variant="outline-warning" style={{ maxWidth: '100%' }} className="main-button" onClick={() => {
-            send_mavmsg('SET_MODE', { target_system, base_mode: 81, custom_mode: 4 })
-            global.page.command_sender.send(
-                { command: 'MAV_CMD_COMPONENT_ARM_DISARM', params: { param1: 1 } },
-                { command: 'MAV_CMD_NAV_TAKEOFF', params: { param7: 10 } }
-            )
-        }}><img src="/static/img/takeoff.png" width="100" style={{ maxWidth: '100%' }} /></Button>
-    </div>
+    render: (props) => <TakeoffButtonComponent {...props} />
 })
+
+const TakeoffButtonComponent = ({ send_mavmsg, target_system, armed }) => {
+    const [showModal, setShowModal] = useState(false)
+    const [alt, setAlt] = useState(TAKEOFF_MIN_ALTITUDE)
+
+    const takeoff = async () => {
+        setShowModal(false)
+        send_mavmsg('SET_MODE', { target_system, base_mode: 81, custom_mode: 4 })
+        global.page.command_sender.send(
+            { command: 'MAV_CMD_COMPONENT_ARM_DISARM', params: { param1: 1 } },
+            { command: 'MAV_CMD_NAV_TAKEOFF', params: { param7: alt } }
+        )
+    }
+
+    return <div className='m-auto p-1'>
+        <Button
+            variant="outline-warning"
+            style={{ maxWidth: '100%' }}
+            className="main-button"
+            onClick={_ => setShowModal(true)}
+            disabled={armed}
+        >
+            <img src="/static/img/takeoff.png" width="100" style={{ maxWidth: '100%' }} />
+        </Button>
+        <Modal
+            visible={showModal}
+            centered
+            onOk={takeoff}
+            onCancel={_ => setShowModal(false)}
+            closable={false}
+            title="Set takeoff altitude (meters)"
+            width={350}
+        >
+            <p>The vehicle will fly up until desired altitude is reached:</p>
+            <Row>
+                <Slider
+                    min={TAKEOFF_MIN_ALTITUDE}
+                    max={TAKEOFF_MAX_ALTITUDE}
+                    defaultValue={10}
+                    onChange={setAlt}
+                    value={alt}
+                    style={{ minWidth: '60%', margin: 'auto' }}
+                />
+                <InputNumber
+                    autoFocus
+                    defaultValue={alt}
+                    value={alt}
+                    onChange={setAlt}
+                    min={TAKEOFF_MIN_ALTITUDE}
+                    max={TAKEOFF_MAX_ALTITUDE}
+                />
+            </Row>
+        </Modal>
+    </div>
+}
 
 
 const LandButton = reduxify({
