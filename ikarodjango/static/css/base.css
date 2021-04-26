@@ -45,9 +45,13 @@ body {
 /*    Variables    */
 :root {
     --gold:#e4cf77;
+    --dark-blue:#02253C;
 }
 .gold {
     color: var(--gold)
+}
+.dark-blue {
+    color: var(--dark-blue)
 }
 .aquatico {
     font-family: "Aquatico-Regular"
@@ -222,6 +226,7 @@ div.instrument.altimeter div.needleSmall {
 
 .navbar-by {
     font-size: 1rem;
+    color: white;
 }
 
 @media (max-width: 1300px) {
