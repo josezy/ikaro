@@ -16,6 +16,8 @@ import { Controls, NerdInfo } from '@/gcs/controls'
 import { Indicators } from '@/gcs/indicators'
 import { request_data_stream } from '@/util/mavutil'
 
+import 'antd/dist/antd.less'
+
 export const FlightPanel = {
     view: 'ui.views.pages.FlightPanel',
 
