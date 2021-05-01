@@ -12,7 +12,7 @@ def reset_viewers_count():
         room.total_viewers = 0
         room.save()
 
-reset_viewers_count()
+# reset_viewers_count()
 
 urlpatterns = [
     path('', Looby.as_view(), name='home'),
