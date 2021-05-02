@@ -5,12 +5,12 @@ import {
 
 export const goto_point = (lat, lng) => (dispatch, getState) => {
     const { target_system, target_component } = getState().mavlink
-    const { alt } = getState().mavlink.GLOBAL_POSITION_INT
+    const { relative_alt } = getState().mavlink.GLOBAL_POSITION_INT
 
     if (
         target_system == undefined
         || target_component == undefined
-        || alt == undefined
+        || relative_alt == undefined
     ) return null
 
     return dispatch(send_mavmsg('MISSION_ITEM', {
@@ -27,7 +27,7 @@ export const goto_point = (lat, lng) => (dispatch, getState) => {
         param4: 0.0,
         x: lat,
         y: lng,
-        z: alt / 10 ** 3
+        z: relative_alt / 10 ** 3
     }))
 }
 
