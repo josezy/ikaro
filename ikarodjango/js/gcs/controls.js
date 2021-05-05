@@ -235,6 +235,7 @@ export const NerdInfo = reduxify({
                 lat: GLOBAL_POSITION_INT.lat / 10 ** 7,
                 lon: GLOBAL_POSITION_INT.lon / 10 ** 7,
                 alt: GLOBAL_POSITION_INT.alt / 10 ** 3,
+                relative_alt: GLOBAL_POSITION_INT.relative_alt / 10 ** 3,
             }
         )(state),
         battery: createSelector(
@@ -275,7 +276,7 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat }) => {
     return <div className="nerdinfo-container">
         <div className="row nerdinfo-inner">
             <div className="col-6">
-                <div>Alt: {position ? `${position.alt}m` : '--'}</div>
+                <div>Alt: {position ? `${position.relative_alt}m` : '--'}</div>
                 <div>Lat: {position ? position.lat : '--'}</div>
                 <div>Lon: {position ? position.lon : '--'}</div>
                 <div>Battery: {Math.max(battery, 0)}%</div>
