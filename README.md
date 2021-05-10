@@ -52,4 +52,9 @@ python src/tukano_service.py
 
 # Connect to BD - Activate virtual env
 python ikarodjango/manage.py shell_plus
+
+# To create demo data (Inside shell_plus)
+u = User.objects.create_user(username="test", email="test@test.test", password="testtest")
+d = Drone.objects.create(plate="00000000", owner=u)
+r = Room.objects.create(host=u, drone=d)
 ```
