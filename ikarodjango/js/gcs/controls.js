@@ -267,7 +267,7 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_m
     return <div className='nerdinfo-container'>
         <div className='row nerdinfo-inner'>
             <div className='col-6'>
-                <div>Alt: {position ? `${position.relative_alt.toFixed(2)}m` : '--'}</div>
+                <div>Alt: {position ? `${position.relative_alt.toFixed(1)}m` : '--'}</div>
                 <div>Lat: {position ? position.lat : '--'}</div>
                 <div>Lon: {position ? position.lon : '--'}</div>
                 <div>Battery: {Math.max(battery, 0)}%</div>
