@@ -13,19 +13,6 @@ import { format_ms } from '@/util/javascript'
 import { GPS_FIX_TYPE, TAKEOFF_MIN_ALTITUDE, TAKEOFF_MAX_ALTITUDE } from '@/util/constants'
 
 
-const FlightMode = reduxify({
-    mapStateToProps: (state, props) => ({
-        flight_mode: createSelector(
-            state => state.mavlink.HEARTBEAT,
-            HEARTBEAT => HEARTBEAT && flightmode_from_heartbeat(HEARTBEAT)
-        )(state),
-    }),
-    mapDispatchToProps: {},
-    render: ({ flight_mode }) => <div style={{ color: 'white', width: '100%', textAlign: 'center' }}>
-        {flight_mode}
-    </div>
-})
-
 const Log = reduxify({
     mapStateToProps: (state, props) => ({
         status: createSelector(
@@ -252,6 +239,10 @@ export const NerdInfo = reduxify({
                 velocity: GPS_RAW_INT.vel / 100,
             }
         )(state),
+        flight_mode: createSelector(
+            state => state.mavlink.HEARTBEAT,
+            HEARTBEAT => HEARTBEAT && flightmode_from_heartbeat(HEARTBEAT)
+        )(state),
     }),
     mapDispatchToProps: {},
     render: props => <NerdInfoComponent {...props} />
@@ -259,7 +250,7 @@ export const NerdInfo = reduxify({
 
 
 let heartbeat_timeout = null
-const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat }) => {
+const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_mode }) => {
     const [path, setPath] = useState([])
     const [alive, setAlive] = useState(false)
 
@@ -280,10 +271,7 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat }) => {
                 <div>Lat: {position ? position.lat : '--'}</div>
                 <div>Lon: {position ? position.lon : '--'}</div>
                 <div>Battery: {Math.max(battery, 0)}%</div>
-                <div>
-                    <div className={`${alive ? 'green' : 'red'} dot`}></div>&nbsp;
-                    {alive ? 'Online' : 'No signal'}
-                </div>
+                <div>F. Mode: {flight_mode}</div>
             </div>
             <div className='col-6'>
                 <div>Speed: {gps ? `${gps.velocity}m/s` : '--'}</div>
@@ -293,6 +281,10 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat }) => {
                 <div>Type: {gps ? gps.type : '--'}</div>
                 <div>Flight Time: {flight ? flight.time : '--'}</div>
                 {/* <div>Flight distance: {getPathLength(path)}m</div> */}
+                <div>
+                    <div className={`${alive ? 'green' : 'red'} dot`}></div>&nbsp;
+                    {alive ? 'Online' : 'No signal'}
+                </div>
             </div>
         </div>
     </div>
@@ -326,9 +318,6 @@ export const Controls = () => <>
         </div>
         <div className='controls-row'>
             <Log />
-        </div>
-        <div className='controls-row'>
-            <FlightMode />
         </div>
     </div>
 </>
