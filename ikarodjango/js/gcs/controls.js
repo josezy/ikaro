@@ -48,7 +48,7 @@ const LogComponent = ({ status }) => {
     }, [status])
 
     return <div id='log' className='log-div'>
-        <i className="fa fa-trash" style={{ position: 'absolute', right: 7 }} onClick={_ => setLog([])}></i>
+        <i className='fa fa-trash' style={{ position: 'absolute', right: 7, cursor: 'pointer' }} onClick={_ => setLog([])}></i>
         {log.map((text, i) => <div key={i}>{text}</div>)}
     </div>
 }
@@ -64,7 +64,7 @@ const ArmedSwitch = reduxify({
     mapDispatchToProps: { send_mavcmd },
     render: ({ armed, send_mavcmd }) => <div style={{ marginLeft: 'auto' }}>
         <label style={{ transform: 'scale(0.7)', display: 'flex' }}>
-            <span style={{ fontSize: '1.2rem', marginRight: 5, color: 'white' }} className="d-none d-lg-block">
+            <span style={{ fontSize: '1.2rem', marginRight: 5, color: 'white' }} className='d-none d-lg-block'>
                 {armed ? 'ARMED' : 'DISARMED'}
             </span>
             <Switch onChange={checked => send_mavcmd(
@@ -80,7 +80,7 @@ const RTLButton = reduxify({
     mapStateToProps: (state, props) => ({}),
     mapDispatchToProps: { send_mavcmd },
     render: ({ send_mavcmd }) => <div className='m-auto p-1 h-100 col-4'>
-        <Button variant="outline-warning" className="secondary-button" onClick={
+        <Button variant='outline-warning' className='secondary-button' onClick={
             () => send_mavcmd('MAV_CMD_NAV_RETURN_TO_LAUNCH')
         }>Return to launch</Button>
     </div>
@@ -91,7 +91,7 @@ const HookButton = reduxify({
     mapStateToProps: (state, props) => ({}),
     mapDispatchToProps: { send_mavcmd },
     render: ({ send_mavcmd }) => <div className='m-auto p-1 h-100 col-4'>
-        <Button variant="outline-warning" className="secondary-button" onClick={
+        <Button variant='outline-warning' className='secondary-button' onClick={
             () => send_mavcmd('TUKANO_RELEASE_HOOK')
         }>Release Hook</Button>
     </div>
@@ -106,7 +106,7 @@ const PauseButton = reduxify({
     mapDispatchToProps: { send_mavmsg },
     render: ({ send_mavmsg, target_system, target_component }) => (
         <div className='m-auto p-1 h-100 col-4'>
-            <Button variant="outline-warning" className="secondary-button" onClick={() => {
+            <Button variant='outline-warning' className='secondary-button' onClick={() => {
                 send_mavmsg('SET_MODE', {
                     target_system,
                     base_mode: 217,
@@ -168,13 +168,13 @@ const TakeoffButtonComponent = ({ send_mavmsg, target_system, armed }) => {
 
     return <div className='m-auto p-1'>
         <Button
-            variant="outline-warning"
+            variant='outline-warning'
             style={{ maxWidth: '100%' }}
-            className="main-button"
+            className='main-button'
             onClick={_ => setShowModal(true)}
             disabled={armed}
         >
-            <img src="/static/img/takeoff.png" width="100" style={{ maxWidth: '100%' }} />
+            <img src='/static/img/takeoff.png' width='100' style={{ maxWidth: '100%' }} />
         </Button>
         <Modal
             visible={showModal}
@@ -182,7 +182,7 @@ const TakeoffButtonComponent = ({ send_mavmsg, target_system, armed }) => {
             onOk={takeoff}
             onCancel={_ => setShowModal(false)}
             closable={false}
-            title="Set takeoff altitude (meters)"
+            title='Set takeoff altitude (meters)'
             width={350}
         >
             <p>The vehicle will fly up until desired altitude is reached:</p>
@@ -213,9 +213,9 @@ const LandButton = reduxify({
     mapStateToProps: (state, props) => ({}),
     mapDispatchToProps: { send_mavcmd },
     render: ({ send_mavcmd }) => <div className='m-auto p-1'>
-        <Button variant="outline-warning" style={{ maxWidth: '100%' }} className="main-button" onClick={
+        <Button variant='outline-warning' style={{ maxWidth: '100%' }} className='main-button' onClick={
             () => send_mavcmd('MAV_CMD_NAV_LAND')
-        }><img src="/static/img/land.png" width="100" style={{ maxWidth: '100%' }} /></Button>
+        }><img src='/static/img/land.png' width='100' style={{ maxWidth: '100%' }} /></Button>
     </div>
 })
 
@@ -273,9 +273,9 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat }) => {
         heartbeat_timeout = setTimeout(() => setAlive(false), 2000)
     }, [heartbeat])
 
-    return <div className="nerdinfo-container">
-        <div className="row nerdinfo-inner">
-            <div className="col-6">
+    return <div className='nerdinfo-container'>
+        <div className='row nerdinfo-inner'>
+            <div className='col-6'>
                 <div>Alt: {position ? `${position.relative_alt}m` : '--'}</div>
                 <div>Lat: {position ? position.lat : '--'}</div>
                 <div>Lon: {position ? position.lon : '--'}</div>
@@ -285,7 +285,7 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat }) => {
                     {alive ? 'Online' : 'No signal'}
                 </div>
             </div>
-            <div className="col-6">
+            <div className='col-6'>
                 <div>Speed: {gps ? `${gps.velocity}m/s` : '--'}</div>
                 <div>GPS Count: {gps ? gps.satellites_visible : 0}</div>
                 {/* <div>VDOP: {gps ? gps.epv : '--'}</div> */}
@@ -301,33 +301,33 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat }) => {
 const LobbyButton = () => (
     <div
         onClick={() => window.location.href = '/'}
-        className="d-flex"
+        className='d-flex'
         style={{ color: '#e4cf77', cursor: 'pointer' }}
     >
-        <span className="material-icons m-auto">arrow_back_ios</span>
-        <span className="m-auto">Lobby</span>
+        <span className='material-icons m-auto'>arrow_back_ios</span>
+        <span className='m-auto'>Lobby</span>
     </div>
 )
 
 export const Controls = () => <>
-    <div className="controls-div">
-        <div className="controls-row">
+    <div className='controls-div'>
+        <div className='controls-row'>
             <LobbyButton />
             <ArmedSwitch />
         </div>
-        <div className="controls-row">
+        <div className='controls-row'>
             <TakeoffButton />
             <LandButton />
         </div>
-        <div className="controls-row">
+        <div className='controls-row'>
             <RTLButton />
             <HookButton />
             <PauseButton />
         </div>
-        <div className="controls-row">
+        <div className='controls-row'>
             <Log />
         </div>
-        <div className="controls-row">
+        <div className='controls-row'>
             <FlightMode />
         </div>
     </div>
