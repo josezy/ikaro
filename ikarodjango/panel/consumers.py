@@ -1,3 +1,4 @@
+import time
 import asyncio
 
 from channels.consumer import AsyncConsumer
@@ -78,6 +79,8 @@ class MavlinkConsumer(AsyncConsumer):
                     "sender_channel_name": self.channel_name
                 }
             )
+            if "HEARTBEAT" in mavmsg:
+                print(f"[WS RECV] {time.ctime()} {self.channel_name}: {mavmsg}", flush=True)
 
     async def flight_message(self, event):
         if self.channel_name != event.get("sender_channel_name"):
