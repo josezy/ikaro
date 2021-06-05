@@ -294,7 +294,7 @@ const LobbyButton = () => (
     <div
         onClick={() => window.location.href = '/'}
         className='d-flex'
-        style={{ color: '#e4cf77', cursor: 'pointer' }}
+        style={{ color: '#e4cf77', cursor: 'pointer', marginLeft: 10, }}
     >
         <span className='material-icons m-auto'>arrow_back_ios</span>
         <span className='m-auto'>Lobby</span>
