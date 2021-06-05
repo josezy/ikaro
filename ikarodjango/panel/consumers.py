@@ -68,22 +68,23 @@ class MavlinkConsumer(AsyncConsumer):
         if not self.can_receive:
             return
 
-        mav_msg = event.get('text', None)
-        if mav_msg is not None:
+        mavmsg = event.get('text', None)
+        if mavmsg is not None:
             await self.channel_layer.group_send(
                 self.room_id,
                 {
                     "type": "flight_message",
-                    "message": mav_msg,
+                    "mavmsg": mavmsg,
                     "sender_channel_name": self.channel_name
                 }
             )
 
     async def flight_message(self, event):
         if self.channel_name != event.get("sender_channel_name"):
+            mavmsg = event.get("mavmsg")
             await self.send({
                 "type": "websocket.send",
-                "text": event.get("message")
+                "text": mavmsg
             })
 
     async def websocket_disconnect(self, event):
