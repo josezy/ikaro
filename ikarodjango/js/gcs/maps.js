@@ -11,6 +11,23 @@ import {
     MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM, MAVLINK_MESSAGES
 } from '@/util/constants'
 
+import { Popconfirm,message } from 'antd';
+import 'antd/dist/antd.css';
+
+function AppConfirm() {
+    const mensajeSucces=()=>{
+        message.success("Mensaje Success");
+      }
+      function confirm(e) {
+        console.log(e);
+        message.success('Click on Yes');
+      }
+      
+      function cancel(e) {
+        console.log(e);
+        message.error('Click on No');
+      }    
+}
 
 const Mapbox = ReactMapboxGl({
     accessToken: global.props.map_key,
@@ -32,12 +49,11 @@ const MapComponent = ({ goto_point }) => {
                 onClick={(map, e) => {
                     if (!global.props.is_pilot) return
                     setGotoCoords([e.lngLat.lng, e.lngLat.lat])
-                    goto_point(e.lngLat.lat, e.lngLat.lng)
                 }}
             >
                 <ZoomControl style={{ top: '40%' }} />
                 <MarkerComponent />
-                {global.props.is_pilot && <GotoMarker center={goto_coords} />}
+                {global.props.is_pilot && <GotoMarker center={goto_coords} goto_point={goto_point} />}
                 <MissionPath />
                 <TraveledPath />
                 {/* <Fence /> */}
@@ -76,9 +92,19 @@ export const MapContainer = reduxify({
     render: props => <MapComponent {...props} />
 })
 
-const GotoMarker = ({ center }) => center ?
+const GotoMarker = ({ center, goto_point }) => center ?
     <Marker coordinates={center}>
-        <span className="material-icons gold" style={{ fontSize: '2rem' }}>place</span>
+        <Popconfirm
+        onVisibleChange=""
+        trigger="hover"
+        title="Are you sure to delete this task?"
+        onConfirm={()=>goto_point(e.lngLat.lat, e.lngLat.lng)}
+        onCancel={()=>console.log('Cancel')}
+        okText="Yes"
+        cancelText="No"
+        >
+        <span className="material-icons gold " style={{ fontSize: '2rem' }}>place</span>
+        </Popconfirm>
     </Marker>
     : null
 
