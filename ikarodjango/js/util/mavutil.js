@@ -1,10 +1,10 @@
 import {
-    MAV_AUTOPILOT, MAV_TYPE,
+    MAV_AUTOPILOT, MAV_TYPE, MAVLINK_MESSAGES,
     mode_mapping_acm, mode_mapping_apm, mode_mapping_rover,
     mode_mapping_tracker, mode_mapping_sub
 } from '@/util/constants'
 
-import { send_mavmsg } from '@/reducers/mavlink'
+import { send_mavmsg, send_mavcmd } from '@/reducers/mavlink'
 
 const mode_mapping_bynumber = type => {
     /**
@@ -87,5 +87,12 @@ export const request_data_stream = (target_system, target_component) => {
         req_stream_id: 12,
         req_message_rate: 3,
         start_stop: 1
+    }))
+}
+
+export const mavcmd_home_position_interval = () => {
+    global.page.store.dispatch(send_mavcmd('MAV_CMD_SET_MESSAGE_INTERVAL', {
+        param1: MAVLINK_MESSAGES['HOME_POSITION'],
+        param2: 4000000, // every 4 seconds
     }))
 }

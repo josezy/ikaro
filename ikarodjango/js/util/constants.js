@@ -14,6 +14,7 @@ export const ALLOWED_MAVLINK_MSGS = [
     'MISSION_COUNT',
     'MISSION_ITEM',
     'PARAM_VALUE',
+    'HOME_POSITION',
 ]
 export const ALLOWED_MAV_TYPES = ['QUADROTOR']
 
@@ -106,9 +107,11 @@ export const MAVLINK_COMMANDS = {
 }
 export const MAVLINK_COMMAND_IDS = Object.entries(MAVLINK_COMMANDS).reduce(switch_entries, {})
 
-export const MAVLINK_IDS = Object.entries(MAVLINK_MESSAGES).reduce(
-    (acc, entry) => ({ ...acc, [entry[1]]: entry[0] })
-    , {})
+
+export const MAVLINK_MESSAGES = {
+    HOME_POSITION: 242,
+}
+export const MAVLINK_MESSAGE_IDS = Object.entries(MAVLINK_MESSAGES).reduce(switch_entries, {})
 
 
 export const mode_mapping_apm = {

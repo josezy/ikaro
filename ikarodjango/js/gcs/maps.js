@@ -41,6 +41,7 @@ const MapComponent = ({ goto_point }) => {
                 <MissionPath />
                 <TraveledPath />
                 {/* <Fence /> */}
+                <Home />
                 <MapContext.Consumer>
                     {map => {
                         global.page.map = map
@@ -96,11 +97,11 @@ const MarkerComponent = reduxify({
     mapDispatchToProps: {},
     render: ({ vehicle_center, heading }) => {
         return vehicle_center ?
-            <Marker coordinates={vehicle_center} anchor="center">
+            <Marker coordinates={vehicle_center} anchor="center" style={{ zIndex: 999 }}>
                 <span className="material-icons" style={{
                     color: 'red',
                     fontSize: '3.5rem',
-                    transform: `rotate(${heading}deg)`
+                    transform: `rotate(${heading}deg)`,
                 }}>navigation</span>
             </Marker>
             : null
@@ -219,6 +220,27 @@ const MissionPathComponent = (props) => {
         <Layer type="line" sourceId="mission_path" layout={layout} paint={paint} />
     </>
 }
+
+const Home = reduxify({
+    mapStateToProps: (state, props) => ({
+        home_center: createSelector(
+            state => state.mavlink.HOME_POSITION
+                && state.mavlink.HOME_POSITION.longitude,
+            state => state.mavlink.HOME_POSITION
+                && state.mavlink.HOME_POSITION.latitude,
+            (lon, lat) => lon && lat && [lon / 10 ** 7, lat / 10 ** 7]
+        )(state),
+    }),
+    mapDispatchToProps: {},
+    render: ({ home_center }) => home_center ?
+        <Marker coordinates={home_center} anchor="center">
+            <span class="material-icons-two-tone" style={{
+                color: "var(--gold)",
+                fontSize: "3rem",
+            }}>home</span>
+        </Marker>
+        : null
+})
 
 const Fence = reduxify({
     mapStateToProps: (state, props) => ({

@@ -14,7 +14,7 @@ import { MapContainer } from '@/gcs/maps'
 import { TukanoPanel } from '@/gcs/panels'
 import { Controls, NerdInfo } from '@/gcs/controls'
 import { Indicators } from '@/gcs/indicators'
-import { request_data_stream } from '@/util/mavutil'
+import { request_data_stream, mavcmd_home_position_interval } from '@/util/mavutil'
 
 import 'antd/dist/antd.less'
 
@@ -50,6 +50,7 @@ export const FlightPanel = {
             const { target_system, target_component } = state.mavlink
             if (target_system && target_component) {
                 request_data_stream(target_system, target_component)
+                mavcmd_home_position_interval()
                 clearInterval(rds_interval)
             }
         }, 500)
