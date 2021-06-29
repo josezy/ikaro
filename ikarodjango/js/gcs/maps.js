@@ -260,10 +260,7 @@ const Home = reduxify({
     mapDispatchToProps: {},
     render: ({ home_center }) => home_center ?
         <Marker coordinates={home_center} anchor="center">
-            <span class="material-icons-two-tone" style={{
-                color: "var(--gold)",
-                fontSize: "3rem",
-            }}>home</span>
+            <span className="material-icons gold" style={{ fontSize: "3rem" }}>home</span>
         </Marker>
         : null
 })
