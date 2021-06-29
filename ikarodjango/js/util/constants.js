@@ -16,7 +16,7 @@ export const ALLOWED_MAVLINK_MSGS = [
     'PARAM_VALUE',
     'HOME_POSITION',
 ]
-export const ALLOWED_MAV_TYPES = ['QUADROTOR']
+// export const ALLOWED_MAV_TYPES = ['QUADROTOR', 'ROVER']
 
 export const MAP_INITIAL_CENTER = [-75.393921, 6.149080]
 export const MAP_INITIAL_ZOOM = [16]
