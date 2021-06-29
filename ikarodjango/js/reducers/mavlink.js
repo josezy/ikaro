@@ -1,5 +1,5 @@
 import {
-    ALLOWED_MAVLINK_MSGS, ALLOWED_MAV_TYPES, MAVLINK_MESSAGES, MAV_TYPE
+    ALLOWED_MAVLINK_MSGS, ALLOWED_MAV_TYPES, MAVLINK_COMMANDS, MAV_TYPE
 } from '@/util/constants'
 
 
@@ -18,7 +18,7 @@ export const goto_point = (lat, lng) => (dispatch, getState) => {
         target_component,
         seq: 0,
         frame: 3,
-        command: MAVLINK_MESSAGES['MAV_CMD_NAV_WAYPOINT'],
+        command: MAVLINK_COMMANDS['MAV_CMD_NAV_WAYPOINT'],
         current: 2,
         autocontinue: 1,
         param1: 0.0,
@@ -43,7 +43,9 @@ export const send_mavcmd = (command, params = {}) => ({
 
 const valid_mavmsg = (mavmsg) => {
     if (!ALLOWED_MAVLINK_MSGS.includes(mavmsg.mavtype)) return false
-    if (mavmsg.mavtype == 'HEARTBEAT' && !ALLOWED_MAV_TYPES.includes(MAV_TYPE[mavmsg.message.type])) return false
+
+    // This only rejects heartbeat
+    // if (mavmsg.mavtype == 'HEARTBEAT' && !ALLOWED_MAV_TYPES.includes(MAV_TYPE[mavmsg.message.type])) return false
     return true
 }
 

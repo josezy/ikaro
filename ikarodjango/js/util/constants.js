@@ -14,8 +14,9 @@ export const ALLOWED_MAVLINK_MSGS = [
     'MISSION_COUNT',
     'MISSION_ITEM',
     'PARAM_VALUE',
+    'HOME_POSITION',
 ]
-export const ALLOWED_MAV_TYPES = ['QUADROTOR']
+// export const ALLOWED_MAV_TYPES = ['QUADROTOR', 'ROVER']
 
 export const MAP_INITIAL_CENTER = [-75.393921, 6.149080]
 export const MAP_INITIAL_ZOOM = [16]
@@ -97,15 +98,20 @@ export const GPS_FIX_TYPE = [
     'PPP',
 ]
 
-export const MAVLINK_MESSAGES = {
+const switch_entries = (acc, entry) => ({ ...acc, [entry[1]]: entry[0] })
+
+export const MAVLINK_COMMANDS = {
     MAV_CMD_NAV_WAYPOINT: 16,
     MAV_CMD_NAV_TAKEOFF: 22,
     MAV_CMD_COMPONENT_ARM_DISARM: 400,
 }
+export const MAVLINK_COMMAND_IDS = Object.entries(MAVLINK_COMMANDS).reduce(switch_entries, {})
 
-export const MAVLINK_IDS = Object.entries(MAVLINK_MESSAGES).reduce(
-    (acc, entry) => ({ ...acc, [entry[1]]: entry[0] })
-    , {})
+
+export const MAVLINK_MESSAGES = {
+    HOME_POSITION: 242,
+}
+export const MAVLINK_MESSAGE_IDS = Object.entries(MAVLINK_MESSAGES).reduce(switch_entries, {})
 
 
 export const mode_mapping_apm = {

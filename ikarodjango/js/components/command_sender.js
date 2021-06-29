@@ -1,5 +1,5 @@
 import { send_mavcmd } from '@/reducers/mavlink'
-import { MAVLINK_IDS } from '@/util/constants'
+import { MAVLINK_COMMAND_IDS } from '@/util/constants'
 
 export class CommandSender {
     constructor(store) {
@@ -24,7 +24,7 @@ export class CommandSender {
 
         const state = this.store.getState()
         const current_ack = state.mavlink && state.mavlink.COMMAND_ACK
-        const ack_command = current_ack && MAVLINK_IDS[current_ack.command]
+        const ack_command = current_ack && MAVLINK_COMMAND_IDS[current_ack.command]
 
         if (current_ack && ack_command == this.commands[this.cmd_index].command) {
             if (current_ack.result == 0) {

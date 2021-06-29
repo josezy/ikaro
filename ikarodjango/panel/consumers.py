@@ -1,3 +1,4 @@
+import time
 import asyncio
 
 from channels.consumer import AsyncConsumer
@@ -44,11 +45,11 @@ class MavlinkConsumer(AsyncConsumer):
             self.can_receive = True
             room = await self.get_drone_room(id)
         else:
-            print("REJECTING CONNECTION")
+            print("REJECTING CONNECTION", flush=True)
             return await self.send({"type": "websocket.close"})
 
         if not room:
-            print("REJECTING CONNECTION: no room")
+            print("REJECTING CONNECTION: no room", flush=True)
             return await self.send({"type": "websocket.close"})
 
         self.room_id = room.short_id
@@ -68,22 +69,25 @@ class MavlinkConsumer(AsyncConsumer):
         if not self.can_receive:
             return
 
-        mav_msg = event.get('text', None)
-        if mav_msg is not None:
+        mavmsg = event.get('text', None)
+        if mavmsg is not None:
             await self.channel_layer.group_send(
                 self.room_id,
                 {
                     "type": "flight_message",
-                    "message": mav_msg,
+                    "mavmsg": mavmsg,
                     "sender_channel_name": self.channel_name
                 }
             )
+            if "HEARTBEAT" in mavmsg:
+                print(f"[WS RECV] {time.ctime()} {self.channel_name}: {mavmsg}", flush=True)
 
     async def flight_message(self, event):
         if self.channel_name != event.get("sender_channel_name"):
+            mavmsg = event.get("mavmsg")
             await self.send({
                 "type": "websocket.send",
-                "text": event.get("message")
+                "text": mavmsg
             })
 
     async def websocket_disconnect(self, event):
