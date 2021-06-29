@@ -8,7 +8,7 @@ import { reduxify } from '@/util/reduxify'
 import { goto_point, send_mavmsg } from '@/reducers/mavlink'
 
 import {
-    MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM, MAVLINK_MESSAGES
+    MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM, MAVLINK_COMMANDS
 } from '@/util/constants'
 
 
@@ -190,7 +190,7 @@ const MissionPathComponent = (props) => {
         }
     }, [mission_count && mission_count.count])
     useEffect(() => {
-        if (mission_item && mission_item.command == MAVLINK_MESSAGES['MAV_CMD_NAV_WAYPOINT']) {
+        if (mission_item && mission_item.command == MAVLINK_COMMANDS['MAV_CMD_NAV_WAYPOINT']) {
             setPath([...path, [mission_item.y, mission_item.x]])
         }
     }, [mission_item && mission_item.seq])
