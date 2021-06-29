@@ -45,11 +45,11 @@ class MavlinkConsumer(AsyncConsumer):
             self.can_receive = True
             room = await self.get_drone_room(id)
         else:
-            print("REJECTING CONNECTION")
+            print("REJECTING CONNECTION", flush=True)
             return await self.send({"type": "websocket.close"})
 
         if not room:
-            print("REJECTING CONNECTION: no room")
+            print("REJECTING CONNECTION: no room", flush=True)
             return await self.send({"type": "websocket.close"})
 
         self.room_id = room.short_id
