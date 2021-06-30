@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import ReactMapboxGl, {
-    Marker, MapContext, Source, Layer, ZoomControl
+    Marker, MapContext, Source, Layer, ZoomControl, Popup
 } from 'react-mapbox-gl'
+import { Button } from 'antd'
 import { createSelector } from 'reselect'
 import { reduxify } from '@/util/reduxify'
 
@@ -32,12 +33,15 @@ const MapComponent = ({ goto_point }) => {
                 onClick={(map, e) => {
                     if (!global.props.is_pilot) return
                     setGotoCoords([e.lngLat.lng, e.lngLat.lat])
-                    goto_point(e.lngLat.lat, e.lngLat.lng)
                 }}
             >
                 <ZoomControl style={{ top: '40%' }} />
                 <MarkerComponent />
-                {global.props.is_pilot && <GotoMarker center={goto_coords} />}
+                {global.props.is_pilot && <GotoMarker
+                    center={goto_coords}
+                    setGotoCoords={setGotoCoords}
+                    goto_point={goto_point}
+                />}
                 <MissionPath />
                 <TraveledPath />
                 {/* <Fence /> */}
@@ -77,11 +81,45 @@ export const MapContainer = reduxify({
     render: props => <MapComponent {...props} />
 })
 
-const GotoMarker = ({ center }) => center ?
-    <Marker coordinates={center}>
-        <span className="material-icons gold" style={{ fontSize: '2rem' }}>place</span>
-    </Marker>
-    : null
+const GotoMarker = ({ center, setGotoCoords, goto_point }) => {
+    const [showConfirm, setShowConfirm] = useState(!!center)
+
+    useEffect(() => {
+        if (center) setShowConfirm(true)
+    }, [center])
+
+    const denyGoto = () => {
+        setShowConfirm(false)
+        setGotoCoords(null)
+    }
+
+    const confirmGoto = () => {
+        setShowConfirm(false)
+        goto_point(center[1], center[0])
+    }
+
+    if (!center) return null
+
+    return (
+        <>
+            {showConfirm && <Popup
+                coordinates={center}
+                anchor="bottom"
+                offset={38}
+                style={{ zIndex: 0 }}
+            >
+                <h6>Seguro que deseas ir a este punto?</h6>
+                <Button onClick={denyGoto}>No</Button>
+                <Button onClick={confirmGoto} type="primary" style={{
+                    float: "right",
+                }}>Si</Button>
+            </Popup>}
+            <Marker coordinates={center} anchor="bottom" style={{ zIndex: 0 }}>
+                <span className="material-icons gold" style={{ fontSize: '2rem' }}>place</span>
+            </Marker>
+        </>
+    )
+}
 
 const MarkerComponent = reduxify({
     mapStateToProps: (state, props) => ({
@@ -97,7 +135,7 @@ const MarkerComponent = reduxify({
     mapDispatchToProps: {},
     render: ({ vehicle_center, heading }) => {
         return vehicle_center ?
-            <Marker coordinates={vehicle_center} anchor="center" style={{ zIndex: 999 }}>
+            <Marker coordinates={vehicle_center} anchor="center">
                 <span className="material-icons" style={{
                     color: 'red',
                     fontSize: '3.5rem',
