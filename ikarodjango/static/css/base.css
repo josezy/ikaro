@@ -115,7 +115,7 @@ body {
     height: 100vh;
     position: absolute;
     background: rgba(0, 0, 0, 0.3);
-    z-index: 20;
+    z-index: 15;
     display: flex;
     flex-direction: column;
     overflow-y: auto;

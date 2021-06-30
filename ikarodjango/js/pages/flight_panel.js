@@ -14,6 +14,7 @@ import { MapContainer } from '@/gcs/maps'
 import { TukanoPanel } from '@/gcs/panels'
 import { Controls, NerdInfo } from '@/gcs/controls'
 import { Indicators } from '@/gcs/indicators'
+import { VideoVisor } from '@/gcs/video'
 import { request_data_stream, mavcmd_home_position_interval } from '@/util/mavutil'
 
 import 'antd/dist/antd.less'
@@ -71,6 +72,7 @@ export const FlightPanel = {
                 <Indicators />
                 {/* <SpectatorsEye /> */}
                 <NerdInfo />
+                <VideoVisor room='1234'/>
             </Provider>
         )
     },
