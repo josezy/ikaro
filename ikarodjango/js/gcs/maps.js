@@ -108,11 +108,11 @@ const GotoMarker = ({ center, setGotoCoords, goto_point }) => {
                 offset={38}
                 style={{ zIndex: 0 }}
             >
-                <h6>Seguro que deseas ir a este punto?</h6>
+                <h6>Are you sure to fly here?</h6>
                 <Button onClick={denyGoto}>No</Button>
                 <Button onClick={confirmGoto} type="primary" style={{
                     float: "right",
-                }}>Si</Button>
+                }}>Yes</Button>
             </Popup>}
             <Marker coordinates={center} anchor="bottom" style={{ zIndex: 0 }}>
                 <span className="material-icons gold" style={{ fontSize: '2rem' }}>place</span>
