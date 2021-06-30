@@ -76,5 +76,6 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "version": "0.0.0"
 }
