@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import ReactMapboxGl, {
-    Marker, MapContext, Source, Layer, ZoomControl
+    Marker, MapContext, Source, Layer, ZoomControl, Popup
 } from 'react-mapbox-gl'
+import { Button } from 'antd'
 import { createSelector } from 'reselect'
 import { reduxify } from '@/util/reduxify'
 
@@ -11,23 +12,6 @@ import {
     MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM, MAVLINK_COMMANDS
 } from '@/util/constants'
 
-import { Popconfirm,message } from 'antd';
-import 'antd/dist/antd.css';
-
-function AppConfirm() {
-    const mensajeSucces=()=>{
-        message.success("Mensaje Success");
-      }
-      function confirm(e) {
-        console.log(e);
-        message.success('Click on Yes');
-      }
-      
-      function cancel(e) {
-        console.log(e);
-        message.error('Click on No');
-      }    
-}
 
 const Mapbox = ReactMapboxGl({
     accessToken: global.props.map_key,
@@ -53,7 +37,11 @@ const MapComponent = ({ goto_point }) => {
             >
                 <ZoomControl style={{ top: '40%' }} />
                 <MarkerComponent />
-                {global.props.is_pilot && <GotoMarker center={goto_coords} goto_point={goto_point} />}
+                {global.props.is_pilot && <GotoMarker
+                    center={goto_coords}
+                    setGotoCoords={setGotoCoords}
+                    goto_point={goto_point}
+                />}
                 <MissionPath />
                 <TraveledPath />
                 {/* <Fence /> */}
@@ -93,21 +81,45 @@ export const MapContainer = reduxify({
     render: props => <MapComponent {...props} />
 })
 
-const GotoMarker = ({ center, goto_point }) => center ?
-    <Marker coordinates={center}>
-        <Popconfirm
-        onVisibleChange=""
-        trigger="hover"
-        title="Are you sure to delete this task?"
-        onConfirm={()=>goto_point(e.lngLat.lat, e.lngLat.lng)}
-        onCancel={()=>console.log('Cancel')}
-        okText="Yes"
-        cancelText="No"
-        >
-        <span className="material-icons gold " style={{ fontSize: '2rem' }}>place</span>
-        </Popconfirm>
-    </Marker>
-    : null
+const GotoMarker = ({ center, setGotoCoords, goto_point }) => {
+    const [showConfirm, setShowConfirm] = useState(!!center)
+
+    useEffect(() => {
+        if (center) setShowConfirm(true)
+    }, [center])
+
+    const denyGoto = () => {
+        setShowConfirm(false)
+        setGotoCoords(null)
+    }
+
+    const confirmGoto = () => {
+        setShowConfirm(false)
+        goto_point(center[1], center[0])
+    }
+
+    if (!center) return null
+
+    return (
+        <>
+            {showConfirm && <Popup
+                coordinates={center}
+                anchor="bottom"
+                offset={38}
+                style={{ zIndex: 0 }}
+            >
+                <h6>Seguro que deseas ir a este punto?</h6>
+                <Button onClick={denyGoto}>No</Button>
+                <Button onClick={confirmGoto} type="primary" style={{
+                    float: "right",
+                }}>Si</Button>
+            </Popup>}
+            <Marker coordinates={center} anchor="bottom" style={{ zIndex: 0 }}>
+                <span className="material-icons gold" style={{ fontSize: '2rem' }}>place</span>
+            </Marker>
+        </>
+    )
+}
 
 const MarkerComponent = reduxify({
     mapStateToProps: (state, props) => ({
@@ -123,7 +135,7 @@ const MarkerComponent = reduxify({
     mapDispatchToProps: {},
     render: ({ vehicle_center, heading }) => {
         return vehicle_center ?
-            <Marker coordinates={vehicle_center} anchor="center" style={{ zIndex: 999 }}>
+            <Marker coordinates={vehicle_center} anchor="center">
                 <span className="material-icons" style={{
                     color: 'red',
                     fontSize: '3.5rem',
