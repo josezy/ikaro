@@ -199,3 +199,6 @@ export const mode_mapping_sub = {
     16: 'POSHOLD',
     19: 'MANUAL',
 }
+
+export const CELLS = [1, 2, 3, 4, 5]
+export const CELL_RANGE = [3.7, 4.2]

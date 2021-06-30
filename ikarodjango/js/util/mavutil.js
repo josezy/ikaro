@@ -1,7 +1,8 @@
 import {
     MAV_AUTOPILOT, MAV_TYPE, MAVLINK_MESSAGES,
     mode_mapping_acm, mode_mapping_apm, mode_mapping_rover,
-    mode_mapping_tracker, mode_mapping_sub
+    mode_mapping_tracker, mode_mapping_sub,
+    CELLS, CELL_RANGE
 } from '@/util/constants'
 
 import { send_mavmsg, send_mavcmd } from '@/reducers/mavlink'
@@ -36,6 +37,14 @@ export const flightmode_from_heartbeat = HEARTBEAT => {
         flightmode = mode_mapping_bynumber(type)[custom_mode]
     }
     return flightmode
+}
+
+export const voltage_to_percentage = voltage => {
+    if (!voltage) return undefined
+    const VOLTAGES = CELLS.map(s => CELL_RANGE.map(v => v * s))
+    const BATT_RANGE = VOLTAGES.find(range => voltage < range[1])
+    const perc = (voltage - BATT_RANGE[0]) * 100 / (BATT_RANGE[1] - BATT_RANGE[0])
+    return Math.min(Math.max(perc, 0), 100)
 }
 
 export const request_data_stream = (target_system, target_component) => {

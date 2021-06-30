@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { reduxify } from '@/util/reduxify'
 import { createSelector } from 'reselect'
-import { getPathLength } from 'geolib'
+// import { getPathLength } from 'geolib'
 
 import Switch from 'react-switch'
 import { Button } from 'react-bootstrap'
 import { Slider, InputNumber, Modal, Row } from 'antd'
 
 import { send_mavcmd, send_mavmsg } from '@/reducers/mavlink'
-import { flightmode_from_heartbeat } from '@/util/mavutil'
+import { flightmode_from_heartbeat, voltage_to_percentage } from '@/util/mavutil'
 import { format_ms } from '@/util/javascript'
 import { GPS_FIX_TYPE, TAKEOFF_MIN_ALTITUDE, TAKEOFF_MAX_ALTITUDE } from '@/util/constants'
 
@@ -227,7 +227,7 @@ export const NerdInfo = reduxify({
         )(state),
         battery: createSelector(
             state => state.mavlink.SYS_STATUS,
-            SYS_STATUS => SYS_STATUS && SYS_STATUS.battery_remaining
+            SYS_STATUS => SYS_STATUS && voltage_to_percentage(SYS_STATUS.voltage_battery / 1000)
         )(state),
         gps: createSelector(
             state => state.mavlink.GPS_RAW_INT,
@@ -270,7 +270,7 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_m
                 <div>Alt: {position ? `${position.relative_alt.toFixed(1)}m` : '--'}</div>
                 <div>Lat: {position ? position.lat : '--'}</div>
                 <div>Lon: {position ? position.lon : '--'}</div>
-                <div>Battery: {Math.max(battery, 0)}%</div>
+                <div>Battery: {battery ? `${battery.toFixed(1)}%` : '--'}</div>
                 <div>Mode: {flight_mode}</div>
             </div>
             <div className='col-6'>
