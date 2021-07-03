@@ -4,7 +4,7 @@ import { Janus } from 'janus-videoroom-client'
 
 export const VideoVisor = (props) => {
     const client = new Janus({
-        url: process.env.JANUS_SERVER || 'ws://207.246.118.54:8188'
+        url: process.env.JANUS_SERVER || 'wss://207.246.118.54:8188'
     })
 
     const pc = new RTCPeerConnection({
@@ -83,14 +83,15 @@ export const VideoVisor = (props) => {
                 backgroundColor: "#2196F3",
                 color: "#fff"
             }}>Click here to move</div>
-            <video id={props.room} autoPlay={true}></video>
+            <video id={props.room} autoPlay muted></video>
             {/* <audio id={props.audio_id} autoPlay={true}></audio> */}
         </div>
     )
 }
 
 window.addEventListener('load', () => {
-    dragElement(document.getElementById("draggable-video"))
+    const elem = document.getElementById("draggable-video")
+    if (elem) dragElement(elem)
 })
 
 function dragElement(elmnt) {

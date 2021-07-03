@@ -30,7 +30,7 @@ const LogComponent = ({ status }) => {
         if (status) setLog([...log.slice(-100), status])
         setTimeout(() => {
             const log_elem = document.getElementById('log')
-            log_elem.scrollTop = log_elem.scrollHeight
+            if (log_elem) log_elem.scrollTop = log_elem.scrollHeight
         }, 500)
     }, [status])
 
