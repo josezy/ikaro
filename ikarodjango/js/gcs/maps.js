@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import ReactMapboxGl, {
-    Marker, MapContext, Source, Layer, ZoomControl
+    Marker, MapContext, Source, Layer, ZoomControl, GeoJSONLayer
 } from 'react-mapbox-gl'
 import { createSelector } from 'reselect'
 import { reduxify } from '@/util/reduxify'
@@ -237,7 +237,81 @@ const Fence = reduxify({
 })
 
 const FenceComponent = (props) => {
-    const {
+    
+    // map.on('load', function () {
+    //     // Add the vector tileset as a source.
+    //     map.addSource('FENCE_ENABLE', {
+    //         type: 'vector',
+    //         url: 'mapbox://examples.8fgz4egr'
+    //     });
+    //     map.addLayer({
+    //         'id': 'population',
+    //         'type': 'circle',
+    //         'source': 'FENCE_ENABLE',
+    //         'source-layer': 'sf2010',
+    //         'paint': {
+    //             // Make circles larger as the user zooms from z12 to z22.
+    //             'circle-radius': {
+    //                 'base': 1.75,
+    //                 'stops': [
+    //                     [12, 2],
+    //                     [22, 180]
+    //                 ]
+    //             },
+    //     // Color circles by ethnicity, using a `match` expression.
+    //             'circle-color': [
+    //                 'match',
+    //                 ['get', 'ethnicity'],
+    //                 'White',
+    //                 '#fbb03b',
+    //                 'Black',
+    //                 '#223b53',
+    //                 'Hispanic',
+    //                 '#e55e5e',
+    //                 'Asian',
+    //                 '#3bb2d0',
+    //                 /* other */ '#ccc'
+    //             ]
+    //         }
+    //     });
+    // });
+    
+    // <GeoJSONLayer
+    //     data={geojson}
+    //     symbolLayout={{
+    //         "text-field": "{place}",
+    //         "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+    //         "text-offset": [0, 0.6],
+    //         "text-anchor": "top"
+    // }}/>
+
+    const [pathFence, setPathFence] = useState([])
+
+    const geoJsonSource = {
+        'type': 'geojson',
+        'data': {
+            'type': 'Feature',
+            'properties': {},
+            'geometry': {
+                'type': 'circle',
+                'coordinates': path
+            }
+        }
+    }
+    const layoutFence = {
+        'line-join': 'round',
+        'line-cap': 'round'
+    }
+    const paintFence = {
+        'line-color': '#008f39',
+        'line-width': 4
+    }
+    return <>
+        <Source id="fence_path" geoJsonSource={geoJsonSource} />
+        <Layer type="line" sourceId="fence_path" layout={layoutFence} paint={paintFence} />
+    </>
+    
+    /* const {
         send_mavmsg, target_system, target_component, fence_enable
     } = props
     // const [path, setPath] = useState([])
@@ -284,6 +358,6 @@ const FenceComponent = (props) => {
     // }
     return <>
         {/* <Source id="mission_path" geoJsonSource={geoJsonSource} />
-        <Layer type="line" sourceId="mission_path" layout={layout} paint={paint} /> */}
-    </>
+        <Layer type="line" sourceId="mission_path" layout={layout} paint={paint} /> 
+    */
 }
