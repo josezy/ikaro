@@ -4,7 +4,8 @@ import { Janus } from 'janus-videoroom-client'
 
 export const VideoVisor = (props) => {
     const client = new Janus({
-        url: process.env.JANUS_SERVER || 'wss://207.246.118.54:8188'
+        url: process.env.JANUS_SERVER || 'wss://ikaro.tucanorobotics.co/video/',
+        token: '123456789',
     })
 
     const pc = new RTCPeerConnection({
