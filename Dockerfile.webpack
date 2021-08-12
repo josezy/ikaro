@@ -1,0 +1,8 @@
+FROM node:16-alpine
+
+WORKDIR /opt/ikaro/ikarodjango/js
+COPY ./ikarodjango/js/yarn.lock ./ikarodjango/js/package.json /opt/ikaro/ikarodjango/js/
+
+RUN yarn install
+
+ENV PATH="/opt/ikaro/ikarodjango/js/node_modules/.bin:${PATH}"

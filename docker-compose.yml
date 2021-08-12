@@ -11,6 +11,22 @@ services:
     command: bash -c "python manage.py migrate && python manage.py collectstatic --no-input && python manage.py runserver 0.0.0.0:8000"
     ports:
       - 8000:8000
+    environment:
+      SERVER_ENV: DEV
     volumes:
       - ./ikarodjango:/opt/ikaro/ikarodjango
+      - ./env:/opt/ikaro/env
 
+  webpack:
+    build:
+      context: . 
+      dockerfile: ./Dockerfile.webpack
+    image: ikaro:webpack
+    command: sh -c "(webpack --mode development --watch --info-verbosity verbose &)| cat"
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./ikarodjango/js:/opt/ikaro/ikarodjango/js
+      - ./ikarodjango/static:/opt/ikaro/ikarodjango/static
+      # Hide local node_modules
+      - ./ikarodjango/js/node_modules:/src/node_modules
