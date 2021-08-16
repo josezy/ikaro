@@ -34,7 +34,7 @@ export const flightmode_from_heartbeat = HEARTBEAT => {
         // flightmode = mavutil.interpret_px4_mode(base_mode, custom_mode)
         throw new Error('PX4 not supported yet')
     } else {
-        flightmode = mode_mapping_bynumber(type)[custom_mode]
+        flightmode = (mode_mapping_bynumber(type) || {})[custom_mode]
     }
     return flightmode
 }
