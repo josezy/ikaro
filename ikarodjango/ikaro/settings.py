@@ -49,7 +49,7 @@ STATICFILES_DIR = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(DATA_DIR, 'media')
 STATIC_ROOT = os.path.join(DATA_DIR, 'static')
 
-REDIS_URL = "redis://localhost:6379"
+REDIS_HOST = "localhost"
 
 MAP_KEY = PLACEHOLDER_FOR_SECRET
 
@@ -128,7 +128,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [REDIS_URL],
+            "hosts": [f"redis://{REDIS_HOST}:6379"],
             "capacity": 1500,
             "expiry": 1,
         },

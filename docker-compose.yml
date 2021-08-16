@@ -13,6 +13,7 @@ services:
       - 8000:8000
     environment:
       SERVER_ENV: DEV
+      REDIS_HOST: redis
     volumes:
       - ./ikarodjango:/opt/ikaro/ikarodjango
       - ./env:/opt/ikaro/env
