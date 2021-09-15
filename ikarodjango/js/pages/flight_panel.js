@@ -72,7 +72,7 @@ export const FlightPanel = {
                 <Indicators />
                 {/* <SpectatorsEye /> */}
                 <NerdInfo />
-                <VideoVisor room='1234'/>
+                <VideoVisor />
             </Provider>
         )
     },

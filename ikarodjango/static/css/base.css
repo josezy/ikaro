@@ -230,6 +230,21 @@ div.instrument.altimeter div.needleSmall {
     color: white;
 }
 
+.video-container {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.video-elem {
+    width: 320px;
+    height: 240px;
+    margin: 10px 10px 35px 10px;
+}
+
 @media (max-width: 1300px) {
     div.mw-wrap {
         width: 100%;
