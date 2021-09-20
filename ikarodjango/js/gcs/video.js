@@ -1,35 +1,22 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Janus } from 'janus-videoroom-client'
 
 
 const client = new Janus({
-    url: 'ws://localhost:8188',
-    // url: process.env.JANUS_SERVER || 'wss://ikaro.tucanorobotics.co/video/',
-    token: '123456789',
+    url: global.props.JANUS_ENDPOINT,
+    // token: '123456789',
 });
 
-const pc_create_negotiate = (publisher) => {
+const pc_create_negotiate = async (publisher, onTrack) => {
     const pc = new RTCPeerConnection({ sdpSemantics: 'unified-plan' });
-    pc.addEventListener('track', (evt) => {
-        console.log(evt.track.kind, evt.streams[0])
-        if (evt.track.kind === 'video') {
-            document.getElementById('video_id').srcObject = evt.streams[0];
-
-        }
-        // if (evt.track.kind === 'audio') {
-        //     document.getElementById('audio_id').srcObject = evt.streams[0];
-        // }
-    });
+    pc.addEventListener('track', onTrack);
 
     pc.setRemoteDescription({ sdp: publisher.listenerHandle.getOffer(), type: "offer" });
 
     pc.addTransceiver('video', { direction: 'recvonly' });
     // pc.addTransceiver('audio', { direction: 'recvonly' });
 
-    pc.createAnswer().then((answer) => {
-        console.log("CREATING ANSWER")
-        return pc.setLocalDescription(answer);
-    }).then(() => {
+    await pc.createAnswer().then((answer) => pc.setLocalDescription(answer)).then(() => {
         // wait for ICE gathering to complete
         return new Promise((resolve) => {
             if (pc.iceGatheringState === 'complete') {
@@ -44,33 +31,38 @@ const pc_create_negotiate = (publisher) => {
                 pc.addEventListener('icegatheringstatechange', checkState);
             }
         });
-    }).then(() => {
-        publisher.listenerHandle.setRemoteAnswer(pc.localDescription.sdp).then(() => {
-            console.log("ANSWERD SEND VIDEO IS STARTING...")
-        });
-    })
+    }).then(() => publisher.listenerHandle.setRemoteAnswer(pc.localDescription.sdp))
+
+    console.log("ANSWERD SEND VIDEO IS STARTING...")
 }
 
 export const VideoVisor = () => {
-    const room = '1234'
+    const videoRef = useRef(null)
+
+    // const room_id = window.location.pathname.slice(-8)
+    const room_id = '1234'
+
+    const onTrack = (evt) => {
+        console.log(evt.track.kind, evt.streams[0])
+        if (evt.track.kind === 'video') {
+            if (videoRef.current) videoRef.current.srcObject = evt.streams[0]
+        }
+        // if (evt.track.kind === 'audio') {
+        //     document.getElementById('audio_id').srcObject = evt.streams[0];
+        // }
+    }
 
     useEffect(() => {
-        // var JanusClient = require('janus-videoroom-client').Janus;
-
-        // if (this.props.token)
-        //     janus_props_session.token = this.props.token
-
-        // var client = new JanusClient(janus_props_session);
-
+        if (!room_id) return
         client.onConnected(() => {
             client.createSession().then((session) => {
-                console.log("CREATING SESSION", session)
-                session.videoRoom().getFeeds(room).then((feeds) => {
-                    if (feeds.length == 0) return console.warn("no feeds")
-                    console.log("FEEDS", room, feeds)
-                    session.videoRoom().listenFeed(room, feeds[0]).then((listenerHandle) => {
+                console.log("Session created, room id:", room_id)
+                session.videoRoom().getFeeds(room_id).then((feeds) => {
+                    if (feeds.length == 0) return console.warn("No feeds for room:", room_id)
+                    console.log("Feeds:", feeds)
+                    session.videoRoom().listenFeed(room_id, feeds[0]).then((listenerHandle) => {
                         console.log("listenerHandle", listenerHandle)
-                        setTimeout(() => pc_create_negotiate({ listenerHandle }), 3000)
+                        setTimeout(() => pc_create_negotiate({ listenerHandle }, onTrack), 3000)
                     });
                 })
 
@@ -92,7 +84,7 @@ export const VideoVisor = () => {
     return (
         <div className="video-container">
             <video
-                id="video_id"
+                ref={videoRef}
                 autoPlay
                 muted
                 playsInline
