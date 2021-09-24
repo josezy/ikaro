@@ -4,7 +4,7 @@ import { Janus } from 'janus-videoroom-client'
 
 const client = new Janus({
     url: global.props.JANUS_ENDPOINT,
-    // token: '123456789',
+    token: '123456789',
 });
 
 const pc_create_negotiate = async (publisher, onTrack) => {
