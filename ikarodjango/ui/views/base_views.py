@@ -28,16 +28,17 @@ class BaseContextMixin(object):
         """get the base context items made available to every template"""
 
         return {
-            'DEBUG': settings.DEBUG,
-            'GIT_SHA': settings.GIT_SHA,
-            'ENVIRONMENT': settings.SERVER_ENV,
-            'TIME_ZONE': settings.TIME_ZONE,
-            'LANGUAGE_CODE': settings.LANGUAGE_CODE,
             'user': request.user,
             'title': self.title or self.__class__.__name__,
             'page_id': self.__class__.__name__.lower(),
             'component': self.component,
             'custom_stylesheet': self.custom_stylesheet,
+            'DEBUG': settings.DEBUG,
+            'GIT_SHA': settings.GIT_SHA,
+            'ENVIRONMENT': settings.SERVER_ENV,
+            'TIME_ZONE': settings.TIME_ZONE,
+            'LANGUAGE_CODE': settings.LANGUAGE_CODE,
+            'JANUS_ENDPOINT': settings.JANUS_ENDPOINT,
         }
 
     def context(self, request, *args, **kwargs):
