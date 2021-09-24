@@ -124,6 +124,7 @@ class PublicReactView(BaseView):
 
     def get_base_props(self, request, *args, **kwargs):
         base_props = {
+            'user': self.user_json(request),
             'url_name': request.resolver_match.url_name,
             'url': request.build_absolute_uri(),
             'domain': request.META.get('HTTP_HOST', ''),
@@ -132,7 +133,7 @@ class PublicReactView(BaseView):
             'GIT_SHA': settings.GIT_SHA,
             'ENVIRONMENT': settings.SERVER_ENV,
             'TIME_ZONE': settings.TIME_ZONE,
-            'user': self.user_json(request),
+            'JANUS_ENDPOINT': settings.JANUS_ENDPOINT,
         }
 
         return base_props
