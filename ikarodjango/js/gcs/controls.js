@@ -62,7 +62,7 @@ const ArmedSwitch = reduxify({
     </div>
 })
 
-
+    
 const RTLButton = reduxify({
     mapStateToProps: (state, props) => ({}),
     mapDispatchToProps: { send_mavcmd },
@@ -194,6 +194,198 @@ const TakeoffButtonComponent = ({ send_mavmsg, target_system, armed }) => {
         </Modal>
     </div>
 }
+const ManualDriveButton = reduxify({
+    mapStateToProps: (state, props) => ({
+        target_system: state.mavlink.target_system,
+        target_component: state.mavlink.target_component,
+        armed: createSelector(
+            state => state.mavlink.HEARTBEAT,
+            HEARTBEAT => HEARTBEAT && Boolean(HEARTBEAT.base_mode & 10 ** 7)
+        )(state),
+    }),
+    mapDispatchToProps: { send_mavmsg },
+    render: (props) => <ManualControlButtonComponent {...props} />
+})
+
+
+const ManualControlButtonComponent = ({ send_mavmsg, target_system, target_component,armed }) => {
+    const [showModal, setShowModal] = useState(false)
+    const [takeControlFlag, setTakeControlFlag] = useState(false)
+    const [roll, setRoll] = useState(1500)
+    const [throttle, setThrottle] = useState(1000)
+    const [orientation, setOrientation] = useState(0)
+
+    const [keyPress, setKeyPress] = useState(
+        {
+            up:{
+                pressed: false,
+                keyCode:87,
+            },
+            down:{
+                pressed: false,
+                keyCode:83,
+            },
+            right:{
+                pressed: false,
+                keyCode:68,
+            },
+            left:{
+                pressed: false,
+                keyCode:65,
+            },
+        }
+    )
+    const keyDownListener = async (event) => {
+        
+        if(takeControlFlag){
+
+            Object.entries(keyPress).map(([key, value]) => {
+                if(event.keyCode==value.keyCode)
+                    value.pressed=true    
+                
+            })
+        }
+       
+           
+    }
+    const keyUpListener = async (event) => {
+        if(takeControlFlag)           
+            Object.entries(keyPress).map(([key, value]) => {
+                if(event.keyCode==value.keyCode)
+                    value.pressed=false      
+                
+            })                 
+
+    }
+    
+    const move =  (roll,throttle, orientation) => {
+        if (orientation==1){
+            
+            send_mavmsg('RC_CHANNELS_OVERRIDE', {
+                target_system,
+                target_component,            
+                chan1_raw: roll,
+                chan2_raw: 0,
+                chan3_raw: throttle,
+                chan4_raw: 0,
+                chan5_raw: 0,
+                chan6_raw: 0,
+                chan7_raw: 1000,
+                chan8_raw: 2000,        
+            })
+        } 
+        else{
+            
+            send_mavmsg('RC_CHANNELS_OVERRIDE', {
+                target_system,   
+                target_component,          
+                chan1_raw: roll,
+                chan2_raw: 0,
+                chan3_raw: throttle,
+                chan4_raw: 0,
+                chan5_raw: 0,
+                chan6_raw: 0,
+                chan7_raw: 2000,
+                chan8_raw: 1000        
+            })
+        }
+                
+    
+    }
+
+    const  doMove = async () => {
+        if(takeControlFlag ){   
+            setThrottle(1000)
+            setRoll(1500)
+            
+           
+            if(keyPress.up.pressed && !keyPress.down.pressed){
+                setThrottle(1650)
+                setOrientation(0)
+            
+            }else if(!keyPress.up.pressed && keyPress.down.pressed){
+                setThrottle(1650)
+                setOrientation(1)
+            }
+
+            if( keyPress.right.pressed && !keyPress.left.pressed){      
+                setRoll(1900)
+            }
+            else if( !keyPress.right.pressed && keyPress.left.pressed){                
+                setRoll(1100)
+            }
+          
+          
+            move(roll, throttle, orientation)
+        }  
+    }
+    useEffect(() => {
+    
+        window.addEventListener('keydown', keyDownListener )
+        window.addEventListener('keyup', keyUpListener )
+        const interval = setInterval( doMove, 10);
+
+        return () => {
+            window.removeEventListener('keydown', keyDownListener),
+            window.removeEventListener('keyup', keyUpListener),
+            clearInterval(interval);
+        }
+    }, [takeControlFlag,roll, throttle, orientation,keyPress,armed,target_system])
+
+    const takeControl =  (doControl) => {
+        console.log("armadooooooo",armed,"doControl",doControl)
+        
+
+        if(!doControl)
+            //HOLD
+            send_mavmsg('SET_MODE', {
+                target_system,
+                base_mode: 193,
+                custom_mode: 4
+            })
+           
+        else if(doControl && armed ){
+            //SET TO MANUAL MODE            
+            send_mavmsg('SET_MODE', {
+                target_system,
+                base_mode: 129,
+                custom_mode: 0
+            })
+            console.log("MANUAL MODE!")
+        }
+        
+        setTakeControlFlag(doControl && armed)        
+        setShowModal(false)   
+     
+    }
+
+    
+    return <div className='m-auto p-1'>
+
+        <Button
+            variant='outline-warning'
+            style={{ maxWidth: '100%' }}
+            className='main-button'
+            onClick={_ => setShowModal(true)}
+            disabled={!armed}
+        >
+            <img src='/static/img/takeoff.png' width='100' style={{ maxWidth: '100%' }} />
+        </Button>
+        <Modal
+            visible={showModal}
+            centered
+            onOk={_ => takeControl(true)}
+
+            onCancel={_ => takeControl(false)}
+            closable={false}
+            title='Set takeoff altitude (meters)'
+            width={350}
+        >
+            <p>  You will take control off vehicle:</p>
+           
+        </Modal>
+    </div>
+}
 
 
 const LandButton = reduxify({
@@ -310,6 +502,7 @@ export const Controls = () => <>
         <div className='controls-row'>
             <TakeoffButton />
             <LandButton />
+            
         </div>
         <div className='controls-row'>
             <RTLButton />
@@ -318,6 +511,9 @@ export const Controls = () => <>
         </div>
         <div className='controls-row'>
             <Log />
+        </div>
+        <div className='controls-row'>
+            <ManualDriveButton />
         </div>
     </div>
 </>

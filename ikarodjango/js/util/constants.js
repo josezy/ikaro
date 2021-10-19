@@ -15,6 +15,8 @@ export const ALLOWED_MAVLINK_MSGS = [
     'MISSION_ITEM',
     'PARAM_VALUE',
     'HOME_POSITION',
+    'SET_MODE',
+    'RC_CHANNELS_OVERRIDE'
 ]
 // export const ALLOWED_MAV_TYPES = ['QUADROTOR', 'ROVER']
 
