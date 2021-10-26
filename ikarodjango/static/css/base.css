@@ -237,6 +237,7 @@ div.instrument.altimeter div.needleSmall {
     display: flex;
     justify-content: flex-end;
     align-items: flex-end;
+    pointer-events: none;
 }
 
 .video-elem {
