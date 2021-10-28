@@ -34,10 +34,26 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
 
     const [vehicleParams, setVehicleParams] = useState(
         {
-            maxThrottle:1700,
-            throttleStep:50,
-            maxRollLeft:1900,
-            maxRollRight:1100
+            
+            throttleParams:{
+                throttle:1700,
+                throttleStep:50,
+                maxPwm:1900,
+                minPwm:1100
+            },
+            rollParams:{
+                rollLeft:1900, //(1500-1900]
+                rollRight:1100, //[1100-1500)
+                maxPwm:1900,
+                minPwm:1100
+            },
+            servoTrimParams:{
+                servo1: 1500,
+                servo2: 1500,
+                pwmStep: 50,
+                maxPwm:1900,
+                minPwm:1100
+            }
         }
     )
     const [keyPress, setKeyPress] = useState(
@@ -62,12 +78,32 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
             more_throttle:{
                 pressed: false,
                 updated: true,
-                keyCode:'e',
+                keyCode:'8',
             },
             less_throttle:{
                 pressed: false,
                 updated: true,
-                keyCode:'q',
+                keyCode:'5',
+            },
+            more_servo1_trim:{
+                pressed: false,
+                updated: true,
+                keyCode:'7',
+            },
+            less_servo1_trim:{
+                pressed: false,
+                updated: true,
+                keyCode:'9',
+            },
+            more_servo2_trim:{
+                pressed: false,
+                updated: true,
+                keyCode:'4',
+            },
+            less_servo2_trim:{
+                pressed: false,
+                updated: true,
+                keyCode:'6',
             },
         }
     )
@@ -98,87 +134,167 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
             })                 
 
     }
-    
-    const move =  (roll,throttle, orientation) => {
-        if (orientation==1){
-            
-            send_mavmsg('RC_CHANNELS_OVERRIDE', {
-                target_system,
-                target_component,            
-                chan1_raw: roll,
-                chan2_raw: 0,
-                chan3_raw: throttle,
-                chan4_raw: 0,
-                chan5_raw: 0,
-                chan6_raw: 0,
-                chan7_raw: 1000,
-                chan8_raw: 2000,        
-            })
-        } 
-        else{
-            
-            send_mavmsg('RC_CHANNELS_OVERRIDE', {
-                target_system,   
-                target_component,          
-                chan1_raw: roll,
-                chan2_raw: 0,
-                chan3_raw: throttle,
-                chan4_raw: 0,
-                chan5_raw: 0,
-                chan6_raw: 0,
-                chan7_raw: 2000,
-                chan8_raw: 1000        
-            })
+    const setServoTrim =  (pwm,servo) => {
+        let param_id='SERVO1_TRIM';
+        if(servo==2){
+            param_id='SERVO2_TRIM';
         }
-                
+        send_mavmsg('PARAM_SET', {
+            target_system,
+            target_component,            
+            param_id: param_id,
+            param_value: pwm,
+            param_type: 4       
+        })
+        console.log("SERVO TRIM","DONE")
+    }
+    const move =  (roll,throttle, orientation) => {
+        let ch7_raw=2000;
+        let ch8_raw=2000
+      
+        if (orientation==1){
+            ch7_raw=1000;
+            ch8_raw=2000;
+        } else if( orientation==0){
+
+            ch7_raw=2000;
+            ch8_raw=1000; 
+        }
+        
+        send_mavmsg('RC_CHANNELS_OVERRIDE', {
+            target_system,
+                target_system,   
+            target_system,
+                target_system,   
+            target_system,
+            target_component,            
+                target_component,          
+            target_component,            
+                target_component,          
+            target_component,            
+            chan1_raw: roll,
+            chan2_raw: 0,
+            chan3_raw: throttle,
+            chan4_raw: 0,
+            chan5_raw: 0,
+            chan6_raw: 0,
+            chan7_raw: ch7_raw,
+            chan8_raw: ch8_raw,        
+        })     
+            })
+        })     
+            })
+        })     
     
     }
-
+    
     const  doMove = async () => {
         if(takeControlFlag ){   
             setThrottle(1000)
             setRoll(1500)
+            setOrientation(2)
 
-            if( keyPress.more_throttle.pressed ){
-                if(vehicleParams.maxThrottle<1900 && keyPress.more_throttle.updated){
-                    keyPress.more_throttle.updated=false
-                    vehicleParams.maxThrottle= vehicleParams.maxThrottle+vehicleParams.throttleStep
+            //SERVO1_TRIM
+            if( keyPress.more_servo1_trim.pressed ){
+                if(
+                    vehicleParams.servoTrimParams.servo1<vehicleParams.servoTrimParams.maxPwm
+                    && keyPress.more_servo1_trim.updated
+                ){
+                    keyPress.more_servo1_trim.updated=false
+                    vehicleParams.servoTrimParams.servo1+=vehicleParams.servoTrimParams.pwmStep
+             
+                    setServoTrim ( 
+                        vehicleParams.servoTrimParams.servo1,1
+                    )
                 }
+            }else{                
+                keyPress.more_servo1_trim.updated=true
+            } 
 
-            }else{
-                
+            if( keyPress.less_servo1_trim.pressed ){
+                if(
+                    vehicleParams.servoTrimParams.servo1>vehicleParams.servoTrimParams.minPwm 
+                    && keyPress.less_servo1_trim.updated
+                ){
+                    keyPress.less_servo1_trim.updated=false
+                    vehicleParams.servoTrimParams.servo1-=vehicleParams.servoTrimParams.pwmStep
+                    setServoTrim( vehicleParams.servoTrimParams.servo1,1)
+                }
+            }else{                
+                keyPress.less_servo1_trim.updated=true
+            }
+            
+            //SERVO2_TRIM
+       
+            if( keyPress.more_servo2_trim.pressed )    {
+                if(
+                    vehicleParams.servoTrimParams.servo2<vehicleParams.servoTrimParams.maxPwm
+                    && keyPress.more_servo2_trim.updated
+                ){
+                    keyPress.more_servo2_trim.updated=false
+                    vehicleParams.servoTrimParams.servo2+=vehicleParams.servoTrimParams.pwmStep
+                    setServoTrim ( 
+                        vehicleParams.servoTrimParams.servo2,2
+                    )
+                }
+            }else{                
+                keyPress.more_servo2_trim.updated=true
+            } 
+
+            if( keyPress.less_servo2_trim.pressed )    {
+                if(
+                    vehicleParams.servoTrimParams.servo2>vehicleParams.servoTrimParams.minPwm 
+                    && keyPress.less_servo2_trim.updated
+                ){
+                    keyPress.less_servo2_trim.updated=false
+                    vehicleParams.servoTrimParams.servo2-=vehicleParams.servoTrimParams.pwmStep
+                    setServoTrim ( 
+                        vehicleParams.servoTrimParams.servo2,2
+                    )   
+                }
+            }else{                
+                keyPress.less_servo2_trim.updated=true
+            } 
+
+            //THROTTLE
+            if( keyPress.more_throttle.pressed ){
+                if(
+                    vehicleParams.throttleParams.throttle<vehicleParams.throttleParams.maxPwm 
+                    && keyPress.more_throttle.updated
+                ){
+                    keyPress.more_throttle.updated=false
+                    vehicleParams.throttleParams.throttle+=vehicleParams.throttleParams.throttleStep
+                }
+            }else{                
                 keyPress.more_throttle.updated=true
             } 
-                
-            
-            if( keyPress.less_throttle.pressed )    {
-                if(vehicleParams.maxThrottle>1100 && keyPress.less_throttle.updated){
-                    keyPress.less_throttle.updated=false
-                    vehicleParams.maxThrottle= vehicleParams.maxThrottle-vehicleParams.throttleStep
-                }
 
-            }else{
-                
+            if( keyPress.less_throttle.pressed )    {
+                if(
+                    vehicleParams.throttleParams.throttle>vehicleParams.throttleParams.minPwm 
+                    && keyPress.less_throttle.updated
+                ){
+                    keyPress.less_throttle.updated=false
+                    vehicleParams.throttleParams.throttle-= vehicleParams.throttleParams.throttleStep
+                }
+            }else{                
                 keyPress.less_throttle.updated=true
             } 
-                    
+                   
+            //MOVE CONTROL 
             if(keyPress.up.pressed && !keyPress.down.pressed){
-                setThrottle(vehicleParams.maxThrottle)
-                setOrientation(0)
-            
+                setThrottle(vehicleParams.throttleParams.throttle)
+                setOrientation(0)            
             }else if(!keyPress.up.pressed && keyPress.down.pressed){
-                setThrottle(vehicleParams.maxThrottle)
+                setThrottle(vehicleParams.throttleParams.throttle)
                 setOrientation(1)
-            }
-
-            if( keyPress.right.pressed && !keyPress.left.pressed){      
-                setRoll( vehicleParams.maxRollLeft)
-            }
-            else if( !keyPress.right.pressed && keyPress.left.pressed){                
-                setRoll( vehicleParams.maxRollRight)
-            }
+            }            
+            if( keyPress.right.pressed && !keyPress.left.pressed)     
+                setRoll( vehicleParams.rollParams.rollRight)
+            else if( !keyPress.right.pressed && keyPress.left.pressed)            
+                setRoll( vehicleParams.rollParams.rollLeft)
+            
           
-        
             move(roll, throttle, orientation)
         }  
     }
@@ -236,9 +352,10 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
                 <div  style={{
                     backgroundColor:'white',                    
                 }}>
-                    <b>Throttle:</b>{vehicleParams.maxThrottle}<br/>
-                    <b>Left:</b>{vehicleParams.maxRollLeft} <br/>
-                    <b>Right:</b>{vehicleParams.maxRollRight}<br/>
+                    <b>Throttle:</b>{vehicleParams.throttleParams.throttle}<br/>
+                    <b>Front Align:</b>{vehicleParams.servoTrimParams.servo1}<br/>
+                    <b>Back Align:</b>{vehicleParams.servoTrimParams.servo2}<br/>
+                    <b>Left:</b>{vehicleParams.rollParams.rollLeft} <br/>
                 </div>
                 
                 <Modal
@@ -311,13 +428,13 @@ export const ManualControl= () => <>
                 <h3>CONTROLES</h3>
                 <p>
                     <b> w: </b>acelerar hacia adelante<br/>
-                    <b> s: </b>derecha <br/>
+                    <b> d: </b>derecha <br/>
                     <b> a: </b>izquierda <br/>
-                    <b> d: </b>acelerar hacia atras<br/>
+                    <b> s: </b>acelerar hacia atras<br/>
                     <b> e: </b>aumenta la aceleración<br/>
                     <b> q: </b>disminuye la aceleració<br/>
                 </p>
             </div>
-        </div               >
+        </div>
     </div>
 </>
