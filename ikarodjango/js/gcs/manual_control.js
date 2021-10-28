@@ -163,14 +163,6 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
         
         send_mavmsg('RC_CHANNELS_OVERRIDE', {
             target_system,
-                target_system,   
-            target_system,
-                target_system,   
-            target_system,
-            target_component,            
-                target_component,          
-            target_component,            
-                target_component,          
             target_component,            
             chan1_raw: roll,
             chan2_raw: 0,
@@ -180,10 +172,6 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
             chan6_raw: 0,
             chan7_raw: ch7_raw,
             chan8_raw: ch8_raw,        
-        })     
-            })
-        })     
-            })
         })     
     
     }
