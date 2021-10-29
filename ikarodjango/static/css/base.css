@@ -240,8 +240,8 @@ div.instrument.altimeter div.needleSmall {
 }
 
 .video-elem {
-    width: 320px;
-    height: 240px;
+    width: 640px;
+    height: 480px;
     margin: 10px 10px 35px 10px;
 }
 
