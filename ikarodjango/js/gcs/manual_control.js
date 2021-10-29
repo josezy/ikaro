@@ -43,8 +43,8 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
                 minPwm:1100
             },
             rollParams:{
-                rollLeft:1100, //(1500-1900]
-                rollRight:1900, //[1100-1500)
+                rollLeft:1900, //(1500-1900]
+                rollRight:1100, //[1100-1500)
                 maxPwm:1900,
                 minPwm:1100
             },
@@ -70,11 +70,11 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
             },
             right:{
                 pressed: false,
-                keyCode:'d',
+                keyCode:'a',
             },
             left:{
                 pressed: false,
-                keyCode:'a',
+                keyCode:'d',
             },
             more_throttle:{
                 pressed: false,
