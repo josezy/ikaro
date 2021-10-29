@@ -70,11 +70,11 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
             },
             right:{
                 pressed: false,
-                keyCode:'d',
+                keyCode:'a',
             },
             left:{
                 pressed: false,
-                keyCode:'a',
+                keyCode:'d',
             },
             more_throttle:{
                 pressed: false,
