@@ -6,6 +6,7 @@ import { Button } from 'react-bootstrap'
 import {  Modal } from 'antd'
 
 import { send_mavmsg } from '@/reducers/mavlink'
+import { RC_CHANNELS_OVERRIDE_INTERVAL } from '@/util/constants'
 import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
 
@@ -290,7 +291,7 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
     
         window.addEventListener('keydown', keyDownListener )
         window.addEventListener('keyup', keyUpListener )
-        const interval = setInterval( doMove, 10);
+        const interval = setInterval( doMove, RC_CHANNELS_OVERRIDE_INTERVAL);
 
         return () => {
             window.removeEventListener('keydown', keyDownListener),
