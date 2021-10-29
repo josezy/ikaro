@@ -4594,6 +4594,11 @@ react-redux@^7.1.0:
     prop-types "^15.7.2"
     react-is "^16.13.1"
 
+react-simple-keyboard@^3.3.21:
+  version "3.3.21"
+  resolved "https://registry.yarnpkg.com/react-simple-keyboard/-/react-simple-keyboard-3.3.21.tgz#20fa4daf37ab3195ee8ca78262594b63ebc9e5f2"
+  integrity sha512-OOtOMLlyK+1kebfiWEnL19jNzHd6c4fnouZUzNLkUnRv160FrwhIUEWkF1eKv3ffAqnADfcz8OVvbJr88Rc+JQ==
+
 react-switch@^5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/react-switch/-/react-switch-5.0.1.tgz#449277f4c3aed5286fffd0f50d5cbc2a23330406"
