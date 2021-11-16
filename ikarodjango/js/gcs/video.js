@@ -60,7 +60,7 @@ export const VideoVisor = () => {
                 session.videoRoom().getFeeds(room_id).then((feeds) => {
                     if (feeds.length == 0) return console.warn("No feeds for room:", room_id)
                     console.log("Feeds:", feeds)
-                    session.videoRoom().listenFeed(room_id, feeds[0]).then((listenerHandle) => {
+                    session.videoRoom().listenFeed(room_id, feeds[feeds.length-1]).then((listenerHandle) => {
                         console.log("listenerHandle", listenerHandle)
                         setTimeout(() => pc_create_negotiate({ listenerHandle }, onTrack), 3000)
                     });
