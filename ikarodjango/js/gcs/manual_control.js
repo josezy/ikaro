@@ -380,7 +380,7 @@ const JoystickControls = React.forwardRef((props, ref) => {
         let throttle_range=Math.abs(props.vehicleParams.throttleParams.maxPwm-props.vehicleParams.throttleParams.minPwm)
         let roll_range=Math.abs(props.vehicleParams.rollParams.maxPwm-props.vehicleParams.rollParams.minPwm)
         let r = Math.sqrt(Math.pow(values.x/50,2)+Math.pow(values.y/50,2))
-        let x = Math.abs(values.x/50)
+        let x = values.x/50
         let y = Math.abs(values.y/50) 
         if(r>1){
             r=1
