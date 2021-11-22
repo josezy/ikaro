@@ -12,6 +12,7 @@ import { flightmode_from_heartbeat, voltage_to_percentage } from '@/util/mavutil
 import { format_ms } from '@/util/javascript'
 import { GPS_FIX_TYPE, TAKEOFF_MIN_ALTITUDE, TAKEOFF_MAX_ALTITUDE } from '@/util/constants'
 
+import { ManualControl } from '@/gcs/manual_control'
 
 const Log = reduxify({
     mapStateToProps: (state, props) => ({
@@ -326,5 +327,9 @@ export const Controls = () => <>
         <div className='controls-row'>
             <Log />
         </div>
+        <div className='controls-row'>
+            <ManualControl />
+        </div>
+        
     </div>
 </>
