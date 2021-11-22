@@ -4,8 +4,7 @@ import ReactMapboxGl, {
 } from 'react-mapbox-gl'
 import { Button } from 'antd'
 import { createSelector } from 'reselect'
-import { reduxify } from '@/util/reduxify'
-import { ManualControl } from '@/gcs/manual_control'
+import { reduxify } from '@/util/reduxify'      
 
 import { goto_point, send_mavmsg } from '@/reducers/mavlink'
 
@@ -74,7 +73,6 @@ const MapComponent = ({ goto_point }) => {
             </Mapbox>
         </div>
         
-        <ManualControl></ManualControl>
     </>
 }
 

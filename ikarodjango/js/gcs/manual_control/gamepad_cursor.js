@@ -14,7 +14,7 @@ export function GamepadCursor(props, ref) {
    
  
     if(props.takeControlFlag){
-        if(gamepads[gamepadId].axes[1]>0){
+        if(gamepads[gamepadId].axes[1]<0){
             props.vehicleParams.throttleParams.orientation = 0
         }else{
             props.vehicleParams.throttleParams.orientation = 1
