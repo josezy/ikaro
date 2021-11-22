@@ -289,7 +289,7 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
             setOrientation(vehicleParams.throttleParams.orientation)  
             setRoll( vehicleParams.rollParams.roll)
             console.log(roll, throttle, orientation)
-            //move(roll, throttle, orientation)
+            move(roll, throttle, orientation)
         }  
     }
     useEffect(() => {
