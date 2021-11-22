@@ -11,7 +11,6 @@ import { send_mavcmd, send_mavmsg } from '@/reducers/mavlink'
 import { flightmode_from_heartbeat, voltage_to_percentage } from '@/util/mavutil'
 import { format_ms } from '@/util/javascript'
 import { GPS_FIX_TYPE, TAKEOFF_MIN_ALTITUDE, TAKEOFF_MAX_ALTITUDE } from '@/util/constants'
-import { ManualControl } from './manual_control'
 
 
 const Log = reduxify({
@@ -326,9 +325,6 @@ export const Controls = () => <>
         </div>
         <div className='controls-row'>
             <Log />
-        </div>
-        <div className='controls-row'>
-            <ManualControl />
         </div>
     </div>
 </>
