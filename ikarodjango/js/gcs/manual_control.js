@@ -9,6 +9,7 @@ import { send_mavmsg } from '@/reducers/mavlink'
 import { RC_CHANNELS_OVERRIDE_INTERVAL } from '@/util/constants'
 import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
+import { Joystick } from 'react-joystick-component';
 
 
 const ManualDriveButton = reduxify({
@@ -40,9 +41,11 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
                 throttle:1700,
                 throttleStep:50,
                 maxPwm:1900,
-                minPwm:1100
+                minPwm:1100,
+                orientation:2
             },
             rollParams:{
+                roll:1500,
                 rollLeft:1900, //(1500-1900]
                 rollRight:1100, //[1100-1500)
                 maxPwm:1900,
@@ -178,7 +181,7 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
     }
     
     const  doMove = async () => {
-        if(takeControlFlag ){   
+        if(!takeControlFlag ){   
             setThrottle(1000)
             setRoll(1500)
             setOrientation(2)
@@ -246,45 +249,47 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
             } 
 
             //THROTTLE
-            if( keyPress.more_throttle.pressed ){
-                if(
-                    vehicleParams.throttleParams.throttle<vehicleParams.throttleParams.maxPwm 
-                    && keyPress.more_throttle.updated
-                ){
-                    keyPress.more_throttle.updated=false
-                    vehicleParams.throttleParams.throttle+=vehicleParams.throttleParams.throttleStep
-                }
-            }else{                
-                keyPress.more_throttle.updated=true
-            } 
+            // if( keyPress.more_throttle.pressed ){
+            //     if(
+            //         vehicleParams.throttleParams.throttle<vehicleParams.throttleParams.maxPwm 
+            //         && keyPress.more_throttle.updated
+            //     ){
+            //         keyPress.more_throttle.updated=false
+            //         vehicleParams.throttleParams.throttle+=vehicleParams.throttleParams.throttleStep
+            //     }
+            // }else{                
+            //     keyPress.more_throttle.updated=true
+            // } 
 
-            if( keyPress.less_throttle.pressed )    {
-                if(
-                    vehicleParams.throttleParams.throttle>vehicleParams.throttleParams.minPwm 
-                    && keyPress.less_throttle.updated
-                ){
-                    keyPress.less_throttle.updated=false
-                    vehicleParams.throttleParams.throttle-= vehicleParams.throttleParams.throttleStep
-                }
-            }else{                
-                keyPress.less_throttle.updated=true
-            } 
+            // if( keyPress.less_throttle.pressed )    {
+            //     if(
+            //         vehicleParams.throttleParams.throttle>vehicleParams.throttleParams.minPwm 
+            //         && keyPress.less_throttle.updated
+            //     ){
+            //         keyPress.less_throttle.updated=false
+            //         vehicleParams.throttleParams.throttle-= vehicleParams.throttleParams.throttleStep
+            //     }
+            // }else{                
+            //     keyPress.less_throttle.updated=true
+            // } 
                    
-            //MOVE CONTROL 
-            if(keyPress.up.pressed && !keyPress.down.pressed){
-                setThrottle(vehicleParams.throttleParams.throttle)
-                setOrientation(0)            
-            }else if(!keyPress.up.pressed && keyPress.down.pressed){
-                setThrottle(vehicleParams.throttleParams.throttle)
-                setOrientation(1)
-            }            
-            if( keyPress.right.pressed && !keyPress.left.pressed)     
-                setRoll( vehicleParams.rollParams.rollRight)
-            else if( !keyPress.right.pressed && keyPress.left.pressed)            
-                setRoll( vehicleParams.rollParams.rollLeft)
-            
-          
-            move(roll, throttle, orientation)
+            //KEY MOVE CONTROL 
+            // if(keyPress.up.pressed && !keyPress.down.pressed){
+            //     setThrottle(vehicleParams.throttleParams.throttle)
+            //     setOrientation(0)            
+            // }else if(!keyPress.up.pressed && keyPress.down.pressed){
+            //     setThrottle(vehicleParams.throttleParams.throttle)
+            //     setOrientation(1)
+            // }            
+            // if( keyPress.right.pressed && !keyPress.left.pressed)     
+            //     setRoll( vehicleParams.rollParams.rollRight)
+            // else if( !keyPress.right.pressed && keyPress.left.pressed)            
+            //     setRoll( vehicleParams.rollParams.rollLeft)
+            setThrottle(vehicleParams.throttleParams.throttle)
+            setOrientation(vehicleParams.throttleParams.orientation)  
+            setRoll( vehicleParams.rollParams.roll)
+            console.log(roll, throttle, orientation)
+            //move(roll, throttle, orientation)
         }  
     }
     useEffect(() => {
@@ -338,13 +343,17 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
                 >
                     <img src='/static/img/takeoff.png' width='100' style={{ maxWidth: '100%' }} />
                 </Button>
+                <JoystickControls takeControlFlag={takeControlFlag} vehicleParams={vehicleParams} setVehicleParams={setVehicleParams}/>
+
+                
                 <div  style={{
                     backgroundColor:'white',                    
                 }}>
                     <b>Throttle:</b>{vehicleParams.throttleParams.throttle}<br/>
+                    <b>Roll:</b>{vehicleParams.rollParams.roll} <br/>
+                    <b>Orientation:</b>{vehicleParams.throttleParams.orientation} <br/>
                     <b>Front Align:</b>{vehicleParams.servoTrimParams.servo1}<br/>
                     <b>Back Align:</b>{vehicleParams.servoTrimParams.servo2}<br/>
-                    <b>Left:</b>{vehicleParams.rollParams.rollLeft} <br/>
                 </div>
                 
                 <Modal
@@ -365,43 +374,42 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
           
         </div>
 }
-const MyControls = React.forwardRef((props, ref) => {
-    props.takeControlFlag;
-    
-    const onVirtualKeyPress = (button) => {   
-        if(props.takeControlFlag)           
-            Object.entries(props.keyPress).map(([key, value]) => {
-                if(button==value.keyCode)
-                    value.pressed=true      
-                
-            })   
-   
+const JoystickControls = React.forwardRef((props, ref) => {
 
+    const handleMove = (values) => {  
+        let throttle_range=Math.abs(props.vehicleParams.throttleParams.maxPwm-props.vehicleParams.throttleParams.minPwm)
+        let roll_range=Math.abs(props.vehicleParams.rollParams.maxPwm-props.vehicleParams.rollParams.minPwm)
+        let x = values.x/50
+        let y = Math.abs(values.y/50)
+        if(!props.takeControlFlag){
+            if(values.y>0){
+                props.vehicleParams.throttleParams.orientation = 0
+            }else{
+                props.vehicleParams.throttleParams.orientation = 1
+
+            }
+            props.vehicleParams.throttleParams.throttle = props.vehicleParams.throttleParams.minPwm+y*throttle_range          
+            props.vehicleParams.rollParams.roll = 1500+x*roll_range/2
+        }else{
+
+        }
     }
-    
-    const onVirtualKeyReleased = (button) => {
-        if(props.takeControlFlag)           
-            Object.entries(props.keyPress).map(([key, value]) => 
-            {
-                if(button==value.keyCode)
-                    value.pressed=false      
-                
-            })   
+    const handleStop = (values) => {   
+        props.vehicleParams.throttleParams.throttle = 1100
+        props.vehicleParams.throttleParams.orientation = 2
+        props.vehicleParams.rollParams.roll = 1500
+        
     }
-    return   <Keyboard                        
-            keyboardRef={ref}
-            layout={{
-                'default': [
-                'q w e',
-                'a s d'
-                ]
-            }}
-            onKeyReleased={button =>
-                onVirtualKeyReleased(button)}
-            onKeyPress={button =>                   
-                onVirtualKeyPress(button)}
-        />             ;
+    return   <Joystick size={100} 
+        baseColor="red" 
+        stickColor="blue"
+        move={values=>handleMove(values)}
+        stop={values=>handleStop(values)}>
+
+    </Joystick>;
 });
+
+
 
 export const ManualControl= () => <>
     <div className='controls-div'>
