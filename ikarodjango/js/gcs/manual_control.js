@@ -181,7 +181,7 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
     }
     
     const  doMove = async () => {
-        if(!takeControlFlag ){   
+        if(takeControlFlag ){   
             setThrottle(1000)
             setRoll(1500)
             setOrientation(2)
@@ -381,7 +381,7 @@ const JoystickControls = React.forwardRef((props, ref) => {
         let roll_range=Math.abs(props.vehicleParams.rollParams.maxPwm-props.vehicleParams.rollParams.minPwm)
         let x = values.x/50
         let y = Math.abs(values.y/50)
-        if(!props.takeControlFlag){
+        if(props.takeControlFlag){
             if(values.y>0){
                 props.vehicleParams.throttleParams.orientation = 0
             }else{
