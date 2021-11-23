@@ -28,14 +28,14 @@ export const JoystickControls = React.forwardRef((props, ref) => {
             if(angle_percentage>180){
                 angle_percentage = 1-(angle_percentage-180)/180
     
-                props.vehicleParams.throttleParams.orientation = 0
+                props.vehicleParams.throttleParams.orientation = 1
             }else{
                 angle_percentage = angle_percentage/180
-                props.vehicleParams.throttleParams.orientation = 1
+                props.vehicleParams.throttleParams.orientation = 0
     
             }
             props.vehicleParams.throttleParams.throttle = Math.floor(props.vehicleParams.throttleParams.minPwm+stick_radius*throttle_range)
-            props.vehicleParams.rollParams.roll = Math.floor(1100+angle_percentage*roll_range)
+            props.vehicleParams.rollParams.roll = Math.floor(props.vehicleParams.rollParams.minPwm-angle_percentage*roll_range)
             console.log("throthle:",props.vehicleParams.throttleParams.throttle,"rol:",props.vehicleParams.rollParams.roll,"orientation",props.vehicleParams.throttleParams.orientation)
         }
     }
