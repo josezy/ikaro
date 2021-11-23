@@ -5,13 +5,16 @@ import Joystick from 'react-joystick'
 const joyOptions = {
     mode: 'semi',
     catchDistance: 150,
-    color: 'white'
+    color: 'blue',
+    restOpacity: 10,
+    dataOnly: false
 }
 
 const containerStyle = {
     position: 'relative',
     height: '100%',
     width: '100%',
+    opacity: '100%'
 }
 
 

@@ -162,10 +162,16 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
             >
                 <img src='/static/img/takeoff.png' width='100' style={{ maxWidth: '100%' }} />
             </Button>
-            <JoystickControls takeControlFlag={takeControlFlag} vehicleParams={vehicleParams} setVehicleParams={setVehicleParams}/>
-
-            <GamepadCursor  takeControlFlag={takeControlFlag} vehicleParams={vehicleParams} setVehicleParams={setVehicleParams}/>
             
+            <div style={{
+                height:'150px',                    
+            }}>
+
+                <JoystickControls takeControlFlag={takeControlFlag} vehicleParams={vehicleParams} setVehicleParams={setVehicleParams}/>
+
+                <GamepadCursor  takeControlFlag={takeControlFlag} vehicleParams={vehicleParams} setVehicleParams={setVehicleParams}/>
+                
+            </div>
             <div  style={{
                 backgroundColor:'white',                    
             }}>
