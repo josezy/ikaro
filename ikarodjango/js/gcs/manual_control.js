@@ -42,7 +42,7 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
             throttleParams:{
                 throttle:1700,
                 throttleStep:50,
-                maxPwm:1900,
+                maxPwm:1700,
                 minPwm:1100,
                 orientation:2
             },
