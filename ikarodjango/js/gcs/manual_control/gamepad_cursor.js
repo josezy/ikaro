@@ -11,17 +11,22 @@ export function GamepadCursor(props, ref) {
     let roll_range=Math.abs(props.vehicleParams.rollParams.maxPwm-props.vehicleParams.rollParams.minPwm)
     let left_vertical = Math.abs(gamepads[gamepadId].axes[1])
     let left_horizontal = gamepads[gamepadId].axes[2]
-   
+  
     console.log(gamepads[gamepadId].axes)
     if(props.takeControlFlag){
-        if(gamepads[gamepadId].axes[1]<0){
-            props.vehicleParams.throttleParams.orientation = 0
-        }else{
-            props.vehicleParams.throttleParams.orientation = 1
-        }
-        props.vehicleParams.throttleParams.throttle = Math.floor(props.vehicleParams.throttleParams.minPwm+left_vertical*throttle_range)
-        props.vehicleParams.rollParams.roll = Math.floor(1500+left_horizontal*roll_range/2)
-        
+      if(left_vertical<0.01 && left_horizontal<0.01 ){      
+        props.vehicleParams.throttleParams.throttle = 1100
+        props.vehicleParams.throttleParams.orientation = 2
+        props.vehicleParams.rollParams.roll = 1500
+      }
+      if(gamepads[gamepadId].axes[1]<0){
+          props.vehicleParams.throttleParams.orientation = 0
+      }else{
+          props.vehicleParams.throttleParams.orientation = 1
+      }
+      props.vehicleParams.throttleParams.throttle = Math.floor(props.vehicleParams.throttleParams.minPwm+left_vertical*throttle_range)
+      props.vehicleParams.rollParams.roll = Math.floor(1500+left_horizontal*roll_range/2)
+      
     }
   });
   return (
