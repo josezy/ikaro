@@ -205,5 +205,5 @@ export const mode_mapping_sub = {
 export const CELLS = [1, 2, 3, 4, 5]
 export const CELL_RANGE = [3.7, 4.2]
 
-export const RC_CHANNELS_OVERRIDE_INTERVAL = 20
+export const RC_CHANNELS_OVERRIDE_INTERVAL = 10
 export const KEYBOARD_INTERVAL = 50
