@@ -18,15 +18,17 @@ export function GamepadCursor(props, ref) {
         props.vehicleParams.throttleParams.throttle = 1100
         props.vehicleParams.throttleParams.orientation = 2
         props.vehicleParams.rollParams.roll = 1500
-      }
-      if(gamepads[gamepadId].axes[1]<0){
-          props.vehicleParams.throttleParams.orientation = 0
       }else{
-          props.vehicleParams.throttleParams.orientation = 1
+
+        if(gamepads[gamepadId].axes[1]<0){
+          props.vehicleParams.throttleParams.orientation = 0
+        }else{
+            props.vehicleParams.throttleParams.orientation = 1
+        }
+        props.vehicleParams.throttleParams.throttle = Math.floor(props.vehicleParams.throttleParams.minPwm+left_vertical*throttle_range)
+        props.vehicleParams.rollParams.roll = Math.floor(1500+left_horizontal*roll_range/2)
+        
       }
-      props.vehicleParams.throttleParams.throttle = Math.floor(props.vehicleParams.throttleParams.minPwm+left_vertical*throttle_range)
-      props.vehicleParams.rollParams.roll = Math.floor(1500+left_horizontal*roll_range/2)
-      
     }
   });
   return (
