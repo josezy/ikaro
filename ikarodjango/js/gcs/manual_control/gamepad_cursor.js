@@ -10,7 +10,7 @@ export function GamepadCursor(props, ref) {
     let throttle_range=Math.abs(props.vehicleParams.throttleParams.maxPwm-props.vehicleParams.throttleParams.minPwm)
     let roll_range=Math.abs(props.vehicleParams.rollParams.maxPwm-props.vehicleParams.rollParams.minPwm)
     let left_vertical = Math.abs(gamepads[gamepadId].axes[1])
-    let left_horizontal = Math.abs(gamepads[gamepadId].axes[2])
+    let left_horizontal = gamepads[gamepadId].axes[2]
    
     console.log(gamepads[gamepadId].axes)
     if(props.takeControlFlag){
