@@ -164,7 +164,7 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
             </Button>
             <JoystickControls takeControlFlag={takeControlFlag} vehicleParams={vehicleParams} setVehicleParams={setVehicleParams}/>
 
-            {/* <GamepadCursor  takeControlFlag={takeControlFlag} vehicleParams={vehicleParams} setVehicleParams={setVehicleParams}/> */}
+            <GamepadCursor  takeControlFlag={takeControlFlag} vehicleParams={vehicleParams} setVehicleParams={setVehicleParams}/>
             
             <div  style={{
                 backgroundColor:'white',                    
