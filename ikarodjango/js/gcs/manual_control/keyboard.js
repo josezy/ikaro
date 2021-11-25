@@ -1,9 +1,13 @@
 
-
+import React, {useState, useEffect} from 'react'
 import { KEYBOARD_INTERVAL } from '@/util/constants'
+import Keyboard from "react-simple-keyboard";
+import "react-simple-keyboard/build/css/index.css";
 
-const ManualControlComponent = ({ send_mavmsg, target_system, target_component,armed }) => {
-    
+export const KeyboardControl = React.forwardRef((props, ref) => {
+    console.log(props.takeControlFlag)
+    let takeControlFlag = true
+    let vehicleParams = props.vehicleParams
     const [keyPress, setKeyPress] = useState(
         {
             up:{
@@ -82,10 +86,13 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
             })                 
 
     }
- const  doMove = async () => {
+    const  doMove = async () => {
         if(takeControlFlag ){   
-
-            //SERVO1_TRIM
+            
+            vehicleParams.throttleParams.throttle = 1100
+            vehicleParams.throttleParams.orientation= 2    
+            vehicleParams.rollParams.roll=1500 
+                //SERVO1_TRIM
             if( keyPress.more_servo1_trim.pressed ){
                 if(
                     vehicleParams.servoTrimParams.servo1<vehicleParams.servoTrimParams.maxPwm
@@ -150,11 +157,11 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
             //THROTTLE
             if( keyPress.more_throttle.pressed ){
                 if(
-                    vehicleParams.throttleParams.throttle<vehicleParams.throttleParams.maxPwm 
+                    vehicleParams.throttleParams.maxThrottle<vehicleParams.throttleParams.maxPwm 
                     && keyPress.more_throttle.updated
                 ){
                     keyPress.more_throttle.updated=false
-                    vehicleParams.throttleParams.throttle+=vehicleParams.throttleParams.throttleStep
+                    vehicleParams.throttleParams.maxThrottle+=vehicleParams.throttleParams.throttleStep
                 }
             }else{                
                 keyPress.more_throttle.updated=true
@@ -162,11 +169,11 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
 
             if( keyPress.less_throttle.pressed )    {
                 if(
-                    vehicleParams.throttleParams.throttle>vehicleParams.throttleParams.minPwm 
+                    vehicleParams.throttleParams.maxThrottle>vehicleParams.throttleParams.minPwm 
                     && keyPress.less_throttle.updated
                 ){
                     keyPress.less_throttle.updated=false
-                    vehicleParams.throttleParams.throttle-= vehicleParams.throttleParams.throttleStep
+                    vehicleParams.throttleParams.maxThrottle-= vehicleParams.throttleParams.throttleStep
                 }
             }else{                
                 keyPress.less_throttle.updated=true
@@ -174,16 +181,16 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
                    
             //KEY MOVE CONTROL 
             if(keyPress.up.pressed && !keyPress.down.pressed){
-                setThrottle(vehicleParams.throttleParams.throttle)
-                setOrientation(0)            
+                vehicleParams.throttleParams.throttle=vehicleParams.throttleParams.maxThrottle
+                vehicleParams.throttleParams.orientation=0    
             }else if(!keyPress.up.pressed && keyPress.down.pressed){
-                setThrottle(vehicleParams.throttleParams.throttle)
-                setOrientation(1)
+                vehicleParams.throttleParams.throttle=vehicleParams.throttleParams.maxThrottle
+                vehicleParams.throttleParams.orientation=1   
             }            
-            if( keyPress.right.pressed && !keyPress.left.pressed)     
-                setRoll( vehicleParams.rollParams.rollRight)
+            if( keyPress.right.pressed && !keyPress.left.pressed)    
+                vehicleParams.rollParams.roll=vehicleParams.rollParams.rollRight
             else if( !keyPress.right.pressed && keyPress.left.pressed)            
-                setRoll( vehicleParams.rollParams.rollLeft)
+                vehicleParams.rollParams.roll=vehicleParams.rollParams.rollLeft     
         }  
     }   
     useEffect(() => {
@@ -191,13 +198,13 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
         window.addEventListener('keydown', keyDownListener )
         window.addEventListener('keyup', keyUpListener )
         
-        const interval = setInterval( keyBoardCallback, KEYBOARD_INTERVAL);
+        const interval = setInterval( doMove, KEYBOARD_INTERVAL);
         return () => {
             window.removeEventListener('keydown', keyDownListener),
             window.removeEventListener('keyup', keyUpListener)
             clearInterval(interval);
         }
-    }, [takeControlFlag,roll, throttle, orientation,keyPress,armed,target_system])
+    }, [takeControlFlag,keyPress])
 
 
   
@@ -205,4 +212,4 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
            
         
     </div>
-}
+});

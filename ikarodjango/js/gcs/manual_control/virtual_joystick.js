@@ -1,20 +1,20 @@
-import React, { Component } from 'react'
+import React from 'react'
 import Joystick from 'react-joystick'
 
 
 const joyOptions = {
     mode: 'semi',
     catchDistance: 150,
-    color: 'blue',
-    restOpacity: 10,
-    dataOnly: false
+    color: 'white',
+    restOpacity: 10
 }
 
 const containerStyle = {
     position: 'relative',
     height: '100%',
     width: '100%',
-    opacity: '100%'
+    opacity: '100%',
+    background: 'linear-gradient(to right, #E684AE, #79CBCA, #77A1D3)'
 }
 
 

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { reduxify } from '@/util/reduxify'
 import { createSelector } from 'reselect'
 
@@ -7,9 +7,8 @@ import {  Modal } from 'antd'
 
 import { send_mavmsg } from '@/reducers/mavlink'
 import { RC_CHANNELS_OVERRIDE_INTERVAL } from '@/util/constants'
-import Keyboard from "react-simple-keyboard";
-import "react-simple-keyboard/build/css/index.css";
 import { JoystickControls } from '@/gcs/manual_control/virtual_joystick.js';
+import { KeyboardControl } from '@/gcs/manual_control/keyboard.js';
 import { GamepadCursor } from '@/gcs/manual_control/gamepad_cursor.js'
 
 
@@ -41,6 +40,7 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
             
             throttleParams:{
                 throttle:1700,
+                maxThrottle:1700,
                 throttleStep:50,
                 maxPwm:1850,
                 minPwm:1100,
@@ -75,7 +75,6 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
             param_value: pwm,
             param_type: 4       
         })
-        console.log("SERVO TRIM","DONE")
     }
     const move =  (roll,throttle, orientation) => {
         let ch7_raw=2000;
@@ -107,14 +106,17 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
     
     const  doMove = async () => {
         if(takeControlFlag ){   
-        
+            
             setThrottle(vehicleParams.throttleParams.throttle)
             setOrientation(vehicleParams.throttleParams.orientation)  
             setRoll( vehicleParams.rollParams.roll)
-
-            console.log(roll, throttle, orientation)
             move(roll, throttle, orientation)
         }  
+        setThrottle(vehicleParams.throttleParams.throttle)
+        setOrientation(vehicleParams.throttleParams.orientation)  
+        setRoll( vehicleParams.rollParams.roll)
+        console.log(roll, throttle, orientation )
+        //move(roll, throttle, orientation)
     }
     useEffect(() => {
     
@@ -126,7 +128,6 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
     }, [takeControlFlag,roll, throttle, orientation,armed,target_system])
 
     const takeControl =  (doControl) => {
-        console.log("armadooooooo",armed,"doControl",doControl)        
 
         if(!doControl)
             //HOLD
@@ -152,7 +153,7 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
     }
 
   
-    return <div>
+    return <div >
             <Button
                 variant='outline-warning'
                 style={{ maxWidth: '100%' }}
@@ -167,9 +168,10 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
                 height:'150px',                    
             }}>
 
-                <JoystickControls takeControlFlag={takeControlFlag} vehicleParams={vehicleParams} setVehicleParams={setVehicleParams}/>
+                <KeyboardControl takeControlFlag={takeControlFlag} vehicleParams={vehicleParams}/>
 
-                <GamepadCursor  takeControlFlag={takeControlFlag} vehicleParams={vehicleParams} setVehicleParams={setVehicleParams}/>
+                {/* <JoystickControls takeControlFlag={takeControlFlag} vehicleParams={vehicleParams}/> */}
+                {/* <GamepadCursor  takeControlFlag={takeControlFlag} vehicleParams={vehicleParams} /> */}
                 
             </div>
             <div  style={{
