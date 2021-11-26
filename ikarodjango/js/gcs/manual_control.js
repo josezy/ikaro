@@ -118,7 +118,7 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
             setRoll( vehicleParams.rollParams.roll)
             move(roll, throttle, orientation)
         }  
-        // console.log(flight_mode) 
+        console.log(flight_mode) 
         //move(roll, throttle, orientation)
     }
     useEffect(() => {
