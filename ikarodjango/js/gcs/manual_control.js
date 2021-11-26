@@ -34,7 +34,7 @@ const ManualDriveButton = reduxify({
 
 
 const ManualControlComponent = ({ send_mavmsg, target_system, target_component,armed,flight_mode }) => {
-    const [showModal, setShowModal] = useState(false)
+   
     const [takeControlFlag, setTakeControlFlag] = useState(false)
     const [roll, setRoll] = useState(1500)
     const [throttle, setThrottle] = useState(1000)
@@ -118,7 +118,8 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
             setRoll( vehicleParams.rollParams.roll)
             move(roll, throttle, orientation)
         }  
-        console.log(flight_mode) 
+        setTakeControlFlag(flight_mode=="MANUAL" && armed)      
+        
         //move(roll, throttle, orientation)
     }
     useEffect(() => {
@@ -130,31 +131,7 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
         }
     }, [takeControlFlag,roll, throttle, orientation,armed,flight_mode,target_system])
 
-    const takeControl =  (doControl) => {
-
-        if(!doControl)
-            //HOLD
-            send_mavmsg('SET_MODE', {
-                target_system,
-                base_mode: 193,
-                custom_mode: 4
-            })
-           
-        else if(doControl && armed ){
-            //SET TO MANUAL MODE            
-            send_mavmsg('SET_MODE', {
-                target_system,
-                base_mode: 129,
-                custom_mode: 0
-            })
-            console.log("MANUAL MODE!")
-        }
-        
-        setTakeControlFlag(doControl && armed)        
-        setShowModal(false)   
-     
-    }
-
+   
   
     return <div >
                          
@@ -189,9 +166,46 @@ export const ManualControl= () => <>
 </>
 
 
-export const ManualControlInfo = () => <>
+export const ManualControlPanel = reduxify({
+    mapStateToProps: (state, props) => ({
+        target_system: state.mavlink.target_system,
+        target_component: state.mavlink.target_component,
+        armed: createSelector(
+            state => state.mavlink.HEARTBEAT,
+            HEARTBEAT => HEARTBEAT && Boolean(HEARTBEAT.base_mode & 10 ** 7)
+        )(state)
+    }),
+    mapDispatchToProps: { send_mavmsg },
+    render: (props) => <ManualControlPanelComponent {...props} />
+})
 
-    <div>
+const ManualControlPanelComponent = ({ send_mavmsg, target_system, target_component,armed }) => {
+    
+    const [showModal, setShowModal] = useState(false)
+    const takeControl =  (doControl) => {
+        if(!doControl)
+            //HOLD
+            send_mavmsg('SET_MODE', {
+                target_system,
+                base_mode: 193,
+                custom_mode: 4
+            })
+           
+        else if(doControl && armed ){
+            //SET TO MANUAL MODE            
+            send_mavmsg('SET_MODE', {
+                target_system,
+                base_mode: 129,
+                custom_mode: 0
+            })
+            console.log("MANUAL MODE!")
+        }
+        
+        
+     
+    }
+  
+    return  <div>
         <Button
             variant='outline-warning'
             style={{ maxWidth: '100%' }}
@@ -201,15 +215,7 @@ export const ManualControlInfo = () => <>
         >
             <img src='/static/img/takeoff.png' width='100' style={{ maxWidth: '100%' }} />
         </Button>
-        <div  style={{
-            backgroundColor:'white',                    
-        }}>
-            <b>Throttle:</b>{vehicleParams.throttleParams.throttle}<br/>
-            <b>Roll:</b>{vehicleParams.rollParams.roll} <br/>
-            <b>Orientation:</b>{vehicleParams.throttleParams.orientation} <br/>
-            <b>Front Align:</b>{vehicleParams.servoTrimParams.servo1}<br/>
-            <b>Back Align:</b>{vehicleParams.servoTrimParams.servo2}<br/>
-        </div>
+
         
         <Modal
             visible={showModal}
@@ -226,5 +232,5 @@ export const ManualControlInfo = () => <>
         </Modal> 
       
     </div>
-</>
+}
  
