@@ -65,7 +65,25 @@ body {
 
 /*    Mapbox    */
 .mapbox-component {
+    width: 25%;
+    height: 25%;
+}
+/*    Mapbox    */
+.mapbox-component-fullscreen {
     height: 100%;
+}
+.mapbox-container {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+.mapbox-container-fullscreen{
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
 }
 
 /*    General purpose    */
@@ -230,6 +248,20 @@ div.instrument.altimeter div.needleSmall {
     color: white;
 }
 
+.video-container-fullscreen {
+    position: absolute;
+    background-color: #02253C;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    height: 100vh;
+    width: 100vw;
+}
+
+.video-elem-fullscreen{ 
+    height: 100%;
+    width: 100%;
+}
 .video-container {
     position: absolute;
     width: 100vw;

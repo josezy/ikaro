@@ -12,8 +12,6 @@ import { flightmode_from_heartbeat, voltage_to_percentage } from '@/util/mavutil
 import { format_ms } from '@/util/javascript'
 import { GPS_FIX_TYPE, TAKEOFF_MIN_ALTITUDE, TAKEOFF_MAX_ALTITUDE } from '@/util/constants'
 
-import { ManualControl } from '@/gcs/manual_control'
-
 const Log = reduxify({
     mapStateToProps: (state, props) => ({
         status: createSelector(
@@ -269,29 +267,27 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_m
         heartbeat_timeout = setTimeout(() => setAlive(false), 2000)
     }, [heartbeat])
 
-    return <div className='nerdinfo-container'>
-        <div className='row nerdinfo-inner'>
-            <div className='col-6'>
-                <div>Alt: {position ? `${position.relative_alt.toFixed(1)}m` : '--'}</div>
-                <div>Lat: {position ? position.lat : '--'}</div>
-                <div>Lon: {position ? position.lon : '--'}</div>
-                <div>Vx: {position ? position.vx : '--'}</div>
-                <div>Vy: {position ? position.vy: '--'}</div>
-                <div>Battery: {battery ? `${battery.toFixed(1)}%` : '--'}</div>
-                <div>Mode: {flight_mode}</div>
-            </div>
-            <div className='col-6'>
-                <div>Speed: {gps ? `${gps.velocity}m/s` : '--'}</div>
-                <div>GPS Count: {gps ? gps.satellites_visible : 0}</div>
-                {/* <div>VDOP: {gps ? gps.epv : '--'}</div> */}
-                {/* <div>HDOP: {gps ? gps.eph : '--'}</div> */}
-                <div>Type: {gps ? gps.type : '--'}</div>
-                <div>Time: {flight ? flight.time : '--'}</div>
-                {/* <div>Flight distance: {getPathLength(path)}m</div> */}
-                <div>
-                    <div className={`${alive ? 'green' : 'red'} dot`}></div>&nbsp;
-                    {alive ? 'Online' : 'No signal'}
-                </div>
+    return <div className='row nerdinfo-inner'>
+        <div className='col-6'>
+            <div>Alt: {position ? `${position.relative_alt.toFixed(1)}m` : '--'}</div>
+            <div>Lat: {position ? position.lat : '--'}</div>
+            <div>Lon: {position ? position.lon : '--'}</div>
+            <div>Vx: {position ? position.vx : '--'}</div>
+            <div>Vy: {position ? position.vy: '--'}</div>
+            <div>Battery: {battery ? `${battery.toFixed(1)}%` : '--'}</div>
+            <div>Mode: {flight_mode}</div>
+        </div>
+        <div className='col-6'>
+            <div>Speed: {gps ? `${gps.velocity}m/s` : '--'}</div>
+            <div>GPS Count: {gps ? gps.satellites_visible : 0}</div>
+            {/* <div>VDOP: {gps ? gps.epv : '--'}</div> */}
+            {/* <div>HDOP: {gps ? gps.eph : '--'}</div> */}
+            <div>Type: {gps ? gps.type : '--'}</div>
+            <div>Time: {flight ? flight.time : '--'}</div>
+            {/* <div>Flight distance: {getPathLength(path)}m</div> */}
+            <div>
+                <div className={`${alive ? 'green' : 'red'} dot`}></div>&nbsp;
+                {alive ? 'Online' : 'No signal'}
             </div>
         </div>
     </div>
@@ -326,9 +322,6 @@ export const Controls = () => <>
         </div>
         <div className='controls-row'>
             <Log />
-        </div>
-        <div className='controls-row'>
-            <ManualControl />
         </div>
         
     </div>

@@ -17,6 +17,8 @@ import { Indicators } from '@/gcs/indicators'
 import { VideoVisor } from '@/gcs/video'
 import { request_data_stream, mavcmd_home_position_interval } from '@/util/mavutil'
 
+
+import { ManualControl } from '@/gcs/manual_control'
 import 'antd/dist/antd.less'
 
 export const FlightPanel = {
@@ -66,13 +68,14 @@ export const FlightPanel = {
     render({ store }) {
         return (
             <Provider store={store}>
-                <MapContainer />
                 <TukanoPanel />
                 {global.props.is_pilot && <Controls />}
                 <Indicators />
-                {/* <SpectatorsEye /> */}
-                <NerdInfo />
+                <SpectatorsEye />
                 <VideoVisor />
+                <MapContainer />
+                
+                <ManualControl/>
             </Provider>
         )
     },

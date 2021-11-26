@@ -10,6 +10,8 @@ import { RC_CHANNELS_OVERRIDE_INTERVAL } from '@/util/constants'
 import { JoystickControls } from '@/gcs/manual_control/virtual_joystick.js';
 import { KeyboardControl } from '@/gcs/manual_control/keyboard.js';
 import { GamepadCursor } from '@/gcs/manual_control/gamepad_cursor.js'
+import { NerdInfo } from './controls'
+import { flightmode_from_heartbeat } from '@/util/mavutil'
 
 
 
@@ -21,13 +23,17 @@ const ManualDriveButton = reduxify({
             state => state.mavlink.HEARTBEAT,
             HEARTBEAT => HEARTBEAT && Boolean(HEARTBEAT.base_mode & 10 ** 7)
         )(state),
+        flight_mode: createSelector(
+            state => state.mavlink.HEARTBEAT,
+            HEARTBEAT => HEARTBEAT && flightmode_from_heartbeat(HEARTBEAT)
+        )(state),
     }),
     mapDispatchToProps: { send_mavmsg },
     render: (props) => <ManualControlComponent {...props} />
 })
 
 
-const ManualControlComponent = ({ send_mavmsg, target_system, target_component,armed }) => {
+const ManualControlComponent = ({ send_mavmsg, target_system, target_component,armed,flight_mode }) => {
     const [showModal, setShowModal] = useState(false)
     const [takeControlFlag, setTakeControlFlag] = useState(false)
     const [roll, setRoll] = useState(1500)
@@ -112,10 +118,7 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
             setRoll( vehicleParams.rollParams.roll)
             move(roll, throttle, orientation)
         }  
-        setThrottle(vehicleParams.throttleParams.throttle)
-        setOrientation(vehicleParams.throttleParams.orientation)  
-        setRoll( vehicleParams.rollParams.roll)
-        console.log(roll, throttle, orientation )
+        // console.log(flight_mode) 
         //move(roll, throttle, orientation)
     }
     useEffect(() => {
@@ -125,7 +128,7 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
         return () => {
             clearInterval(interval);
         }
-    }, [takeControlFlag,roll, throttle, orientation,armed,target_system])
+    }, [takeControlFlag,roll, throttle, orientation,armed,flight_mode,target_system])
 
     const takeControl =  (doControl) => {
 
@@ -154,16 +157,7 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
 
   
     return <div >
-            <Button
-                variant='outline-warning'
-                style={{ maxWidth: '100%' }}
-                className='main-button'
-                onClick={_ => setShowModal(true)}
-                disabled={!armed}
-            >
-                <img src='/static/img/takeoff.png' width='100' style={{ maxWidth: '100%' }} />
-            </Button>
-            
+                         
             <div style={{
                 height:'150px',                    
             }}>
@@ -174,29 +168,7 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
                 {/* <GamepadCursor  takeControlFlag={takeControlFlag} vehicleParams={vehicleParams} /> */}
                 
             </div>
-            <div  style={{
-                backgroundColor:'white',                    
-            }}>
-                <b>Throttle:</b>{vehicleParams.throttleParams.throttle}<br/>
-                <b>Roll:</b>{vehicleParams.rollParams.roll} <br/>
-                <b>Orientation:</b>{vehicleParams.throttleParams.orientation} <br/>
-                <b>Front Align:</b>{vehicleParams.servoTrimParams.servo1}<br/>
-                <b>Back Align:</b>{vehicleParams.servoTrimParams.servo2}<br/>
-            </div>
             
-            <Modal
-                visible={showModal}
-                centered
-                onOk={_ => takeControl(true)}
-
-                onCancel={_ => takeControl(false)}
-                closable={false}
-                title='Set takeoff altitude (meters)'
-                width={350}
-            >
-                <p>  You will take control off vehicle:</p>
-            
-            </Modal>               
             
     
         
@@ -207,26 +179,52 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
 
 
 export const ManualControl= () => <>
-    <div className='controls-div'>
-    
-        <div className='controls-row'>
+    <div className='nerdinfo-container'>
+        <NerdInfo />
+        <div className='row nerdinfo-inner'>
             <ManualDriveButton />
         </div>
-        <div className='controls-row'>
-            <div  style={{
-                backgroundColor:'white',
-                width:'300px'
-            }}>
-                <h3>CONTROLES</h3>
-                <p>
-                    <b> w: </b>acelerar hacia adelante<br/>
-                    <b> d: </b>derecha <br/>
-                    <b> a: </b>izquierda <br/>
-                    <b> s: </b>acelerar hacia atras<br/>
-                    <b> e: </b>aumenta la aceleración<br/>
-                    <b> q: </b>disminuye la aceleració<br/>
-                </p>
-            </div>
-        </div>
+      
     </div>
 </>
+
+
+export const ManualControlInfo = () => <>
+
+    <div>
+        <Button
+            variant='outline-warning'
+            style={{ maxWidth: '100%' }}
+            className='main-button'
+            onClick={_ => setShowModal(true)}
+            disabled={!armed}
+        >
+            <img src='/static/img/takeoff.png' width='100' style={{ maxWidth: '100%' }} />
+        </Button>
+        <div  style={{
+            backgroundColor:'white',                    
+        }}>
+            <b>Throttle:</b>{vehicleParams.throttleParams.throttle}<br/>
+            <b>Roll:</b>{vehicleParams.rollParams.roll} <br/>
+            <b>Orientation:</b>{vehicleParams.throttleParams.orientation} <br/>
+            <b>Front Align:</b>{vehicleParams.servoTrimParams.servo1}<br/>
+            <b>Back Align:</b>{vehicleParams.servoTrimParams.servo2}<br/>
+        </div>
+        
+        <Modal
+            visible={showModal}
+            centered
+            onOk={_ => takeControl(true)}
+
+            onCancel={_ => takeControl(false)}
+            closable={false}
+            title='Set takeoff altitude (meters)'
+            width={350}
+        >
+            <p>  You will take control off vehicle:</p>
+        
+        </Modal> 
+      
+    </div>
+</>
+ 

@@ -5,8 +5,7 @@ import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
 
 export const KeyboardControl = React.forwardRef((props, ref) => {
-    console.log(props.takeControlFlag)
-    let takeControlFlag = true
+    let takeControlFlag = props.takeControlFlag
     let vehicleParams = props.vehicleParams
     const [keyPress, setKeyPress] = useState(
         {

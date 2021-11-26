@@ -23,7 +23,7 @@ const Mapbox = ReactMapboxGl({
 const MapComponent = ({ goto_point }) => {
     const [goto_coords, setGotoCoords] = useState(null)
     return <>
-        <div style={{ width: '100vw', height: '100vh', position: 'absolute' }}>
+        <div className='mapbox-container'>
             <Mapbox
                 // style="mapbox://styles/mapbox/navigation-guidance-night-v4"
                 style="mapbox://styles/mapbox/satellite-v9"

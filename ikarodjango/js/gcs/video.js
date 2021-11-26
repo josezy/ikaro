@@ -82,13 +82,13 @@ export const VideoVisor = () => {
     }, [])
 
     return (
-        <div className="video-container">
+        <div className="video-container-fullscreen">
             <video
                 ref={videoRef}
                 autoPlay
                 muted
                 playsInline
-                className="video-elem"
+                className="video-elem-fullscreen"
                 poster="/static/img/no-signal.gif"
             ></video>
             {/* <audio id={'audio_id'} autoPlay={true}></audio> */}
