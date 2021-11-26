@@ -156,9 +156,8 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
 
 
 export const ManualControl= () => <>
-    <div className='nerdinfo-container'>
-        <NerdInfo />
-        <div className='row nerdinfo-inner'>
+    <div className='manual-control-container'>
+        <div className='row manual-control-inner'>
             <ManualDriveButton />
         </div>
       

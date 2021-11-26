@@ -75,7 +75,7 @@ body {
 .mapbox-container {
     width: 100vw;
     height: 100vh;
-    position: relative;
+    position: absolute;
     display: flex;
     justify-content: flex-end;
     align-items: flex-end;
@@ -220,12 +220,13 @@ div.instrument.altimeter div.needleSmall {
 
 .nerdinfo-container {
     color: white;
-    bottom: 0;
+    top: 0;
     position: absolute;
     left: 50%;
     width: 270px;
     margin-left: -115px;
 }
+
 
 .nerdinfo-inner {
     margin: 0 auto;
@@ -236,6 +237,25 @@ div.instrument.altimeter div.needleSmall {
     padding: 5px 0;
     align-items: flex-end;
 }
+
+.manual-control-container {
+    color: white;
+    bottom: 0;
+    position: absolute;
+    left: 50%;
+    width: 270px;
+    margin-left: -115px;
+}
+.manual-control-inner {
+    margin: 0 auto;
+    font-weight: 100;
+    font-size: 0.7rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px 10px 0 0;
+    padding: 5px 0;
+    align-items: flex-end;
+}
+
 
 .tucano-logo {
     height: 48px;
@@ -259,8 +279,9 @@ div.instrument.altimeter div.needleSmall {
 }
 
 .video-elem-fullscreen{ 
-    height: 100%;
-    width: 100%;
+    width: 640px;
+    height: 480px;
+    margin: 10px 10px 35px 10px;
 }
 .video-container {
     position: absolute;
