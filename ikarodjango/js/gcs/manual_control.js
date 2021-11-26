@@ -200,7 +200,7 @@ const ManualControlPanelComponent = ({ send_mavmsg, target_system, target_compon
             })
             console.log("MANUAL MODE!")
         }
-        
+        setShowModal(false)
         
      
     }
