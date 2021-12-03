@@ -1,6 +1,5 @@
 /*    Body    */
 body {
-    height: 100vh;
     display: flex;
     flex-direction: column;
 }
@@ -63,28 +62,7 @@ body {
     font-family: "FranklinGothic-Book"
 }
 
-/*    Mapbox    */
-.mapbox-component {
-    width: 25%;
-    height: 25%;
-}
-/*    Mapbox    */
-.mapbox-component-fullscreen {
-    height: 100%;
-}
-.mapbox-container {
-    width: 100vw;
-    height: 100vh;
-    position: absolute;
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
-}
-.mapbox-container-fullscreen{
-    position: absolute;
-    width: 100vw;
-    height: 100vh;
-}
+
 
 /*    General purpose    */
 .dot {
@@ -127,16 +105,31 @@ body {
 }
 
 /*    Controls div    */
-.controls-div {
-    width: 25vw;
-    max-width: 350px;
-    height: 100vh;
+
+.controls-close-drawer-button {
+    pointer-events: auto;
+}
+.controls-close-drawer-div {
+    background: '#02253C';
     position: absolute;
-    background: rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+}
+.controls-drawer {
+    background: rgba(0, 0, 0, 0.1);
+ 
+}
+.controls-div {
+    width: 100%;
+    max-width: 350px;
+    height: 100%;
+    position: absolute;
+    /* background: rgba(0, 0, 0, 0.2); */
     z-index: 15;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    
+    pointer-events: none;
 }
 .controls-row {
     width: 100%;
@@ -162,8 +155,16 @@ div.instrument {
     width: 150px;
     height: 150px;
     position: relative;
-    display: inline-block;
+    display: flex;
     overflow: hidden;
+    align-items: flex-start;
+}
+
+.indicator-container{
+    width: 100%;
+    height: 100%;
+    position: 'absolute';
+    pointer-events: auto;
 }
 
 div.instrument .box {
@@ -202,6 +203,7 @@ div.instrument.altimeter div.needleSmall {
 .viewers-container {
     position: absolute;
     width: 100%;
+    pointer-events: none;
 }
 
 .viewers-inner {
@@ -218,45 +220,6 @@ div.instrument.altimeter div.needleSmall {
     height: 100%;
 }
 
-.nerdinfo-container {
-    color: white;
-    top: 0;
-    position: absolute;
-    left: 50%;
-    width: 270px;
-    margin-left: -115px;
-}
-
-
-.nerdinfo-inner {
-    margin: 0 auto;
-    font-weight: 100;
-    font-size: 0.7rem;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 10px 10px 0 0;
-    padding: 5px 0;
-    align-items: flex-end;
-}
-
-.manual-control-container {
-    color: white;
-    bottom: 0;
-    position: absolute;
-    left: 50%;
-    width: 270px;
-    margin-left: -115px;
-}
-.manual-control-inner {
-    margin: 0 auto;
-    font-weight: 100;
-    font-size: 0.7rem;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 10px 10px 0 0;
-    padding: 5px 0;
-    align-items: flex-end;
-}
-
-
 .tucano-logo {
     height: 48px;
     padding-top: 7px;
@@ -267,36 +230,146 @@ div.instrument.altimeter div.needleSmall {
     font-size: 1rem;
     color: white;
 }
+/* NerdInfo */
 
+.nerdinfo-container {
+    color: white;   
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+}
+
+
+.nerdinfo-inner {    
+    font-weight: 100;
+    font-size: 0.7rem;
+    /* font-size: 3vh 3vw; */
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px 10px 0 0;   
+    pointer-events: auto; 
+    
+    
+}
+
+
+/*    Mapbox    */
+.mapbox-component {
+    width: 100%;
+    height: 100%;
+    
+}
+.mapbox-draggable-button {
+    position: absolute;
+    z-index: 1;
+    width: 10%;
+    height: 10%;
+}
+.mapbox-draggale-div{
+    width: 25%;
+    height: 25%;
+    
+    max-width: 640px;
+    max-height: 480px;
+    pointer-events: auto; 
+    
+    display: flex;
+    justify-content: flex-end;
+    align-items: bottom;
+}
+
+
+.mapbox-container {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 10;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    
+    pointer-events: none;
+}
+
+
+
+/*    Mapbox    */
+.mapbox-component-fullscreen {
+    height: 100%;
+    width: 100%;
+}
+
+.mapbox-container-fullscreen{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+
+/*    Video    */
 .video-container-fullscreen {
     position: absolute;
+    z-index: -1;
     background-color: #02253C;
     display: flex;
     justify-content: center;
     align-items: center; 
-    height: 100vh;
-    width: 100vw;
-}
-
-.video-elem-fullscreen{ 
-    width: 640px;
-    height: 480px;
-    margin: 10px 10px 35px 10px;
+    height: 100%;
+    width: 100%;
 }
 .video-container {
     position: absolute;
-    width: 100vw;
-    height: 100vh;
+    z-index: 2;
+    height: 100%;
+    width: 100%;
     display: flex;
     justify-content: flex-end;
     align-items: flex-end;
 }
 
-.video-elem {
-    width: 640px;
-    height: 480px;
+
+.video-elem{ 
+    width: 40%;
+    height: 40%;
     margin: 10px 10px 35px 10px;
 }
+
+.video-elem-fullscreen{ 
+    width: 100%;
+    height: 100%;
+}
+/*    ManualControlPanel    */
+.manual-control-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+}
+.manual-control-inner {
+    margin-top: auto;
+    font-weight: 100;
+    font-size: 0.7rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px 10px 0 0;    
+    height: 20%;
+    width: 20%;
+}
+
+
+
+ 
 
 @media (max-width: 1300px) {
     div.mw-wrap {
@@ -315,7 +388,7 @@ div.instrument.altimeter div.needleSmall {
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 768px) ,  (max-height: 600px){
 
     img.d-block.w-100 {
         height: 200px;
