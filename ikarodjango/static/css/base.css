@@ -136,6 +136,7 @@ body {
     height: fit-content;
     display: flex;
     padding: 2px;
+    pointer-events: auto;
 }
 
 /*   Logs   */
