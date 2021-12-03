@@ -134,20 +134,11 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
    
   
     return <div >
-                         
-            <div style={{
-                height:'150px',                    
-            }}>
+                    
+        <KeyboardControl takeControlFlag={takeControlFlag} vehicleParams={vehicleParams}/>
 
-                <KeyboardControl takeControlFlag={takeControlFlag} vehicleParams={vehicleParams}/>
-
-                {/* <JoystickControls takeControlFlag={takeControlFlag} vehicleParams={vehicleParams}/> */}
-                {/* <GamepadCursor  takeControlFlag={takeControlFlag} vehicleParams={vehicleParams} /> */}
-                
-            </div>
-            
-            
-    
+        {/* <JoystickControls takeControlFlag={takeControlFlag} vehicleParams={vehicleParams}/> */}
+        {/* <GamepadCursor  takeControlFlag={takeControlFlag} vehicleParams={vehicleParams} /> */}
         
     </div>
 }
@@ -157,7 +148,7 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
 
 export const ManualControl= () => <>
     <div className='manual-control-container'>
-        <div className='row manual-control-inner'>
+        <div className='manual-control-inner'>
             <ManualDriveButton />
         </div>
       

@@ -2,6 +2,7 @@ import React from 'react'
 import { reduxify } from '@/util/reduxify'
 import { createSelector } from 'reselect'
 
+import Draggable from 'react-draggable';
 
 const Attitude = reduxify({
     mapStateToProps: (state, props) => ({
@@ -65,8 +66,16 @@ const Heading = reduxify({
 })
 
 export const Indicators = () => <>
+
     <div style={{ position: 'absolute', right: 0 }}>
-        <Attitude />
-        <Heading />
+        
+        <Draggable handle=".indicator-container">   
+            <div className="indicator-container">
+                
+                <Attitude />
+                <Heading />
+            </div>
+        </Draggable>
+
     </div>
 </>

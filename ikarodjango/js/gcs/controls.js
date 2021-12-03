@@ -18,6 +18,8 @@ import { ManualControlPanel  } from '@/gcs/manual_control'
 import Drawer from "react-modern-drawer"
 import "../node_modules/react-modern-drawer/dist/index.css"
 
+import Draggable from 'react-draggable';
+
 const Log = reduxify({
     mapStateToProps: (state, props) => ({
         status: createSelector(
@@ -273,31 +275,34 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_m
         heartbeat_timeout = setTimeout(() => setAlive(false), 2000)
     }, [heartbeat])
 
-    return <div className='nerdinfo-container'>        
-        <div className='row nerdinfo-inner'>
-            <div className='col-6'>
-                <div>Alt: {position ? `${position.relative_alt.toFixed(1)}m` : '--'}</div>
-                <div>Lat: {position ? position.lat : '--'}</div>
-                <div>Lon: {position ? position.lon : '--'}</div>
-                <div>Vx: {position ? position.vx : '--'}</div>
-                <div>Vy: {position ? position.vy: '--'}</div>
-                <div>Battery: {battery ? `${battery.toFixed(1)}%` : '--'}</div>
-                <div>Mode: {flight_mode}</div>
-            </div>
-            <div className='col-6'>
-                <div>Speed: {gps ? `${gps.velocity}m/s` : '--'}</div>
-                <div>GPS Count: {gps ? gps.satellites_visible : 0}</div>
-                {/* <div>VDOP: {gps ? gps.epv : '--'}</div> */}
-                {/* <div>HDOP: {gps ? gps.eph : '--'}</div> */}
-                <div>Type: {gps ? gps.type : '--'}</div>
-                <div>Time: {flight ? flight.time : '--'}</div>
-                {/* <div>Flight distance: {getPathLength(path)}m</div> */}
-                <div>
-                    <div className={`${alive ? 'green' : 'red'} dot`}></div>&nbsp;
-                    {alive ? 'Online' : 'No signal'}
+    return <div className='nerdinfo-container' >     
+    
+        <Draggable >   
+            <div className='row nerdinfo-inner'  >
+                <div className='col-6'>
+                    <div>Alt: {position ? `${position.relative_alt.toFixed(1)}m` : '--'}</div>
+                    <div>Lat: {position ? position.lat : '--'}</div>
+                    <div>Lon: {position ? position.lon : '--'}</div>
+                    <div>Vx: {position ? position.vx : '--'}</div>
+                    <div>Vy: {position ? position.vy: '--'}</div>
+                    <div>Battery: {battery ? `${battery.toFixed(1)}%` : '--'}</div>
+                    <div>Mode: {flight_mode}</div>
+                </div>
+                <div className='col-6'>
+                    <div>Speed: {gps ? `${gps.velocity}m/s` : '--'}</div>
+                    <div>GPS Count: {gps ? gps.satellites_visible : 0}</div>
+                    {/* <div>VDOP: {gps ? gps.epv : '--'}</div> */}
+                    {/* <div>HDOP: {gps ? gps.eph : '--'}</div> */}
+                    <div>Type: {gps ? gps.type : '--'}</div>
+                    <div>Time: {flight ? flight.time : '--'}</div>
+                    {/* <div>Flight distance: {getPathLength(path)}m</div> */}
+                    <div>
+                        <div className={`${alive ? 'green' : 'red'} dot`}></div>&nbsp;
+                        {alive ? 'Online' : 'No signal'}
+                    </div>
                 </div>
             </div>
-        </div>
+        </Draggable>       
     </div>
 }
 
@@ -319,33 +324,33 @@ export const Controls =  () => {
     }
 
     return   <div>
-        <div style={{ background: '#02253C' }}  >
-            <button onClick={toggleDrawer}>Show</button>
+        <div className='controls-close-drawer-div'  >
+            <button className='controls-close-drawer-button'  onClick={toggleDrawer}>Show</button>
         </div>        
-        <Drawer style={{ background: 'rgba(0, 0, 0, 0.3)'}} open={isOpen} onClose={toggleDrawer} direction='left'>
-        <div className='controls-div' >
-            <div className='controls-row'>
-                <LobbyButton />
-                <ArmedSwitch />
-            </div>
-            <div className='controls-row'>
-                <TakeoffButton />
-                <LandButton />
+        <Drawer style={{ background: 'rgba(0, 0, 0, 0.0)'}} open={isOpen} onClose={toggleDrawer} direction='left'>
+            <div className='controls-div' >
+                <div className='controls-row'>
+                    <LobbyButton />
+                    <ArmedSwitch />
+                </div>
+                <div className='controls-row'>
+                    <TakeoffButton />
+                    <LandButton />
+                    
+                </div>
+                <div className='controls-row'>
+                    <RTLButton />
+                    <HookButton />
+                    <PauseButton />
+                </div>
+                <div className='controls-row'>
+                    <Log />
+                </div>
+                <div className='controls-row'>
+                    <ManualControlPanel />
+                </div>
                 
             </div>
-            <div className='controls-row'>
-                <RTLButton />
-                <HookButton />
-                <PauseButton />
-            </div>
-            <div className='controls-row'>
-                <Log />
-            </div>
-            <div className='controls-row'>
-                <ManualControlPanel />
-            </div>
-            
-        </div>
         </Drawer>
     </div>  
 }
