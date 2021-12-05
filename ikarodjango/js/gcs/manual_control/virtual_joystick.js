@@ -44,7 +44,6 @@ export const JoystickControls = React.forwardRef((props, ref) => {
             handleMove(stick)
         })
         manager.on('click', () => {
-           console.log("WTF")
         })
         manager.on('end', () => {
             handleStop()

@@ -10,6 +10,7 @@ import { RC_CHANNELS_OVERRIDE_INTERVAL } from '@/util/constants'
 import { JoystickControls } from '@/gcs/manual_control/virtual_joystick.js';
 import { KeyboardControl } from '@/gcs/manual_control/keyboard.js';
 import { GamepadCursor } from '@/gcs/manual_control/gamepad_cursor.js'
+import { PidController } from '@/gcs/manual_control/pid.js'
 import { flightmode_from_heartbeat } from '@/util/mavutil'
 
 
@@ -21,10 +22,21 @@ const ManualDriveButton = reduxify({
         armed: createSelector(
             state => state.mavlink.HEARTBEAT,
             HEARTBEAT => HEARTBEAT && Boolean(HEARTBEAT.base_mode & 10 ** 7)
-        )(state),
+        )(state), 
         flight_mode: createSelector(
             state => state.mavlink.HEARTBEAT,
             HEARTBEAT => HEARTBEAT && flightmode_from_heartbeat(HEARTBEAT)
+        )(state),        
+        position: createSelector(
+            state => state.mavlink.GLOBAL_POSITION_INT,
+            GLOBAL_POSITION_INT => GLOBAL_POSITION_INT && {
+                lat: GLOBAL_POSITION_INT.lat / 10 ** 7,
+                lon: GLOBAL_POSITION_INT.lon / 10 ** 7,
+                alt: GLOBAL_POSITION_INT.alt / 10 ** 3,
+                vx: GLOBAL_POSITION_INT.vx,
+                vy: GLOBAL_POSITION_INT.vy,
+                relative_alt: GLOBAL_POSITION_INT.relative_alt ,
+            }
         )(state),
     }),
     mapDispatchToProps: { send_mavmsg },
@@ -32,13 +44,12 @@ const ManualDriveButton = reduxify({
 })
 
 
-const ManualControlComponent = ({ send_mavmsg, target_system, target_component,armed,flight_mode }) => {
+const ManualControlComponent = ({ send_mavmsg, target_system, target_component,armed,flight_mode, position }) => {
    
     const [takeControlFlag, setTakeControlFlag] = useState(false)
     const [roll, setRoll] = useState(1500)
     const [throttle, setThrottle] = useState(1000)
     const [orientation, setOrientation] = useState(0)
-
 
     const [vehicleParams, setVehicleParams] = useState(
         {

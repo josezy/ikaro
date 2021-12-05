@@ -12,7 +12,6 @@ import {
     MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM, MAVLINK_COMMANDS
 } from '@/util/constants'
 import Draggable from 'react-draggable';
-import { Resizable } from "re-resizable";
 
 
 const Mapbox = ReactMapboxGl({

@@ -236,14 +236,6 @@ export const NerdInfo = reduxify({
                 relative_alt: GLOBAL_POSITION_INT.relative_alt / 10 ** 3,
             }
         )(state),
-        local_position: createSelector(
-            state => state.mavlink.LOCAL_POSITION_NED ,
-            LOCAL_POSITION_NED => LOCAL_POSITION_NED && {
-                vx: LOCAL_POSITION_NED.vx,
-                vy: LOCAL_POSITION_NED.vy,
-                vz: LOCAL_POSITION_NED.vz ,
-            }
-        )(state),
         battery: createSelector(
             state => state.mavlink.SYS_STATUS,
             SYS_STATUS => SYS_STATUS && voltage_to_percentage(SYS_STATUS.voltage_battery / 1000)
@@ -269,11 +261,10 @@ export const NerdInfo = reduxify({
 
 
 let heartbeat_timeout = null
-const NerdInfoComponent = ({ flight, position, local_position, battery, gps, heartbeat, flight_mode }) => {
+const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_mode }) => {
     const [path, setPath] = useState([])
     const [alive, setAlive] = useState(false)
 
-    console.log(local_position)
     
     useEffect(() => {
         if (position) setPath([...path, { latitude: position.lat, longitude: position.lon }])
@@ -293,8 +284,9 @@ const NerdInfoComponent = ({ flight, position, local_position, battery, gps, hea
                     <div>Alt: {position ? `${position.relative_alt.toFixed(1)}m` : '--'}</div>
                     <div>Lat: {position ? position.lat : '--'}</div>
                     <div>Lon: {position ? position.lon : '--'}</div>
-                    <div>Vx: {local_position ? local_position.vx : '--'}</div>
-                    <div>Vy: {local_position ? local_position.vy: '--'}</div>
+                    <div>Vx: {position ? position.vx : '--'}</div>
+                    <div>Vy: {position ? position.vy: '--'}</div>
+                    <div>Alt: {position ? position.relative_alt: '--'}</div>
                     <div>Battery: {battery ? `${battery.toFixed(1)}%` : '--'}</div>
                     <div>Mode: {flight_mode}</div>
                 </div>
