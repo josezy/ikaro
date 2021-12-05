@@ -35,7 +35,19 @@ const ManualDriveButton = reduxify({
                 alt: GLOBAL_POSITION_INT.alt / 10 ** 3,
                 vx: GLOBAL_POSITION_INT.vx,
                 vy: GLOBAL_POSITION_INT.vy,
+                vz: GLOBAL_POSITION_INT.vz ,
                 relative_alt: GLOBAL_POSITION_INT.relative_alt ,
+            }
+        )(state),        
+        position_local: createSelector(
+            state => state.mavlink.LOCAL_POSITION_NED ,
+            LOCAL_POSITION_NED  => LOCAL_POSITION_NED  && {
+                x: LOCAL_POSITION_NED.x,
+                y: LOCAL_POSITION_NED.y,
+                z: LOCAL_POSITION_NED.z,
+                vx: LOCAL_POSITION_NED.vx,
+                vy: LOCAL_POSITION_NED.vy,
+                vz: LOCAL_POSITION_NED.vz ,
             }
         )(state),
     }),
@@ -44,13 +56,14 @@ const ManualDriveButton = reduxify({
 })
 
 
-const ManualControlComponent = ({ send_mavmsg, target_system, target_component,armed,flight_mode, position }) => {
+const ManualControlComponent = ({ send_mavmsg, target_system, target_component,armed,flight_mode, position,position_local }) => {
    
     const [takeControlFlag, setTakeControlFlag] = useState(false)
     const [roll, setRoll] = useState(1500)
     const [throttle, setThrottle] = useState(1000)
     const [orientation, setOrientation] = useState(0)
 
+    console.log(position_local,position)
     const [vehicleParams, setVehicleParams] = useState(
         {
             
