@@ -9,6 +9,7 @@ export const ALLOWED_MAVLINK_MSGS = [
     'SYS_STATUS',
     'GPS_RAW_INT',
     'VFR_HUD',
+    'RAW_IMU',
     'ATTITUDE',
     'COMMAND_ACK',
     'STATUSTEXT',
