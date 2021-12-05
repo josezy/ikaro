@@ -4,6 +4,7 @@
 export const ALLOWED_MAVLINK_MSGS = [
     'HEARTBEAT',
     'GLOBAL_POSITION_INT',
+    'LOCAL_POSITION_NED',
     'TUKANO_DATA',
     'SYS_STATUS',
     'GPS_RAW_INT',
