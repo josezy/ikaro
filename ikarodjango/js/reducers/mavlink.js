@@ -42,7 +42,6 @@ export const send_mavcmd = (command, params = {}) => ({
 })
 
 const valid_mavmsg = (mavmsg) => {
-    console.log(mavmsg)
     if (!ALLOWED_MAVLINK_MSGS.includes(mavmsg.mavtype)) return false
 
     // This only rejects heartbeat
