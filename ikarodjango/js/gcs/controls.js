@@ -231,8 +231,8 @@ export const NerdInfo = reduxify({
                 lat: GLOBAL_POSITION_INT.lat / 10 ** 7,
                 lon: GLOBAL_POSITION_INT.lon / 10 ** 7,
                 alt: GLOBAL_POSITION_INT.alt / 10 ** 3,
-                vx: GLOBAL_POSITION_INT.vx / 10 ** 7,
-                vy: GLOBAL_POSITION_INT.vy / 10 ** 7,
+                vx: GLOBAL_POSITION_INT.vx,
+                vy: GLOBAL_POSITION_INT.vy,
                 relative_alt: GLOBAL_POSITION_INT.relative_alt / 10 ** 3,
             }
         )(state),
