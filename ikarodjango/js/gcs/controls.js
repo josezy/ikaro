@@ -253,7 +253,9 @@ export const NerdInfo = reduxify({
         flight_mode: createSelector(
             state => state.mavlink.HEARTBEAT,
             HEARTBEAT => HEARTBEAT && flightmode_from_heartbeat(HEARTBEAT)
-        )(state),               
+        )(state),    
+        
+        position_local2: state.mavlink.RAW_IMU,           
         position_local: createSelector(
             state => state.mavlink.RAW_IMU  ,
             RAW_IMU => RAW_IMU   && {
@@ -269,7 +271,7 @@ export const NerdInfo = reduxify({
 
 
 let heartbeat_timeout = null
-const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_mode, position_local }) => {
+const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_mode,position_local2, position_local }) => {
     const [path, setPath] = useState([])
     const [alive, setAlive] = useState(false)
 
@@ -284,6 +286,8 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_m
         heartbeat_timeout = setTimeout(() => setAlive(false), 2000)
     }, [heartbeat])
 
+    console.log(position_local2)
+
     return <div className='nerdinfo-container' >     
     
         <Draggable >   
@@ -292,9 +296,9 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_m
                     <div>Alt: {position ? `${position.relative_alt.toFixed(1)}m` : '--'}</div>
                     <div>Lat: {position ? position.lat : '--'}</div>
                     <div>Lon: {position ? position.lon : '--'}</div>
-                    <div>zacc: {position_local ? position_local.zacc : '--'}</div>
-                    <div>xacc: {position_local ? position_local.xacc: '--'}</div>
-                    <div>yacc: {position_local ? position_local.yacc: '--'}</div>
+                    <div>zacc: {position_local2 ? position_local2.zacc : '--'}</div>
+                    <div>xacc: {position_local2 ? position_local2.xacc: '--'}</div>
+                    <div>yacc: {position_local2 ? position_local2.yacc: '--'}</div>
                     <div>Battery: {battery ? `${battery.toFixed(1)}%` : '--'}</div>
                     <div>Mode: {flight_mode}</div>
                 </div>
