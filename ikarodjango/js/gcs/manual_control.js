@@ -10,7 +10,6 @@ import { RC_CHANNELS_OVERRIDE_INTERVAL } from '@/util/constants'
 import { JoystickControls } from '@/gcs/manual_control/virtual_joystick.js';
 import { KeyboardControl } from '@/gcs/manual_control/keyboard.js';
 import { GamepadCursor } from '@/gcs/manual_control/gamepad_cursor.js'
-import { NerdInfo } from './controls'
 import { flightmode_from_heartbeat } from '@/util/mavutil'
 
 
@@ -133,11 +132,11 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
 
    
   
-    return <div >
+    return    <div className='manual-control-inner'>
                     
-        <KeyboardControl takeControlFlag={takeControlFlag} vehicleParams={vehicleParams}/>
+        {/* <KeyboardControl takeControlFlag={takeControlFlag} vehicleParams={vehicleParams}/> */}
 
-        {/* <JoystickControls takeControlFlag={takeControlFlag} vehicleParams={vehicleParams}/> */}
+        <JoystickControls takeControlFlag={takeControlFlag} vehicleParams={vehicleParams}/>
         {/* <GamepadCursor  takeControlFlag={takeControlFlag} vehicleParams={vehicleParams} /> */}
         
     </div>
@@ -148,10 +147,7 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
 
 export const ManualControl= () => <>
     <div className='manual-control-container'>
-        <div className='manual-control-inner'>
             <ManualDriveButton />
-        </div>
-      
     </div>
 </>
 

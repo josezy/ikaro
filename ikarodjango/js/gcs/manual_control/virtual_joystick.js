@@ -9,15 +9,6 @@ const joyOptions = {
     restOpacity: 10
 }
 
-const containerStyle = {
-    position: 'relative',
-    height: '100%',
-    width: '100%',
-    opacity: '100%',
-    background: 'linear-gradient(to right, #E684AE, #79CBCA, #77A1D3)'
-}
-
-
 export const JoystickControls = React.forwardRef((props, ref) => {
 
     const handleMove = (stick) => {  
@@ -52,11 +43,14 @@ export const JoystickControls = React.forwardRef((props, ref) => {
         manager.on('move', (e, stick) => {
             handleMove(stick)
         })
+        manager.on('click', () => {
+           console.log("WTF")
+        })
         manager.on('end', () => {
             handleStop()
         })
     }
-    return   <Joystick options={joyOptions} containerStyle={containerStyle}
+    return   <Joystick className='manual-control-virtual-joystick' options={joyOptions} 
     managerListener={managerListener}/>;
 });
 
