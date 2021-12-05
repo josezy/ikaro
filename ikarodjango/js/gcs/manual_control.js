@@ -63,7 +63,7 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
     const [throttle, setThrottle] = useState(1000)
     const [orientation, setOrientation] = useState(0)
 
-    
+    console.log(position_local)
     const [vehicleParams, setVehicleParams] = useState(
         {
             
