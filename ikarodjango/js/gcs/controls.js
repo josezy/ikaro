@@ -255,13 +255,13 @@ export const NerdInfo = reduxify({
             HEARTBEAT => HEARTBEAT && flightmode_from_heartbeat(HEARTBEAT)
         )(state),    
         
-        position_local2: state.mavlink.RAW_IMU,           
+        position_local2: state.mavlink.HIGHRES_IMU,           
         position_local: createSelector(
-            state => state.mavlink.RAW_IMU  ,
-            RAW_IMU => RAW_IMU   && {
-                xacc: RAW_IMU.xacc,
-                yacc: RAW_IMU.yacc,
-                zacc: RAW_IMU.zacc,
+            state => state.mavlink.HIGHRES_IMU,
+            HIGHRES_IMU => HIGHRES_IMU && {
+                xacc: HIGHRES_IMU.xacc,
+                yacc: HIGHRES_IMU.yacc,
+                zacc: HIGHRES_IMU.zacc,
             }
         )(state),
     }),
@@ -296,9 +296,9 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_m
                     <div>Alt: {position ? `${position.relative_alt.toFixed(1)}m` : '--'}</div>
                     <div>Lat: {position ? position.lat : '--'}</div>
                     <div>Lon: {position ? position.lon : '--'}</div>
-                    <div>zacc: {position_local2 ? position_local2.zacc : '--'}</div>
-                    <div>xacc: {position_local2 ? position_local2.xacc: '--'}</div>
-                    <div>yacc: {position_local2 ? position_local2.yacc: '--'}</div>
+                    <div>zacc: {position_local ? position_local.zacc : '--'}</div>
+                    <div>xacc: {position_local ? position_local.xacc: '--'}</div>
+                    <div>yacc: {position_local ? position_local.yacc: '--'}</div>
                     <div>Battery: {battery ? `${battery.toFixed(1)}%` : '--'}</div>
                     <div>Mode: {flight_mode}</div>
                 </div>
