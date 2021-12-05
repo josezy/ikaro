@@ -273,6 +273,7 @@ const NerdInfoComponent = ({ flight, position, local_position, battery, gps, hea
     const [path, setPath] = useState([])
     const [alive, setAlive] = useState(false)
 
+    console.log(local_position)
     
     useEffect(() => {
         if (position) setPath([...path, { latitude: position.lat, longitude: position.lon }])
