@@ -257,11 +257,11 @@ export const NerdInfo = reduxify({
         
         position_local2: state.mavlink.LOCAL_POSITION,           
         position_local: createSelector(
-            state => state.mavlink.IMU_RAW,
-            IMU_RAW => IMU_RAW && {
-                xacc: IMU_RAW.xacc,
-                yacc: IMU_RAW.yacc,
-                zacc: IMU_RAW.zacc,
+            state => state.mavlink.RAW_IMU,
+            RAW_IMU => RAW_IMU && {
+                xacc: RAW_IMU.xacc,
+                yacc: RAW_IMU.yacc,
+                zacc: RAW_IMU.zacc,
             }
         )(state),
     }),
