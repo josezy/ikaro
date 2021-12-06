@@ -255,13 +255,20 @@ export const NerdInfo = reduxify({
             HEARTBEAT => HEARTBEAT && flightmode_from_heartbeat(HEARTBEAT)
         )(state),    
         
-        position_local2: state.mavlink.LOCAL_POSITION,           
-        velocity: createSelector(
+        raw_imu:  createSelector(
             state => state.mavlink.RAW_IMU,
             RAW_IMU => RAW_IMU && {
                 xacc: RAW_IMU.xacc,
                 yacc: RAW_IMU.yacc,
                 zacc: RAW_IMU.zacc,
+            }
+        )(state),       
+        attitude: createSelector(
+            state => state.mavlink.ATTITUDE,
+            ATTITUDE => ATTITUDE && {
+                roll: ATTITUDE.roll,
+                pitch: ATTITUDE.pitch,
+                yaw: ATTITUDE.yaw,
             }
         )(state),
     }),
@@ -271,7 +278,7 @@ export const NerdInfo = reduxify({
 
 
 let heartbeat_timeout = null
-const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_mode,position_local2, velocity }) => {
+const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_mode,raw_imu, attitude }) => {
     const [path, setPath] = useState([])
     const [alive, setAlive] = useState(false)
 
@@ -285,8 +292,7 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_m
         if (heartbeat_timeout) clearTimeout(heartbeat_timeout)
         heartbeat_timeout = setTimeout(() => setAlive(false), 2000)
     }, [heartbeat])
-
-    console.log("position_local2",position_local2,"velocity",velocity)
+    console.log()
 
     return <div className='nerdinfo-container' >     
     
@@ -296,11 +302,11 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_m
                     <div>Alt: {position ? `${position.relative_alt.toFixed(1)}m` : '--'}</div>
                     <div>Lat: {position ? position.lat : '--'}</div>
                     <div>Lon: {position ? position.lon : '--'}</div>
-                    <div>zacc: {velocity ? velocity.zacc : '--'}</div>
-                    <div>xacc: {velocity ? velocity.xacc: '--'}</div>
-                    <div>yacc: {velocity ? velocity.yacc: '--'}</div>
                     <div>Battery: {battery ? `${battery.toFixed(1)}%` : '--'}</div>
                     <div>Mode: {flight_mode}</div>
+                    <div>rol: {attitude ? attitude.rol: '--'}</div>
+                    <div>pitch: {attitude ? attitude.pitch : '--'}</div>
+                    <div>yaw: {attitude ? attitude.yaw: '--'}</div>
                 </div>
                 <div className='col-6'>
                     <div>Speed: {gps ? `${gps.velocity}m/s` : '--'}</div>
@@ -314,6 +320,10 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_m
                         <div className={`${alive ? 'green' : 'red'} dot`}></div>&nbsp;
                         {alive ? 'Online' : 'No signal'}
                     </div>
+                    
+                    <div>zacc: {raw_imu ? raw_imu.zacc : '--'}</div>
+                    <div>xacc: {raw_imu ? raw_imu.xacc: '--'}</div>
+                    <div>yacc: {raw_imu ? raw_imu.yacc: '--'}</div>
                 </div>
             </div>
         </Draggable>       

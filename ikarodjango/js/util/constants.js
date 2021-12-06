@@ -4,22 +4,20 @@
 export const ALLOWED_MAVLINK_MSGS = [
     'HEARTBEAT',
     'GLOBAL_POSITION_INT',
-    'LOCAL_POSITION_NED',
     'TUKANO_DATA',
     'SYS_STATUS',
     'GPS_RAW_INT',
-    'VFR_HUD',
-    'HIGHRES_IMU',
-    'RAW_IMU',
-    'ATTITUDE',
     'COMMAND_ACK',
     'STATUSTEXT',
     'MISSION_COUNT',
     'MISSION_ITEM',
     'PARAM_VALUE',
     'HOME_POSITION',
+
     'SET_MODE',
-    'RC_CHANNELS_OVERRIDE'
+    'RC_CHANNELS_OVERRIDE',    
+    'RAW_IMU',
+    'ATTITUDE'
 ]
 // export const ALLOWED_MAV_TYPES = ['QUADROTOR', 'ROVER']
 
