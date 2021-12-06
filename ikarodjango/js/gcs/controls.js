@@ -303,7 +303,7 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_m
                     <div>Lon: {position ? position.lon : '--'}</div>
                     <div>Battery: {battery ? `${battery.toFixed(1)}%` : '--'}</div>
                     <div>Mode: {flight_mode}</div>
-                    <div>rol: {attitude ? attitude.rol: '--'}</div>
+                    <div>rol: {attitude ? attitude.roll: '--'}</div>
                     <div>pitch: {attitude ? attitude.pitch : '--'}</div>
                     <div>yaw: {attitude ? attitude.yaw: '--'}</div>
                 </div>
