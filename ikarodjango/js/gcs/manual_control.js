@@ -10,8 +10,9 @@ import { RC_CHANNELS_OVERRIDE_INTERVAL } from '@/util/constants'
 import { JoystickControls } from '@/gcs/manual_control/virtual_joystick.js';
 import { KeyboardControl } from '@/gcs/manual_control/keyboard.js';
 import { GamepadCursor } from '@/gcs/manual_control/gamepad_cursor.js'
-import { PidController } from '@/gcs/manual_control/pid.js'
+import { PidController,VelocityCalc } from '@/gcs/manual_control/pid.js'
 import { flightmode_from_heartbeat } from '@/util/mavutil'
+
 
 
 
@@ -39,15 +40,12 @@ const ManualDriveButton = reduxify({
                 relative_alt: GLOBAL_POSITION_INT.relative_alt ,
             }
         )(state),        
-        position_local: createSelector(
-            state => state.mavlink.VFR_HUD ,
-            VFR_HUD  => VFR_HUD  && {
-                airspeed: VFR_HUD.airspeed,
-                groundspeed: VFR_HUD.groundspeed,
-                heading: VFR_HUD.heading,
-                throttle: VFR_HUD.throttle,
-                alt: VFR_HUD.alt,
-                climb: VFR_HUD.climb ,
+        raw_imu:  createSelector(
+            state => state.mavlink.RAW_IMU,
+            RAW_IMU => RAW_IMU && {
+                xacc: RAW_IMU.xacc,
+                yacc: RAW_IMU.yacc,
+                zacc: RAW_IMU.zacc,
             }
         )(state),
     }),
@@ -55,14 +53,15 @@ const ManualDriveButton = reduxify({
     render: (props) => <ManualControlComponent {...props} />
 })
 
+const velCalc=VelocityCalc()
 
-const ManualControlComponent = ({ send_mavmsg, target_system, target_component,armed,flight_mode, position,position_local }) => {
+const ManualControlComponent = ({ send_mavmsg, target_system, target_component,armed,flight_mode, position,raw_imu }) => {
    
     const [takeControlFlag, setTakeControlFlag] = useState(false)
     const [roll, setRoll] = useState(1500)
     const [throttle, setThrottle] = useState(1000)
     const [orientation, setOrientation] = useState(0)
-
+    console.log(velCalc.run(raw_imu.xacc))
     const [vehicleParams, setVehicleParams] = useState(
         {
             
