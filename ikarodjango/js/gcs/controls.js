@@ -255,13 +255,13 @@ export const NerdInfo = reduxify({
             HEARTBEAT => HEARTBEAT && flightmode_from_heartbeat(HEARTBEAT)
         )(state),    
         
-        position_local2: state.mavlink.HIGHRES_IMU,           
+        position_local2: state.mavlink.LOCAL_POSITION,           
         position_local: createSelector(
-            state => state.mavlink.HIGHRES_IMU,
-            HIGHRES_IMU => HIGHRES_IMU && {
-                xacc: HIGHRES_IMU.xacc,
-                yacc: HIGHRES_IMU.yacc,
-                zacc: HIGHRES_IMU.zacc,
+            state => state.mavlink.IMU_RAW,
+            IMU_RAW => IMU_RAW && {
+                xacc: IMU_RAW.xacc,
+                yacc: IMU_RAW.yacc,
+                zacc: IMU_RAW.zacc,
             }
         )(state),
     }),
