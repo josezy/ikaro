@@ -6,7 +6,7 @@ export const VelocityCalc =  ()=> {
   
     privateScope.dt = 0.010
     privateScope.v0 = 0
-    privateScope.velocity = v0 
+    privateScope.velocity = 0 
     privateScope.acc_prom = 0
     privateScope.acc_accum = 0 
     privateScope.acc_counter = 0  
