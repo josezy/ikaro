@@ -225,7 +225,7 @@ export const NerdInfo = reduxify({
                 time: format_ms(GLOBAL_POSITION_INT.time_boot_ms),
             }
         )(state),
-        position1: createSelector(
+        position: createSelector(
             state => state.mavlink.GLOBAL_POSITION_INT,
             GLOBAL_POSITION_INT => GLOBAL_POSITION_INT && {
                 lat: GLOBAL_POSITION_INT.lat / 10 ** 7,
@@ -271,7 +271,7 @@ export const NerdInfo = reduxify({
 
 
 let heartbeat_timeout = null
-const NerdInfoComponent = ({ flight, position1, battery, gps, heartbeat, flight_mode,position_local2, velocity }) => {
+const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_mode,position_local2, velocity }) => {
     const [path, setPath] = useState([])
     const [alive, setAlive] = useState(false)
 
@@ -293,9 +293,9 @@ const NerdInfoComponent = ({ flight, position1, battery, gps, heartbeat, flight_
         <Draggable >   
             <div className='row nerdinfo-inner'  >
                 <div className='col-6'>
-                    <div>Alt: {position1 ? `${position1.relative_alt.toFixed(1)}m` : '--'}</div>
-                    <div>Lat: {position1 ? position1.lat : '--'}</div>
-                    <div>Lon: {position1 ? position1.lon : '--'}</div>
+                    <div>Alt: {position ? `${position.relative_alt.toFixed(1)}m` : '--'}</div>
+                    <div>Lat: {position ? position.lat : '--'}</div>
+                    <div>Lon: {position ? position.lon : '--'}</div>
                     <div>zacc: {velocity ? velocity.zacc : '--'}</div>
                     <div>xacc: {velocity ? velocity.xacc: '--'}</div>
                     <div>yacc: {velocity ? velocity.yacc: '--'}</div>
