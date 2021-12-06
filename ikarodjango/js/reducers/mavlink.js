@@ -95,6 +95,8 @@ export const mavlink = (state = {}, action) => {
 
 export const onmessage_mavlink = (le_message) => {
     const message = JSON.parse(le_message.data)
+    console.log(le_message)
+    console.log(le_message.data)
     if (message.mavpackettype) {
         const { mavpackettype, srcSystem, srcComponent, ...mav_msg } = message
         global.page.store.dispatch({
