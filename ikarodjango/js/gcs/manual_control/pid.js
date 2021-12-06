@@ -4,27 +4,26 @@ export const VelocityCalc =  ()=> {
     var self = {},
         privateScope = {};
   
-    privateScope.dt = 0.010
+    privateScope.dt = 10
     privateScope.v0 = 0
     privateScope.velocity = 0 
     privateScope.acc_prom = 0
     privateScope.acc_accum = 0 
     privateScope.acc_counter = 0  
-    privateScope.acc_timer = 0
+    privateScope.acc_timer = performance.now();
 
     self.run = function (acc) {
-        console.log(privateScope.acc_prom)
-        if(privateScope.acc_counter!=0){
+        console.log(privateScope.acc_prom,performance.now())
+        if( performance.now()  - privateScope.acc_timer > privateScope.dt){
             if(privateScope.acc_counter!=0){
                 privateScope.acc_prom =  privateScope.acc_accum/privateScope.acc_counter
                 privateScope.acc_accum = 0 
                 privateScope.acc_counter = 0  
             }
-
-            aux = privateScope.velocity
+            let aux = privateScope.velocity
             privateScope.velocity = privateScope.v0 + privateScope.dt*privateScope.acc_prom
             privateScope.v0 = aux
-            privateScope.acc_timer = time.time()
+            privateScope.acc_timer = performance.now()
 
         }
         else{
