@@ -292,7 +292,6 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_m
         if (heartbeat_timeout) clearTimeout(heartbeat_timeout)
         heartbeat_timeout = setTimeout(() => setAlive(false), 2000)
     }, [heartbeat])
-    console.log()
 
     return <div className='nerdinfo-container' >     
     
