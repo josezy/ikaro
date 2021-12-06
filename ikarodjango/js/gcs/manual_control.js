@@ -61,7 +61,7 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
     const [roll, setRoll] = useState(1500)
     const [throttle, setThrottle] = useState(1000)
     const [orientation, setOrientation] = useState(0)
-    console.log(velCalc.run(raw_imu ? raw_imu.xacc : 0))
+    console.log(velCalc.run(raw_imu ? raw_imu.xacc/100 : 0))
     const [vehicleParams, setVehicleParams] = useState(
         {
             
