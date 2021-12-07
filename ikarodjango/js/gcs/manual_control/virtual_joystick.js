@@ -18,7 +18,7 @@ export const JoystickControls = React.forwardRef((props, ref) => {
         let angle_percentage = stick.angle.degree
         
   
-        if(!props.takeControlFlag){
+        if(props.takeControlFlag){
             if(angle_percentage>180){
                 angle_percentage = 1-(angle_percentage-180)/180
     

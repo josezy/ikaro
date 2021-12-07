@@ -146,6 +146,7 @@ const ManualControlComponent = ({ takeControlFlag, ctrlSelected, send_mavmsg, ta
             setOrientation(vehicleParams.throttleParams.orientation)  
             setRoll( vehicleParams.rollParams.roll)
             move(roll, throttle, orientation)
+            console.log(roll, throttle, orientation)
         }  
         
         //move(roll, throttle, orientation)
