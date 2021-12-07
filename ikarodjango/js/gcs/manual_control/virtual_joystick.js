@@ -30,8 +30,9 @@ export const JoystickControls = React.forwardRef((props, ref) => {
             }
             props.vehicleParams.throttleParams.throttle = Math.floor(props.vehicleParams.throttleParams.minPwm+stick_radius*throttle_range)
             props.vehicleParams.rollParams.roll = Math.floor(props.vehicleParams.rollParams.maxPwm-angle_percentage*roll_range)
-            
+        
         }
+        console.log(props.takeControlFlag,"JOYYYYYYYYSTIK!!")
        
     }
     const handleStop = () => {   
