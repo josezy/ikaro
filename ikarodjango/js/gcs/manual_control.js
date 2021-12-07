@@ -6,18 +6,22 @@ import { Button } from 'react-bootstrap'
 import {  Modal } from 'antd'
 
 import { send_mavmsg } from '@/reducers/mavlink'
-import { RC_CHANNELS_OVERRIDE_INTERVAL } from '@/util/constants'
+import { RC_CHANNELS_OVERRIDE_INTERVAL, MANUAL_CONTROL_TYPES, MANUAL_CONTROL_TYPES_OPTIONS } from '@/util/constants'
 import { JoystickControls } from '@/gcs/manual_control/virtual_joystick.js';
 import { KeyboardControl } from '@/gcs/manual_control/keyboard.js';
 import { GamepadCursor } from '@/gcs/manual_control/gamepad_cursor.js'
 import { PidController,VelocityCalc } from '@/gcs/manual_control/pid.js'
 import { flightmode_from_heartbeat } from '@/util/mavutil'
 
+import Select from 'react-select';
 
 
 
-const ManualDriveButton = reduxify({
+
+export const ManualControl = reduxify({
     mapStateToProps: (state, props) => ({
+        takeControlFlag: props.takeControlFlag,
+        ctrlSelected:props.ctrlSelected,
         target_system: state.mavlink.target_system,
         target_component: state.mavlink.target_component,
         armed: createSelector(
@@ -27,19 +31,7 @@ const ManualDriveButton = reduxify({
         flight_mode: createSelector(
             state => state.mavlink.HEARTBEAT,
             HEARTBEAT => HEARTBEAT && flightmode_from_heartbeat(HEARTBEAT)
-        )(state),        
-        position: createSelector(
-            state => state.mavlink.GLOBAL_POSITION_INT,
-            GLOBAL_POSITION_INT => GLOBAL_POSITION_INT && {
-                lat: GLOBAL_POSITION_INT.lat / 10 ** 7,
-                lon: GLOBAL_POSITION_INT.lon / 10 ** 7,
-                alt: GLOBAL_POSITION_INT.alt / 10 ** 3,
-                vx: GLOBAL_POSITION_INT.vx,
-                vy: GLOBAL_POSITION_INT.vy,
-                vz: GLOBAL_POSITION_INT.vz ,
-                relative_alt: GLOBAL_POSITION_INT.relative_alt ,
-            }
-        )(state),        
+        )(state),              
         raw_imu:  createSelector(
             state => state.mavlink.RAW_IMU,
             RAW_IMU => RAW_IMU && {
@@ -53,15 +45,11 @@ const ManualDriveButton = reduxify({
     render: (props) => <ManualControlComponent {...props} />
 })
 
-const velCalc=VelocityCalc()
-
-const ManualControlComponent = ({ send_mavmsg, target_system, target_component,armed,flight_mode, position,raw_imu }) => {
-   
-    const [takeControlFlag, setTakeControlFlag] = useState(false)
+const ManualControlComponent = ({ takeControlFlag, ctrlSelected, send_mavmsg, target_system, target_component,armed,flight_mode, raw_imu }) => {
+ 
     const [roll, setRoll] = useState(1500)
     const [throttle, setThrottle] = useState(1000)
     const [orientation, setOrientation] = useState(0)
-    console.log(velCalc.run(raw_imu ? raw_imu.xacc/100 : 0))
     const [vehicleParams, setVehicleParams] = useState(
         {
             
@@ -89,6 +77,26 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
             }
         }
     )
+    
+    let controller="NO CONTROLS"
+    if(ctrlSelected[0]){
+        switch(ctrlSelected[0].value){
+            case MANUAL_CONTROL_TYPES.KEYBOARD:
+                controller = <KeyboardControl takeControlFlag={takeControlFlag[0]} vehicleParams={vehicleParams}/>
+                break;
+            case MANUAL_CONTROL_TYPES.JOYSTICK:
+                controller =  <JoystickControls takeControlFlag={takeControlFlag[0]} vehicleParams={vehicleParams}/>
+                break;            
+            case MANUAL_CONTROL_TYPES.PS3_CONTROL:
+                controller = <GamepadCursor  takeControlFlag={takeControlFlag[0]} vehicleParams={vehicleParams} />
+                break;
+            default:
+                console.log("NONE")
+                break;
+        }
+    }
+   
+    
    
     const setServoTrim =  (pwm,servo) => {
         let param_id='SERVO1_TRIM';
@@ -132,14 +140,13 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
     }
     
     const  doMove = async () => {
-        if(takeControlFlag ){   
+        if(takeControlFlag[0] ){   
             
             setThrottle(vehicleParams.throttleParams.throttle)
             setOrientation(vehicleParams.throttleParams.orientation)  
             setRoll( vehicleParams.rollParams.roll)
             move(roll, throttle, orientation)
         }  
-        setTakeControlFlag(flight_mode=="MANUAL" && armed)      
         
         //move(roll, throttle, orientation)
     }
@@ -152,30 +159,18 @@ const ManualControlComponent = ({ send_mavmsg, target_system, target_component,a
         }
     }, [takeControlFlag,roll, throttle, orientation,armed,flight_mode,target_system])
 
-   
   
     return    <div className='manual-control-inner'>
-                    
-        {/* <KeyboardControl takeControlFlag={takeControlFlag} vehicleParams={vehicleParams}/> */}
-
-        <JoystickControls takeControlFlag={takeControlFlag} vehicleParams={vehicleParams}/>
-        {/* <GamepadCursor  takeControlFlag={takeControlFlag} vehicleParams={vehicleParams} /> */}
+         
+        {controller}
         
     </div>
 }
 
-
-
-
-export const ManualControl= () => <>
-    <div className='manual-control-container'>
-            <ManualDriveButton />
-    </div>
-</>
-
-
 export const ManualControlPanel = reduxify({
     mapStateToProps: (state, props) => ({
+        takeControlFlag: props.takeControlFlag,
+        ctrlSelected:props.ctrlSelected,
         target_system: state.mavlink.target_system,
         target_component: state.mavlink.target_component,
         armed: createSelector(
@@ -187,17 +182,21 @@ export const ManualControlPanel = reduxify({
     render: (props) => <ManualControlPanelComponent {...props} />
 })
 
-const ManualControlPanelComponent = ({ send_mavmsg, target_system, target_component,armed }) => {
+const ManualControlPanelComponent = ({ takeControlFlag,ctrlSelected, send_mavmsg, target_system, target_component,armed }) => {
     
     const [showModal, setShowModal] = useState(false)
     const takeControl =  (doControl) => {
-        if(!doControl)
+        if(!doControl){
             //HOLD
             send_mavmsg('SET_MODE', {
                 target_system,
                 base_mode: 193,
                 custom_mode: 4
             })
+            
+            takeControlFlag[1](false)
+
+        }
            
         else if(doControl && armed ){
             //SET TO MANUAL MODE            
@@ -206,11 +205,16 @@ const ManualControlPanelComponent = ({ send_mavmsg, target_system, target_compon
                 base_mode: 129,
                 custom_mode: 0
             })
+            takeControlFlag[1](true)
             console.log("MANUAL MODE!")
         }
         setShowModal(false)
         
      
+    }
+    const handleCtrlChange =  (selectedOption) => {
+    
+        ctrlSelected[1]( selectedOption);
     }
   
     return  <div>
@@ -223,7 +227,11 @@ const ManualControlPanelComponent = ({ send_mavmsg, target_system, target_compon
         >
             <img src='/static/img/takeoff.png' width='100' style={{ maxWidth: '100%' }} />
         </Button>
-
+        <Select
+            value={ctrlSelected[0]}
+            onChange={(selectedOption)=>handleCtrlChange(selectedOption)}
+            options={MANUAL_CONTROL_TYPES_OPTIONS}
+        />
         
         <Modal
             visible={showModal}

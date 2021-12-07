@@ -10,10 +10,10 @@ import { Slider, InputNumber, Modal, Row } from 'antd'
 import { send_mavcmd, send_mavmsg } from '@/reducers/mavlink'
 import { flightmode_from_heartbeat, voltage_to_percentage } from '@/util/mavutil'
 import { format_ms } from '@/util/javascript'
-import { GPS_FIX_TYPE, TAKEOFF_MIN_ALTITUDE, TAKEOFF_MAX_ALTITUDE } from '@/util/constants'
+import { GPS_FIX_TYPE, TAKEOFF_MIN_ALTITUDE, TAKEOFF_MAX_ALTITUDE, MANUAL_CONTROL_TYPES, MANUAL_CONTROL_TYPES_OPTIONS } from '@/util/constants'
 
 
-import { ManualControlPanel  } from '@/gcs/manual_control'
+import { ManualControlPanel, ManualControl  } from '@/gcs/manual_control'
 
 import Drawer from "react-modern-drawer"
 import "../node_modules/react-modern-drawer/dist/index.css"
@@ -253,8 +253,7 @@ export const NerdInfo = reduxify({
         flight_mode: createSelector(
             state => state.mavlink.HEARTBEAT,
             HEARTBEAT => HEARTBEAT && flightmode_from_heartbeat(HEARTBEAT)
-        )(state),    
-        
+        )(state),            
         raw_imu:  createSelector(
             state => state.mavlink.RAW_IMU,
             RAW_IMU => RAW_IMU && {
@@ -262,15 +261,7 @@ export const NerdInfo = reduxify({
                 yacc: RAW_IMU.yacc,
                 zacc: RAW_IMU.zacc,
             }
-        )(state),       
-        attitude: createSelector(
-            state => state.mavlink.ATTITUDE,
-            ATTITUDE => ATTITUDE && {
-                roll: ATTITUDE.roll,
-                pitch: ATTITUDE.pitch,
-                yaw: ATTITUDE.yaw,
-            }
-        )(state),
+        )(state)
     }),
     mapDispatchToProps: {},
     render: props => <NerdInfoComponent {...props} />
@@ -278,7 +269,7 @@ export const NerdInfo = reduxify({
 
 
 let heartbeat_timeout = null
-const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_mode,raw_imu, attitude }) => {
+const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_mode,raw_imu }) => {
     const [path, setPath] = useState([])
     const [alive, setAlive] = useState(false)
 
@@ -303,9 +294,6 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_m
                     <div>Lon: {position ? position.lon : '--'}</div>
                     <div>Battery: {battery ? `${battery.toFixed(1)}%` : '--'}</div>
                     <div>Mode: {flight_mode}</div>
-                    <div>rol: {attitude ? attitude.roll: '--'}</div>
-                    <div>pitch: {attitude ? attitude.pitch : '--'}</div>
-                    <div>yaw: {attitude ? attitude.yaw: '--'}</div>
                 </div>
                 <div className='col-6'>
                     <div>Speed: {gps ? `${gps.velocity}m/s` : '--'}</div>
@@ -346,6 +334,12 @@ export const Controls =  () => {
         setIsOpen((prevState) => !prevState)
     }
 
+    
+    const [aDog, setADog] = React.useState("eres un perro")
+    //FOR MANUAL CONTROL
+    const [takeControlFlag, setTakeControlFlag] = React.useState(false)
+    const [ctrlSelected, setCtrlSelected] = React.useState(MANUAL_CONTROL_TYPES.KEYBOARD)
+
     return   <div>
         <div className='controls-close-drawer-div'  >
             <button className='controls-close-drawer-button'  onClick={toggleDrawer}>Show</button>
@@ -370,10 +364,13 @@ export const Controls =  () => {
                     <Log />
                 </div>
                 <div className='controls-row'>
-                    <ManualControlPanel />
+                    <ManualControlPanel ctrlSelected={[ctrlSelected, setCtrlSelected]}  takeControlFlag={[takeControlFlag, setTakeControlFlag]}/>
                 </div>
                 
             </div>
         </Drawer>
+        <div className='manual-control-container'>
+                <ManualControl ctrlSelected={[ctrlSelected, setCtrlSelected]} takeControlFlag={[takeControlFlag, setTakeControlFlag]}/>
+        </div>
     </div>  
 }

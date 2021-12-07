@@ -208,3 +208,18 @@ export const CELL_RANGE = [3.7, 4.2]
 
 export const RC_CHANNELS_OVERRIDE_INTERVAL = 10
 export const KEYBOARD_INTERVAL = 50
+
+
+export const MANUAL_CONTROL_TYPES = {
+    "KEYBOARD":0,
+    "JOYSTICK":1,
+    "DOUBLE_JOYSTICK":2,
+    "PS3_CONTROL":3
+}
+export const MANUAL_CONTROL_TYPES_OPTIONS = [
+    {label:"KEYBOARD",value:0},
+    {label:"JOYSTICK",value:1},
+    {label:"DOUBLE_JOYSTICK",value:2},
+    {label:"PS3_CONTROL",value:3},
+    
+]

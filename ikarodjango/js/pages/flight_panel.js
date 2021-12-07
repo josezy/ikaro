@@ -77,7 +77,6 @@ export const FlightPanel = {
                 <MapContainer />
                 
                 <NerdInfo />
-                <ManualControl/>
             </Provider>
         )
     },
