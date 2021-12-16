@@ -384,6 +384,7 @@ div.instrument.altimeter div.needleSmall {
 }
 
 
+/*    JOYSTICKS    */
 
 .manual-control-virtual-joystick-contanier {
     height: fit-content;
@@ -418,8 +419,18 @@ div.instrument.altimeter div.needleSmall {
 }
 
 
+/*    KEYBOARD    */
+.manual-control-keyboard{    
+    
+    color:white;
+    width:fit-content;
+    visibility:visible;
+}
 
-
+.manual-control-keyboard-hidden{   
+      
+    visibility:hidden;
+}
 
 
  

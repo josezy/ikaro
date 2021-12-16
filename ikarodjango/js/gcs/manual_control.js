@@ -200,6 +200,7 @@ export const ManualControlPanel = reduxify({
 
 const ManualControlPanelComponent = ({ takeControlFlag,ctrlSelected, send_mavmsg, target_system, target_component,armed }) => {
     
+    const [showKeyBoardControlls, setShowKeyBoardControlls] = useState("manual-control-keyboard-hidden")
     const [showModal, setShowModal] = useState(false)
     const takeControl =  (doControl) => {
         if(!doControl){
@@ -229,7 +230,12 @@ const ManualControlPanelComponent = ({ takeControlFlag,ctrlSelected, send_mavmsg
      
     }
     const handleCtrlChange =  (selectedOption) => {
-    
+        if(selectedOption.value==MANUAL_CONTROL_TYPES.KEYBOARD){
+            
+            setShowKeyBoardControlls("manual-control-keyboard")
+        }else{
+            setShowKeyBoardControlls("manual-control-keyboard-hidden")
+        }
         ctrlSelected[1]( selectedOption);
     }
   
@@ -262,7 +268,17 @@ const ManualControlPanelComponent = ({ takeControlFlag,ctrlSelected, send_mavmsg
             <p>  You will take control off vehicle:</p>
         
         </Modal> 
-      
+        <div  className={showKeyBoardControlls}>
+            <h3>CONTROLES</h3>
+            <p>
+                <b> w: </b>acelerar hacia adelante<br/>
+                <b> d: </b>derecha <br/>
+                <b> a: </b>izquierda <br/>
+                <b> s: </b>acelerar hacia atras<br/>
+                <b> e: </b>aumenta la aceleración<br/>
+                <b> q: </b>disminuye la aceleració<br/>
+            </p>
+        </div>
     </div>
 }
  

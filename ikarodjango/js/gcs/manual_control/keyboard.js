@@ -208,7 +208,30 @@ export const KeyboardControl = React.forwardRef((props, ref) => {
 
   
     return <div>
-           
+        <div className='manual-control-inner-info'>
+            <div className="row">
+                <div className="col">
+                    <b>Throttle:</b> {vehicleParams.throttleParams.throttle}                                 
+                </div>                    
+            </div>
+            <div className="row"> 
+                <div className="col">
+                    <b>R-Roll:</b> {vehicleParams.rollParams.rollRight}                                        
+                </div>                       
+                <div className="col">
+                    <b>L-Roll:</b>  {vehicleParams.rollParams.rollLeft}                                        
+                </div>                    
+            </div>
+            <div className="row">                
+                <div className="col">
+                    <b>Servo1:</b> {vehicleParams.servoTrimParams.servo1} 
+                </div>          
+                <div className="col">
+                    <b>Servo2:</b> {vehicleParams.servoTrimParams.servo2}
+                </div>                    
+            </div>
+        
+        </div>
         
     </div>
 });
