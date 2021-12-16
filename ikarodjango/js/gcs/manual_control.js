@@ -7,7 +7,7 @@ import {  Modal } from 'antd'
 
 import { send_mavmsg } from '@/reducers/mavlink'
 import { RC_CHANNELS_OVERRIDE_INTERVAL, MANUAL_CONTROL_TYPES, MANUAL_CONTROL_TYPES_OPTIONS } from '@/util/constants'
-import { JoystickControls } from '@/gcs/manual_control/virtual_joystick.js';
+import { JoystickControls, DoubleJoystickControls } from '@/gcs/manual_control/virtual_joystick.js';
 import { KeyboardControl } from '@/gcs/manual_control/keyboard.js';
 import { GamepadCursor } from '@/gcs/manual_control/gamepad_cursor.js'
 import { PidController,VelocityCalc } from '@/gcs/manual_control/pid.js'
@@ -86,7 +86,10 @@ const ManualControlComponent = ({ takeControlFlag, ctrlSelected, send_mavmsg, ta
                 break;
             case MANUAL_CONTROL_TYPES.JOYSTICK:
                 controller =  <JoystickControls takeControlFlag={takeControlFlag[0]} vehicleParams={vehicleParams}/>
-                break;            
+                break;   
+            case MANUAL_CONTROL_TYPES.DOUBLE_JOYSTICK:
+                controller =  <DoubleJoystickControls takeControlFlag={takeControlFlag[0]} vehicleParams={vehicleParams}/>
+                break;                     
             case MANUAL_CONTROL_TYPES.PS3_CONTROL:
                 controller = <GamepadCursor  takeControlFlag={takeControlFlag[0]} vehicleParams={vehicleParams} />
                 break;
@@ -161,9 +164,21 @@ const ManualControlComponent = ({ takeControlFlag, ctrlSelected, send_mavmsg, ta
     }, [takeControlFlag,roll, throttle, orientation,armed,flight_mode,target_system])
 
   
-    return    <div className='manual-control-inner'>
-         
-        {controller}
+    return    <div className='manual-control-container'>
+        <div className='manual-control-inner'>
+            <div className='manual-control-inner-info'>
+                Throttle: {throttle ? throttle : '--'}
+                <br/>
+            
+                Roll: {roll ? roll : '--'}
+                <br/>
+            
+                Orientation: {orientation ? orientation: '--'}
+            </div>           
+      
+            {controller}
+        </div>
+   
         
     </div>
 }

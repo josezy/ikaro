@@ -361,21 +361,63 @@ div.instrument.altimeter div.needleSmall {
 }
 .manual-control-inner {
     margin-top: auto;
-    font-weight: 100;
-    font-size: 0.7rem;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 10px 10px 0 0;    
-    height: 100px;
-    width: 20%;
+       
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: fit-content;
+    width: fit-content;
     pointer-events: auto;
 }
-.manual-control-virtual-joystick {
-    position: absolute;
-    height: 100%;
-    opacity: 100%;
-    background: linear-gradient(to right, #E684AE, #79CBCA, #77A1D3);
-    pointer-events:auto;
+
+.manual-control-inner-info {
+    font-size: 0.7rem;
+    color:white;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px 10px 0 0;   
+
+    height: fit-content;
+    width: fit-content;
+    pointer-events: auto;
+    margin-bottom: 20px;
 }
+
+
+
+.manual-control-virtual-joystick-contanier {
+    height: fit-content;
+    width: fit-content;
+    /* position: relative;
+    display: flex; */
+    /* justify-content: center;
+    align-items: center; 
+    pointer-events: auto; */
+
+
+}
+
+.manual-control-virtual-joystick {
+    opacity: 100%;
+    border-radius: 50%;
+    height: 1vh;
+    width: 1vw;
+    margin-bottom:20px;
+
+    background: rgba(255, 255, 255, 0.3); 
+
+}
+.manual-control-virtual-joystick-transparent{
+    opacity: 100%;
+    border-radius: 50%;
+    height: 1vh;
+    width: 1vw;
+    margin-bottom:20px;
+
+    background: rgba(255, 255, 255, 0.0); 
+}
+
+
 
 
 

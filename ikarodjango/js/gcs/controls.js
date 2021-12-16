@@ -294,8 +294,6 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_m
                     <div>Lon: {position ? position.lon : '--'}</div>
                     <div>Battery: {battery ? `${battery.toFixed(1)}%` : '--'}</div>
                     <div>Mode: {flight_mode}</div>
-                    <div>Vx: {position ? position.vx : '--'}</div>
-                    <div>Vy: {position ? position.vy : '--'}</div>
                 </div>
                 <div className='col-6'>
                     <div>Speed: {gps ? `${gps.velocity}m/s` : '--'}</div>
@@ -309,10 +307,6 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_m
                         <div className={`${alive ? 'green' : 'red'} dot`}></div>&nbsp;
                         {alive ? 'Online' : 'No signal'}
                     </div>
-                    
-                    <div>zacc: {raw_imu ? raw_imu.zacc : '--'}</div>
-                    <div>xacc: {raw_imu ? raw_imu.xacc: '--'}</div>
-                    <div>yacc: {raw_imu ? raw_imu.yacc: '--'}</div>
                 </div>
             </div>
         </Draggable>       
@@ -371,8 +365,7 @@ export const Controls =  () => {
                 
             </div>
         </Drawer>
-        <div className='manual-control-container'>
-                <ManualControl ctrlSelected={[ctrlSelected, setCtrlSelected]} takeControlFlag={[takeControlFlag, setTakeControlFlag]}/>
-        </div>
+        <ManualControl ctrlSelected={[ctrlSelected, setCtrlSelected]} takeControlFlag={[takeControlFlag, setTakeControlFlag]}/>
+    
     </div>  
 }

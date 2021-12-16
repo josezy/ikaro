@@ -219,7 +219,7 @@ export const MANUAL_CONTROL_TYPES = {
 export const MANUAL_CONTROL_TYPES_OPTIONS = [
     {label:"KEYBOARD",value:0},
     {label:"JOYSTICK",value:1},
-    {label:"DOUBLE_JOYSTICK",value:2},
+    // {label:"DOUBLE_JOYSTICK",value:2},
     {label:"PS3_CONTROL",value:3},
     
 ]
