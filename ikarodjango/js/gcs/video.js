@@ -62,7 +62,7 @@ export const VideoVisor = () => {
                     console.log("Feeds:", feeds)
                     session.videoRoom().listenFeed(room_id, feeds[0]).then((listenerHandle) => {
                         console.log("listenerHandle", listenerHandle)
-                        setTimeout(() => pc_create_negotiate({ listenerHandle }, onTrack), 100)
+                        setTimeout(() => pc_create_negotiate({ listenerHandle }, onTrack), 1000)
                     });
                 })
 
