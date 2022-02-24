@@ -72,7 +72,7 @@ export const FlightPanel = {
                 <Indicators />
                 {/* <SpectatorsEye /> */}
                 <NerdInfo />
-                <VideoVisor />
+                {/* <VideoVisor /> */}
             </Provider>
         )
     },
