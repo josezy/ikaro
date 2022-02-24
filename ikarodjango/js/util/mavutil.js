@@ -1,11 +1,42 @@
 import {
     MAV_AUTOPILOT, MAV_TYPE, MAVLINK_MESSAGES,
+    PX4_CUSTOM_MAIN_AUTO,
     mode_mapping_acm, mode_mapping_apm, mode_mapping_rover,
     mode_mapping_tracker, mode_mapping_sub,
     CELLS, CELL_RANGE
 } from '@/util/constants'
 
 import { send_mavmsg, send_mavcmd } from '@/reducers/mavlink'
+
+const interpret_px4_mode = (base_mode, custom_mode) => {
+    /* JUST WORKING WITH AUTO MODES, MUST GET VEHICLE STATUS TO USE MANUAL MODELS*/
+    let custom_main_mode = (custom_mode & 0xFF0000)   >> 16
+    let custom_sub_mode  = (custom_mode & 0xFF000000) >> 24
+    if (custom_main_mode){
+        switch(custom_sub_mode){
+            case PX4_CUSTOM_MAIN_AUTO["PX4_CUSTOM_SUB_MODE_AUTO_MISSION"]:
+                return "MISSION"
+            case PX4_CUSTOM_MAIN_AUTO["PX4_CUSTOM_SUB_MODE_AUTO_TAKEOFF"]:
+                return "TAKEOFF"
+            case PX4_CUSTOM_MAIN_AUTO["PX4_CUSTOM_SUB_MODE_AUTO_LOITER"]:
+                return "LOITER"
+            case PX4_CUSTOM_MAIN_AUTO["PX4_CUSTOM_SUB_MODE_AUTO_FOLLOW_TARGET"]:
+                return "FOLLOWME"
+            case PX4_CUSTOM_MAIN_AUTO["PX4_CUSTOM_SUB_MODE_AUTO_RTL"]:
+                return "RTL"
+            case PX4_CUSTOM_MAIN_AUTO["PX4_CUSTOM_SUB_MODE_AUTO_LAND"]:
+                return "LAND"
+            case PX4_CUSTOM_MAIN_AUTO["PX4_CUSTOM_SUB_MODE_AUTO_RTGS"]:
+                return "RTGS"                    
+            case PX4_CUSTOM_MAIN_AUTO["PX4_CUSTOM_SUB_MODE_OFFBOARD"]:
+                return "OFFBOARD"
+            default:
+                return "UNKNOWN"
+        }            
+    }
+    return "UNKNOWN"
+}
+
 
 const mode_mapping_bynumber = type => {
     /**
@@ -31,8 +62,7 @@ export const flightmode_from_heartbeat = HEARTBEAT => {
     const { base_mode, custom_mode, autopilot, type } = HEARTBEAT
 
     if (MAV_AUTOPILOT[autopilot] == 'PX4') {
-        // flightmode = mavutil.interpret_px4_mode(base_mode, custom_mode)
-        throw new Error('PX4 not supported yet')
+        flightmode = interpret_px4_mode(base_mode,custom_mode)
     } else {
         flightmode = (mode_mapping_bynumber(type) || {})[custom_mode]
     }

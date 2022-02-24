@@ -113,6 +113,39 @@ export const MAVLINK_MESSAGES = {
 }
 export const MAVLINK_MESSAGE_IDS = Object.entries(MAVLINK_MESSAGES).reduce(switch_entries, {})
 
+export const MAV_MODE_FLAG = {
+    MAV_MODE_FLAG_MANUAL_INPUT_ENABLED: 64,
+    MAV_MODE_FLAG_AUTO_ENABLED: 4,
+    MAV_MODE_FLAG_STABILIZE_ENABLED : 16,
+    MAV_MODE_FLAG_GUIDED_ENABLED : 8
+}
+// export const MAV_MODE_FLAG_IDS = Object.entries(MAV_MODE_FLAG).reduce(switch_entries, {})
+
+export const PX4_CUSTOM_MAIN_MANUAL = {
+    PX4_CUSTOM_MAIN_MODE_MANUAL    : 1, 
+    PX4_CUSTOM_MAIN_MODE_ALTCTL    : 2, 
+    PX4_CUSTOM_MAIN_MODE_POSCTL    : 3, 
+    PX4_CUSTOM_MAIN_MODE_AUTO      : 4, 
+    PX4_CUSTOM_MAIN_MODE_ACRO      : 5, 
+    PX4_CUSTOM_MAIN_MODE_OFFBOARD  : 6, 
+    PX4_CUSTOM_MAIN_MODE_STABILIZED: 7, 
+    PX4_CUSTOM_MAIN_MODE_RATTITUDE : 8, 
+}
+
+export const PX4_CUSTOM_MAIN_AUTO = {
+    PX4_CUSTOM_SUB_MODE_OFFBOARD          : 0,
+    PX4_CUSTOM_SUB_MODE_AUTO_READY        : 1,
+    PX4_CUSTOM_SUB_MODE_AUTO_TAKEOFF      : 2,
+    PX4_CUSTOM_SUB_MODE_AUTO_LOITER       : 3,
+    PX4_CUSTOM_SUB_MODE_AUTO_MISSION      : 4,
+    PX4_CUSTOM_SUB_MODE_AUTO_RTL          : 5,
+    PX4_CUSTOM_SUB_MODE_AUTO_LAND         : 6,
+    PX4_CUSTOM_SUB_MODE_AUTO_RTGS         : 7,
+    PX4_CUSTOM_SUB_MODE_AUTO_FOLLOW_TARGET: 8,
+}
+
+
+
 
 export const mode_mapping_apm = {
     0: 'MANUAL',
