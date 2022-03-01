@@ -1,11 +1,58 @@
 import {
     MAV_AUTOPILOT, MAV_TYPE, MAVLINK_MESSAGES,
+    PX4_CUSTOM_MAIN_MODE, PX4_CUSTOM_SUB_MODE,
     mode_mapping_acm, mode_mapping_apm, mode_mapping_rover,
-    mode_mapping_tracker, mode_mapping_sub,
-    CELLS, CELL_RANGE
+    mode_mapping_tracker, mode_mapping_sub, auto_mode_flags,
+    CELLS, CELL_RANGE, MAV_MODE_FLAG
 } from '@/util/constants'
 
 import { send_mavmsg, send_mavcmd } from '@/reducers/mavlink'
+
+const interpret_px4_mode = (base_mode, custom_mode) => {
+    const custom_main_mode = (custom_mode & 0xFF0000) >> 16
+    const custom_sub_mode = (custom_mode & 0xFF000000) >> 24
+
+    if (Boolean(base_mode & MAV_MODE_FLAG.MAV_MODE_FLAG_MANUAL_INPUT_ENABLED)) {
+        switch (custom_main_mode) {
+            case PX4_CUSTOM_MAIN_MODE.PX4_CUSTOM_MAIN_MODE_MANUAL:
+                return 'MANUAL'
+            case PX4_CUSTOM_MAIN_MODE.PX4_CUSTOM_MAIN_MODE_ACRO:
+                return "ACRO"
+            case PX4_CUSTOM_MAIN_MODE.PX4_CUSTOM_MAIN_MODE_RATTITUDE:
+                return "RATTITUDE"
+            case PX4_CUSTOM_MAIN_MODE.PX4_CUSTOM_MAIN_MODE_STABILIZED:
+                return "STABILIZED"
+            case PX4_CUSTOM_MAIN_MODE.PX4_CUSTOM_MAIN_MODE_ALTCTL:
+                return "ALTCTL"
+            case PX4_CUSTOM_MAIN_MODE.PX4_CUSTOM_MAIN_MODE_POSCTL:
+                return "POSCTL"
+        }
+    } else if (base_mode & auto_mode_flags == auto_mode_flags) {
+        if (Boolean(custom_main_mode & PX4_CUSTOM_MAIN_MODE.PX4_CUSTOM_MAIN_MODE_AUTO)) {
+            switch (custom_sub_mode) {
+                case PX4_CUSTOM_SUB_MODE.PX4_CUSTOM_SUB_MODE_AUTO_MISSION:
+                    return "MISSION"
+                case PX4_CUSTOM_SUB_MODE.PX4_CUSTOM_SUB_MODE_AUTO_TAKEOFF:
+                    return "TAKEOFF"
+                case PX4_CUSTOM_SUB_MODE.PX4_CUSTOM_SUB_MODE_AUTO_LOITER:
+                    return "LOITER"
+                case PX4_CUSTOM_SUB_MODE.PX4_CUSTOM_SUB_MODE_AUTO_FOLLOW_TARGET:
+                    return "FOLLOWME"
+                case PX4_CUSTOM_SUB_MODE.PX4_CUSTOM_SUB_MODE_AUTO_RTL:
+                    return "RTL"
+                case PX4_CUSTOM_SUB_MODE.PX4_CUSTOM_SUB_MODE_AUTO_LAND:
+                    return "LAND"
+                case PX4_CUSTOM_SUB_MODE.PX4_CUSTOM_SUB_MODE_AUTO_RTGS:
+                    return "RTGS"
+                case PX4_CUSTOM_SUB_MODE.PX4_CUSTOM_SUB_MODE_OFFBOARD:
+                    return "OFFBOARD"
+            }
+        }
+    }
+
+    return "UNKNOWN"
+}
+
 
 const mode_mapping_bynumber = type => {
     /**
@@ -31,8 +78,7 @@ export const flightmode_from_heartbeat = HEARTBEAT => {
     const { base_mode, custom_mode, autopilot, type } = HEARTBEAT
 
     if (MAV_AUTOPILOT[autopilot] == 'PX4') {
-        // flightmode = mavutil.interpret_px4_mode(base_mode, custom_mode)
-        throw new Error('PX4 not supported yet')
+        flightmode = interpret_px4_mode(base_mode, custom_mode)
     } else {
         flightmode = (mode_mapping_bynumber(type) || {})[custom_mode]
     }
