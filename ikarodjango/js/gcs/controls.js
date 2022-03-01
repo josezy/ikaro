@@ -135,16 +135,22 @@ const TakeoffButton = reduxify({
             state => state.mavlink.HEARTBEAT,
             HEARTBEAT => HEARTBEAT && Boolean(HEARTBEAT.base_mode & 10 ** 7)
         )(state),
-        home_position: createSelector(
+        mslAltitude: createSelector(
+            state => state.mavlink.HOME_POSITION,
+            HOME_POSITION => HOME_POSITION && HOME_POSITION.altitude / 1000
+        )(state),
+        autopilot: createSelector(
             state => state.mavlink.HEARTBEAT,
-            HEARTBEAT => HEARTBEAT && MAV_AUTOPILOT[HEARTBEAT.autopilot]
-        )(state)== 'PX4'?state.mavlink.HOME_POSITION:null,
+            HEARTBEAT => MAV_AUTOPILOT[HEARTBEAT?.autopilot]
+        )(state),
     }),
     mapDispatchToProps: { send_mavmsg },
     render: (props) => <TakeoffButtonComponent {...props} />
 })
 
-const TakeoffButtonComponent = ({ send_mavmsg, target_system, armed, home_position }) => {
+const TakeoffButtonComponent = ({
+    send_mavmsg, target_system, armed, mslAltitude, autopilot
+}) => {
     const [showModal, setShowModal] = useState(false)
     const [alt, setAlt] = useState(TAKEOFF_MIN_ALTITUDE)
 
@@ -153,7 +159,9 @@ const TakeoffButtonComponent = ({ send_mavmsg, target_system, armed, home_positi
         send_mavmsg('SET_MODE', { target_system, base_mode: 81, custom_mode: 4 })
         global.page.command_sender.send(
             { command: 'MAV_CMD_COMPONENT_ARM_DISARM', params: { param1: 1 } },
-            { command: 'MAV_CMD_NAV_TAKEOFF', params: { param7: alt+home_position?home_position.altitude/1000:0 } }
+            { command: 'MAV_CMD_NAV_TAKEOFF', params: {
+                param7: autopilot === 'PX4' ? alt + mslAltitude : alt
+            } }
         )
     }
 
