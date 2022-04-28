@@ -69,7 +69,7 @@ const RTLButton = reduxify({
     render: ({ send_mavcmd }) => <div className='m-auto p-1 h-100 col-4'>
         <Button variant='outline-warning' className='secondary-button' onClick={
             () => send_mavcmd('MAV_CMD_NAV_RETURN_TO_LAUNCH')
-        }>Return to launch</Button>
+        }>Return to Launch</Button>
     </div>
 })
 
