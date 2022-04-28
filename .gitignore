@@ -10,6 +10,7 @@ __pycache__
 ikarodjango/js/yarn-error.log
 ikarodjango/js/package-lock.json
 ikarodjango/js/node_modules
+ikarodjango/static/js/pages/*
 ikarodjango/venv
 ikarodjango/pypy-venv
 ikarodjango/.mypy_cache
@@ -24,4 +25,3 @@ etc/nginx/*.key
 .venv
 *.sqlite3
 *.rdb
-static/js/pages/
