@@ -9,7 +9,7 @@ import { mavlink, onmessage_mavlink, send_mavmsg } from '@/reducers/mavlink'
 
 import { SocketRouter } from '@/components/websocket'
 import { CommandSender } from '@/components/command_sender'
-import { SpectatorsEye } from '@/components/SpectatorsEye'
+// import { SpectatorsEye } from '@/components/SpectatorsEye'
 import { MapContainer } from '@/gcs/maps'
 import { TukanoPanel } from '@/gcs/panels'
 import { Controls, NerdInfo } from '@/gcs/controls'
@@ -72,7 +72,7 @@ export const FlightPanel = {
                 <Indicators />
                 {/* <SpectatorsEye /> */}
                 <NerdInfo />
-                {/* <VideoVisor /> */}
+                <VideoVisor />
             </Provider>
         )
     },
