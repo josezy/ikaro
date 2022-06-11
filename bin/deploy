@@ -1,0 +1,16 @@
+#!/bin/bash
+
+REPO_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )"/.. && pwd )"
+
+source .venv/bin/activate
+pip install -r requirements.txt
+
+cd "${REPO_DIR}/ikarodjango/js"
+yarn install
+./node_modules/.bin/webpack
+
+cd "${REPO_DIR}/ikarodjango"
+python manage.py migrate
+python manage.py collectstatic --no-input
+
+sudo supervisorctl restart ikaro:django

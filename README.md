@@ -1,5 +1,5 @@
 # ikaro
-Django based web server for tucano services
+Django based web server for running drones from a browser
 
 ## Project quickstart
 

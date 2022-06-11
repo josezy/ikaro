@@ -10,7 +10,7 @@ import { Slider, InputNumber, Modal, Row } from 'antd'
 import { send_mavcmd, send_mavmsg } from '@/reducers/mavlink'
 import { flightmode_from_heartbeat, voltage_to_percentage } from '@/util/mavutil'
 import { format_ms } from '@/util/javascript'
-import { GPS_FIX_TYPE, TAKEOFF_MIN_ALTITUDE, TAKEOFF_MAX_ALTITUDE, MANUAL_CONTROL_TYPES, MANUAL_CONTROL_TYPES_OPTIONS } from '@/util/constants'
+import { GPS_FIX_TYPE, TAKEOFF_MIN_ALTITUDE, TAKEOFF_MAX_ALTITUDE, MANUAL_CONTROL_TYPES, MAV_AUTOPILOT } from '@/util/constants'
 
 
 import { ManualControlPanel, ManualControl  } from '@/gcs/manual_control'
@@ -76,7 +76,7 @@ const RTLButton = reduxify({
     render: ({ send_mavcmd }) => <div className='m-auto p-1 h-100 col-4'>
         <Button variant='outline-warning' className='secondary-button' onClick={
             () => send_mavcmd('MAV_CMD_NAV_RETURN_TO_LAUNCH')
-        }>Return to launch</Button>
+        }>Return to Launch</Button>
     </div>
 })
 
@@ -142,21 +142,34 @@ const TakeoffButton = reduxify({
             state => state.mavlink.HEARTBEAT,
             HEARTBEAT => HEARTBEAT && Boolean(HEARTBEAT.base_mode & 10 ** 7)
         )(state),
+        mslAltitude: createSelector(
+            state => state.mavlink.HOME_POSITION,
+            HOME_POSITION => HOME_POSITION && HOME_POSITION.altitude / 1000
+        )(state),
+        autopilot: createSelector(
+            state => state.mavlink.HEARTBEAT,
+            HEARTBEAT => MAV_AUTOPILOT[HEARTBEAT?.autopilot]
+        )(state),
     }),
     mapDispatchToProps: { send_mavmsg },
     render: (props) => <TakeoffButtonComponent {...props} />
 })
 
-const TakeoffButtonComponent = ({ send_mavmsg, target_system, armed }) => {
+const TakeoffButtonComponent = ({
+    send_mavmsg, target_system, armed, mslAltitude, autopilot
+}) => {
     const [showModal, setShowModal] = useState(false)
     const [alt, setAlt] = useState(TAKEOFF_MIN_ALTITUDE)
 
     const takeoff = async () => {
         setShowModal(false)
-        send_mavmsg('SET_MODE', { target_system, base_mode: 81, custom_mode: 4 })
+        if(autopilot === 'PX4')
+            send_mavmsg('SET_MODE', { target_system, base_mode: 81, custom_mode: 4 })
         global.page.command_sender.send(
             { command: 'MAV_CMD_COMPONENT_ARM_DISARM', params: { param1: 1 } },
-            { command: 'MAV_CMD_NAV_TAKEOFF', params: { param7: alt } }
+            { command: 'MAV_CMD_NAV_TAKEOFF', params: {
+                param7: autopilot === 'PX4' ? alt + mslAltitude : alt
+            } }
         )
     }
 
