@@ -53,7 +53,7 @@ export const VideoVisor = () => {
         client.onConnected(async () => {
             const session = await client.createSession()
             const feeds = await session.videoRoom().getFeeds(room_id)
-            if (feeds.length == 0) return console.warn("No feeds for room:", room_id)
+            if (feeds.length == 0) return console.log("No feeds for room:", room_id)
 
             const listenerHandle = await session.videoRoom().listenFeed(room_id, feeds[0])
             pc_create_negotiate(listenerHandle, onTrack)
