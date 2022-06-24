@@ -67,16 +67,13 @@ export const FlightPanel = {
     render({ store }) {
         return (
             <Provider store={store}>
+                <MapContainer />
                 <TukanoPanel />
-                
                 {global.props.is_pilot && <Controls />}
                 <Indicators />
-                <SpectatorsEye />
-                
-                <VideoVisor />  
-                <MapContainer />
-                
+                {/* <SpectatorsEye /> */}
                 <NerdInfo />
+                <VideoVisor />
             </Provider>
         )
     },

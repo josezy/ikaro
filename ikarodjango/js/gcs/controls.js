@@ -13,7 +13,7 @@ import { format_ms } from '@/util/javascript'
 import { GPS_FIX_TYPE, TAKEOFF_MIN_ALTITUDE, TAKEOFF_MAX_ALTITUDE, MANUAL_CONTROL_TYPES, MAV_AUTOPILOT } from '@/util/constants'
 
 
-import { ManualControlPanel, ManualControl  } from '@/gcs/manual_control'
+import { ManualControlPanel, ManualControl } from '@/gcs/manual_control'
 
 import Drawer from "react-modern-drawer"
 import "../node_modules/react-modern-drawer/dist/index.css"
@@ -69,7 +69,7 @@ const ArmedSwitch = reduxify({
     </div>
 })
 
-    
+
 const RTLButton = reduxify({
     mapStateToProps: (state, props) => ({}),
     mapDispatchToProps: { send_mavcmd },
@@ -163,13 +163,13 @@ const TakeoffButtonComponent = ({
 
     const takeoff = async () => {
         setShowModal(false)
-        if(autopilot === 'PX4')
+        if (autopilot === 'PX4')
             send_mavmsg('SET_MODE', { target_system, base_mode: 81, custom_mode: 4 })
+
+        const takeoff_alt = autopilot === 'PX4' ? alt + mslAltitude : alt
         global.page.command_sender.send(
             { command: 'MAV_CMD_COMPONENT_ARM_DISARM', params: { param1: 1 } },
-            { command: 'MAV_CMD_NAV_TAKEOFF', params: {
-                param7: autopilot === 'PX4' ? alt + mslAltitude : alt
-            } }
+            { command: 'MAV_CMD_NAV_TAKEOFF', params: { param7: takeoff_alt } }
         )
     }
 
@@ -214,8 +214,6 @@ const TakeoffButtonComponent = ({
         </Modal>
     </div>
 }
-
-
 
 
 const LandButton = reduxify({
@@ -266,15 +264,7 @@ export const NerdInfo = reduxify({
         flight_mode: createSelector(
             state => state.mavlink.HEARTBEAT,
             HEARTBEAT => HEARTBEAT && flightmode_from_heartbeat(HEARTBEAT)
-        )(state),            
-        raw_imu:  createSelector(
-            state => state.mavlink.RAW_IMU,
-            RAW_IMU => RAW_IMU && {
-                xacc: RAW_IMU.xacc,
-                yacc: RAW_IMU.yacc,
-                zacc: RAW_IMU.zacc,
-            }
-        )(state)
+        )(state),
     }),
     mapDispatchToProps: {},
     render: props => <NerdInfoComponent {...props} />
@@ -282,11 +272,10 @@ export const NerdInfo = reduxify({
 
 
 let heartbeat_timeout = null
-const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_mode,raw_imu }) => {
+const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_mode }) => {
     const [path, setPath] = useState([])
     const [alive, setAlive] = useState(false)
 
-    
     useEffect(() => {
         if (position) setPath([...path, { latitude: position.lat, longitude: position.lon }])
     }, [position && position.lat, position && position.lon])
@@ -297,9 +286,8 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_m
         heartbeat_timeout = setTimeout(() => setAlive(false), 2000)
     }, [heartbeat])
 
-    return <div className='nerdinfo-container' >     
-    
-        <Draggable >   
+    return <div className='nerdinfo-container' >
+        <Draggable >
             <div className='row nerdinfo-inner'  >
                 <div className='col-6'>
                     <div>Alt: {position ? `${position.relative_alt.toFixed(1)}m` : '--'}</div>
@@ -322,7 +310,7 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_m
                     </div>
                 </div>
             </div>
-        </Draggable>       
+        </Draggable>
     </div>
 }
 
@@ -337,23 +325,23 @@ const LobbyButton = () => (
     </div>
 )
 
-export const Controls =  () => {
+export const Controls = () => {
     const [isOpen, setIsOpen] = React.useState(false)
     const toggleDrawer = () => {
         setIsOpen((prevState) => !prevState)
     }
 
-    
+
     const [aDog, setADog] = React.useState("eres un perro")
     //FOR MANUAL CONTROL
     const [takeControlFlag, setTakeControlFlag] = React.useState(false)
     const [ctrlSelected, setCtrlSelected] = React.useState(MANUAL_CONTROL_TYPES.KEYBOARD)
 
-    return   <div>
+    return <div>
         <div className='controls-close-drawer-div'  >
-            <button className='controls-close-drawer-button'  onClick={toggleDrawer}>Show</button>
-        </div>        
-        <Drawer style={{ background: 'rgba(0, 0, 0, 0.0)'}} open={isOpen} onClose={toggleDrawer} direction='left'>
+            <button className='controls-close-drawer-button' onClick={toggleDrawer}>Show</button>
+        </div>
+        <Drawer style={{ background: 'rgba(0, 0, 0, 0.0)' }} open={isOpen} onClose={toggleDrawer} direction='left'>
             <div className='controls-div' >
                 <div className='controls-row'>
                     <LobbyButton />
@@ -362,7 +350,7 @@ export const Controls =  () => {
                 <div className='controls-row'>
                     <TakeoffButton />
                     <LandButton />
-                    
+
                 </div>
                 <div className='controls-row'>
                     <RTLButton />
@@ -373,12 +361,12 @@ export const Controls =  () => {
                     <Log />
                 </div>
                 <div className='controls-row'>
-                    <ManualControlPanel ctrlSelected={[ctrlSelected, setCtrlSelected]}  takeControlFlag={[takeControlFlag, setTakeControlFlag]}/>
+                    <ManualControlPanel ctrlSelected={[ctrlSelected, setCtrlSelected]} takeControlFlag={[takeControlFlag, setTakeControlFlag]} />
                 </div>
-                
+
             </div>
         </Drawer>
-        <ManualControl ctrlSelected={[ctrlSelected, setCtrlSelected]} takeControlFlag={[takeControlFlag, setTakeControlFlag]}/>
-    
-    </div>  
+        <ManualControl ctrlSelected={[ctrlSelected, setCtrlSelected]} takeControlFlag={[takeControlFlag, setTakeControlFlag]} />
+
+    </div>
 }

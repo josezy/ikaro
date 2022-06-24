@@ -7,17 +7,17 @@ export const ALLOWED_MAVLINK_MSGS = [
     'TUKANO_DATA',
     'SYS_STATUS',
     'GPS_RAW_INT',
+    'VFR_HUD',
+    'ATTITUDE',
     'COMMAND_ACK',
     'STATUSTEXT',
     'MISSION_COUNT',
     'MISSION_ITEM',
     'PARAM_VALUE',
     'HOME_POSITION',
-
     'SET_MODE',
-    'RC_CHANNELS_OVERRIDE',    
+    'RC_CHANNELS_OVERRIDE',
     'RAW_IMU',
-    'ATTITUDE'
 ]
 // export const ALLOWED_MAV_TYPES = ['QUADROTOR', 'ROVER']
 
@@ -135,14 +135,14 @@ export const auto_mode_flags = (
 )
 
 export const PX4_CUSTOM_MAIN_MODE = {
-    PX4_CUSTOM_MAIN_MODE_MANUAL: 1, 
-    PX4_CUSTOM_MAIN_MODE_ALTCTL: 2, 
-    PX4_CUSTOM_MAIN_MODE_POSCTL: 3, 
-    PX4_CUSTOM_MAIN_MODE_AUTO: 4, 
-    PX4_CUSTOM_MAIN_MODE_ACRO: 5, 
-    PX4_CUSTOM_MAIN_MODE_OFFBOARD: 6, 
-    PX4_CUSTOM_MAIN_MODE_STABILIZED: 7, 
-    PX4_CUSTOM_MAIN_MODE_RATTITUDE: 8, 
+    PX4_CUSTOM_MAIN_MODE_MANUAL: 1,
+    PX4_CUSTOM_MAIN_MODE_ALTCTL: 2,
+    PX4_CUSTOM_MAIN_MODE_POSCTL: 3,
+    PX4_CUSTOM_MAIN_MODE_AUTO: 4,
+    PX4_CUSTOM_MAIN_MODE_ACRO: 5,
+    PX4_CUSTOM_MAIN_MODE_OFFBOARD: 6,
+    PX4_CUSTOM_MAIN_MODE_STABILIZED: 7,
+    PX4_CUSTOM_MAIN_MODE_RATTITUDE: 8,
 }
 
 export const PX4_CUSTOM_SUB_MODE = {
@@ -252,15 +252,15 @@ export const KEYBOARD_INTERVAL = 50
 
 
 export const MANUAL_CONTROL_TYPES = {
-    "KEYBOARD":0,
-    "JOYSTICK":1,
-    "DOUBLE_JOYSTICK":2,
-    "PS3_CONTROL":3
+    "KEYBOARD": 0,
+    "JOYSTICK": 1,
+    "DOUBLE_JOYSTICK": 2,
+    "PS3_CONTROL": 3
 }
 export const MANUAL_CONTROL_TYPES_OPTIONS = [
-    {label:"KEYBOARD",value:0},
-    {label:"JOYSTICK",value:1},
-    // {label:"DOUBLE_JOYSTICK",value:2},
-    {label:"PS3_CONTROL",value:3},
-    
+    { label: "KEYBOARD", value: 0 },
+    { label: "JOYSTICK", value: 1 },
+    // { label: "DOUBLE_JOYSTICK", value: 2 },
+    { label: "PS3_CONTROL", value: 3 },
+
 ]

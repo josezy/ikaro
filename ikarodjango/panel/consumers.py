@@ -32,7 +32,6 @@ class MavlinkConsumer(AsyncConsumer):
         room.total_viewers += n
         room.save()
 
-
     async def websocket_connect(self, event):
         self.user = self.scope["user"]
 
@@ -57,21 +56,16 @@ class MavlinkConsumer(AsyncConsumer):
         pilot = await database_sync_to_async(is_pilot)(self.room_id, self.scope["user"].id)
         if self.user.is_authenticated and pilot:
             self.can_receive = True
-        try:
-            print("\nWAIT1\n")
-            await self.send({"type": "websocket.accept"})
 
-            print("\nWAIT2\n")
+        try:
+            await self.send({"type": "websocket.accept"})
             await self.channel_layer.group_add(
                 self.room_id,
                 self.channel_name
             )
-            
-            print("\nWAIT3\n")
+            # await self.add_viewer(1)
         except Exception as e:
-
-            print("\ERROR\n",e)
-        # await self.add_viewer(1)
+            print(f"[WS ERROR]: {e}", flush=True)
 
     async def websocket_receive(self, event):
         if not self.can_receive:

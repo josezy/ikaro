@@ -68,14 +68,11 @@ const Heading = reduxify({
 export const Indicators = () => <>
 
     <div style={{ position: 'absolute', right: 0 }}>
-        
-        <Draggable handle=".indicator-container">   
+        <Draggable handle=".indicator-container">
             <div className="indicator-container">
-                
                 <Attitude />
                 <Heading />
             </div>
         </Draggable>
-
     </div>
 </>
