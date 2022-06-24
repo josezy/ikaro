@@ -82,7 +82,8 @@ class MavlinkConsumer(AsyncConsumer):
                 }
             )
             if "HEARTBEAT" in mavmsg:
-                print(f"[WS RECV] {time.ctime()} {self.channel_name}: {mavmsg}", flush=True)
+                print(
+                    f"[WS RECV] {time.ctime()} {self.channel_name}: {mavmsg}", flush=True)
 
     async def flight_message(self, event):
         if self.channel_name != event.get("sender_channel_name"):

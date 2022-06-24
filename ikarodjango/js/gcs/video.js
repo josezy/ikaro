@@ -32,7 +32,7 @@ export const VideoVisor = () => {
 
     const client = new Janus({
         url: global.props.JANUS_ENDPOINT,
-        // token: '123456789',
+        token: '123456789',
     });
 
     // const room_id = window.location.pathname.slice(-8)
