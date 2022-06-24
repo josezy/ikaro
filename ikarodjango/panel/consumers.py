@@ -32,7 +32,6 @@ class MavlinkConsumer(AsyncConsumer):
         room.total_viewers += n
         room.save()
 
-
     async def websocket_connect(self, event):
         self.user = self.scope["user"]
 
@@ -58,12 +57,15 @@ class MavlinkConsumer(AsyncConsumer):
         if self.user.is_authenticated and pilot:
             self.can_receive = True
 
-        await self.send({"type": "websocket.accept"})
-        await self.channel_layer.group_add(
-            self.room_id,
-            self.channel_name
-        )
-        # await self.add_viewer(1)
+        try:
+            await self.send({"type": "websocket.accept"})
+            await self.channel_layer.group_add(
+                self.room_id,
+                self.channel_name
+            )
+            # await self.add_viewer(1)
+        except Exception as e:
+            print(f"[WS ERROR]: {e}", flush=True)
 
     async def websocket_receive(self, event):
         if not self.can_receive:
@@ -80,7 +82,8 @@ class MavlinkConsumer(AsyncConsumer):
                 }
             )
             if "HEARTBEAT" in mavmsg:
-                print(f"[WS RECV] {time.ctime()} {self.channel_name}: {mavmsg}", flush=True)
+                print(
+                    f"[WS RECV] {time.ctime()} {self.channel_name}: {mavmsg}", flush=True)
 
     async def flight_message(self, event):
         if self.channel_name != event.get("sender_channel_name"):

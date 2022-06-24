@@ -156,13 +156,13 @@ const TakeoffButtonComponent = ({
 
     const takeoff = async () => {
         setShowModal(false)
-        if(autopilot === 'PX4')
+        if (autopilot === 'PX4')
             send_mavmsg('SET_MODE', { target_system, base_mode: 81, custom_mode: 4 })
+
+        const takeoff_alt = autopilot === 'PX4' ? alt + mslAltitude : alt
         global.page.command_sender.send(
             { command: 'MAV_CMD_COMPONENT_ARM_DISARM', params: { param1: 1 } },
-            { command: 'MAV_CMD_NAV_TAKEOFF', params: {
-                param7: autopilot === 'PX4' ? alt + mslAltitude : alt
-            } }
+            { command: 'MAV_CMD_NAV_TAKEOFF', params: { param7: takeoff_alt } }
         )
     }
 
