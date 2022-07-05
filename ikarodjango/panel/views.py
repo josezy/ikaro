@@ -26,11 +26,14 @@ class FlightPanel(PublicReactView):
         return super().get(request, *args, **kwargs)
 
     def props(self, request, *args, **kwargs):
-        room = Room.objects.get(id__startswith=kwargs.get("id", None))
+        room_id = kwargs.get("id", None)
+        assert room_id is not None, "No room ID provided"
+        room = Room.objects.get(id__startswith=room_id)
 
         return {
             "map_key": settings.MAP_KEY,
             "is_pilot": is_pilot(room.short_id, request.user.id),
+            "videoroom_id": room.videoroom_id,
         }
 
 

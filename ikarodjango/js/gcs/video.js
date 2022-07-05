@@ -31,13 +31,12 @@ const pc_create_negotiate = async (listenerHandle, onTrack) => {
 
 export const VideoVisor = () => {
     const videoRef = useRef(null)
+    const room_id = global.props.videoroom_id
 
     const client = new Janus({
         url: global.props.JANUS_ENDPOINT,
         token: '123456789',
     });
-
-    const room_id = window.location.pathname.slice(-8)
 
     const onTrack = (evt) => {
         if (evt.track.kind === 'video') {
