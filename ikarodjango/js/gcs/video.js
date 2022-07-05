@@ -37,8 +37,7 @@ export const VideoVisor = () => {
         token: '123456789',
     });
 
-    // const room_id = window.location.pathname.slice(-8)
-    const room_id = '1234'
+    const room_id = window.location.pathname.slice(-8)
 
     const onTrack = (evt) => {
         if (evt.track.kind === 'video') {
