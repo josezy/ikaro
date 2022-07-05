@@ -54,10 +54,10 @@ const ManualControlComponent = ({ takeControlFlag, ctrlSelected, send_mavmsg, ta
         {
             
             throttleParams:{
-                throttle:1700,
-                maxThrottle:1700,
+                throttle:1100,
+                maxThrottle:1100,
                 throttleStep:50,
-                maxPwm:1850,
+                maxPwm:1250,
                 minPwm:1100,
                 orientation:2
             },
