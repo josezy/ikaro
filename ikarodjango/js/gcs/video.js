@@ -1,6 +1,7 @@
 // https://github.com/meetecho/janus-gateway/blob/master/html/videoroomtest.js
 
 import React, { useEffect, useRef } from 'react'
+import { reduxify } from '@/util/reduxify'
 import { Janus } from 'janus-videoroom-client'
 
 
@@ -29,7 +30,7 @@ const pc_create_negotiate = async (listenerHandle, onTrack) => {
     await listenerHandle.setRemoteAnswer(pc.localDescription.sdp)
 }
 
-export const VideoVisor = () => {
+const VideoVisorComponent = ({ smallVideo }) => {
     const videoRef = useRef(null)
     const room_id = global.props.videoroom_id
 
@@ -64,17 +65,25 @@ export const VideoVisor = () => {
     }, [])
 
     return (
-        <div className="video-container-fullscreen">
+        <div className={smallVideo ? 'pip-container' : 'wholescreen-container'}>
             <video
                 ref={videoRef}
                 autoPlay
                 muted
                 playsInline
-                className="video-elem-fullscreen"
+                className="video-elem"
                 poster="/static/img/no-signal.gif"
             ></video>
             {/* <audio id={'audio_id'} autoPlay={true}></audio> */}
         </div>
     )
 }
+
+export const VideoVisor = reduxify({
+    mapStateToProps: (state, props) => ({
+        smallVideo: state.pageSettings.smallVideo,
+    }),
+    mapDispatchToProps: { },
+    render: props => <VideoVisorComponent {...props} />
+})
 

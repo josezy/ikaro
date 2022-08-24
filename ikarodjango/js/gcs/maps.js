@@ -11,7 +11,6 @@ import { goto_point, send_mavmsg } from '@/reducers/mavlink'
 import {
     MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM, MAVLINK_COMMANDS
 } from '@/util/constants'
-import Draggable from 'react-draggable';
 
 
 const Mapbox = ReactMapboxGl({
@@ -21,70 +20,70 @@ const Mapbox = ReactMapboxGl({
     renderWorldCopies: false,
 })
 
-const MapComponent = ({ goto_point }) => {
+const MapComponent = ({ goto_point, smallVideo }) => {
     const [goto_coords, setGotoCoords] = useState(null)
-    return <>
-        <div className='mapbox-container' >
-            <Draggable
-                handle=".mapbox-draggable-button"  >
-                <div className='mapbox-draggale-div' >
-                    <button className='mapbox-draggable-button' />
-                    <Mapbox
-                        // style="mapbox://styles/mapbox/navigation-guidance-night-v4"
-                        style="mapbox://styles/mapbox/satellite-v9"
-                        center={MAP_INITIAL_CENTER}
-                        zoom={MAP_INITIAL_ZOOM}
-                        className='mapbox-component'
-                        onClick={(map, e) => {
-                            if (!global.props.is_pilot) return
-                            setGotoCoords([e.lngLat.lng, e.lngLat.lat])
-                        }}
-                    >
-                        <ZoomControl style={{ top: '40%' }} />
-                        <MarkerComponent />
-                        {global.props.is_pilot && <GotoMarker
-                            center={goto_coords}
-                            setGotoCoords={setGotoCoords}
-                            goto_point={goto_point}
-                        />}
-                        <MissionPath />
-                        <TraveledPath />
-                        {/* <Fence /> */}
-                        <Home />
-                        <MapContext.Consumer>
-                            {map => {
-                                global.page.map = map
-                                setInterval(() => {
-                                    const bounds = map.getBounds()
-                                    const { mavlink } = global.page.store.getState()
-                                    if (!mavlink) return
 
-                                    const { GLOBAL_POSITION_INT } = mavlink
-                                    if (!GLOBAL_POSITION_INT) return
+    useEffect(() => {
+        if (global.page?.map) global.page.map.resize()
+    }, [smallVideo])
 
-                                    const [lngVeh, latVeh] = [
-                                        GLOBAL_POSITION_INT.lon / 10 ** 7,
-                                        GLOBAL_POSITION_INT.lat / 10 ** 7
-                                    ]
-                                    if (lngVeh == 0 && latVeh == 0) return
+    return (
+        <div className={smallVideo ? 'wholescreen-container' : 'pip-container'}>
+            <Mapbox
+                // style="mapbox://styles/mapbox/navigation-guidance-night-v4"
+                style="mapbox://styles/mapbox/satellite-v9"
+                center={MAP_INITIAL_CENTER}
+                zoom={MAP_INITIAL_ZOOM}
+                className='mapbox-component'
+                onClick={(map, e) => {
+                    if (!global.props.is_pilot) return
+                    setGotoCoords([e.lngLat.lng, e.lngLat.lat])
+                }}
+            >
+                <ZoomControl style={{ top: '40%' }} />
+                <MarkerComponent />
+                {global.props.is_pilot && <GotoMarker
+                    center={goto_coords}
+                    setGotoCoords={setGotoCoords}
+                    goto_point={goto_point}
+                />}
+                <MissionPath />
+                <TraveledPath />
+                {/* <Fence /> */}
+                <Home />
+                <MapContext.Consumer>
+                    {map => {
+                        global.page.map = map
+                        setInterval(() => {
+                            const bounds = map.getBounds()
+                            const { mavlink } = global.page.store.getState()
+                            if (!mavlink) return
 
-                                    const latOut = latVeh < bounds._sw.lat || latVeh > bounds._ne.lat
-                                    const lngOut = lngVeh < bounds._sw.lng || lngVeh > bounds._ne.lng
+                            const { GLOBAL_POSITION_INT } = mavlink
+                            if (!GLOBAL_POSITION_INT) return
 
-                                    if (latOut || lngOut) map.setCenter([lngVeh, latVeh])
-                                }, 10000)
-                            }}
-                        </MapContext.Consumer>
-                    </Mapbox>
-                </div>
-            </Draggable>
+                            const [lngVeh, latVeh] = [
+                                GLOBAL_POSITION_INT.lon / 10 ** 7,
+                                GLOBAL_POSITION_INT.lat / 10 ** 7
+                            ]
+                            if (lngVeh == 0 && latVeh == 0) return
+
+                            const latOut = latVeh < bounds._sw.lat || latVeh > bounds._ne.lat
+                            const lngOut = lngVeh < bounds._sw.lng || lngVeh > bounds._ne.lng
+
+                            if (latOut || lngOut) map.setCenter([lngVeh, latVeh])
+                        }, 10000)
+                    }}
+                </MapContext.Consumer>
+            </Mapbox>
         </div>
-
-    </>
+    )
 }
 
 export const MapContainer = reduxify({
-    mapStateToProps: (state, props) => ({}),
+    mapStateToProps: (state, props) => ({
+        smallVideo: state.pageSettings.smallVideo,
+    }),
     mapDispatchToProps: { goto_point },
     render: props => <MapComponent {...props} />
 })
