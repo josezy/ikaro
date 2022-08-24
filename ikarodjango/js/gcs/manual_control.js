@@ -10,7 +10,6 @@ import { RC_CHANNELS_OVERRIDE_INTERVAL, MANUAL_CONTROL_TYPES, MANUAL_CONTROL_TYP
 import { JoystickControls, DoubleJoystickControls } from '@/gcs/manual_control/virtual_joystick.js';
 import { KeyboardControl } from '@/gcs/manual_control/keyboard.js';
 import { GamepadCursor } from '@/gcs/manual_control/gamepad_cursor.js'
-import { PidController,VelocityCalc } from '@/gcs/manual_control/pid.js'
 import { flightmode_from_heartbeat } from '@/util/mavutil'
 
 import Select from 'react-select';
