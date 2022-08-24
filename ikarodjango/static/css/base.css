@@ -106,9 +106,6 @@ body {
 
 /*    Controls div    */
 
-.controls-close-drawer-button {
-    pointer-events: auto;
-}
 .controls-close-drawer-div {
     background: '#02253C';
     position: absolute;
@@ -204,7 +201,6 @@ div.instrument.altimeter div.needleSmall {
 .viewers-container {
     position: absolute;
     width: 100%;
-    pointer-events: none;
 }
 
 .viewers-inner {
@@ -231,32 +227,25 @@ div.instrument.altimeter div.needleSmall {
     font-size: 1rem;
     color: white;
 }
+
 /* NerdInfo */
-
 .nerdinfo-container {
-    color: white;   
+    color: white;
+    bottom: 0;
     position: absolute;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    pointer-events: none;
+    left: 50%;
+    width: 270px;
+    margin-left: -115px;
 }
-
-
-.nerdinfo-inner {    
+.nerdinfo-inner {
+    margin: 0 auto;
     font-weight: 100;
     font-size: 0.7rem;
-    /* font-size: 3vh 3vw; */
     background: rgba(0, 0, 0, 0.3);
-    border-radius: 10px 10px 0 0;   
-    pointer-events: auto; 
-    
-    
+    border-radius: 10px 10px 0 0;
+    padding: 5px 0;
+    align-items: flex-end;
 }
-
 
 /*    Mapbox    */
 .mapbox-component {
@@ -319,7 +308,7 @@ div.instrument.altimeter div.needleSmall {
 .video-container-fullscreen {
     position: absolute;
     z-index: -1;
-    background-color: #02253C;
+    background-color: black;
     display: flex;
     justify-content: center;
     align-items: center; 
