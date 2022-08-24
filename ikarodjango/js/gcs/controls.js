@@ -11,14 +11,7 @@ import { send_mavcmd, send_mavmsg } from '@/reducers/mavlink'
 import { flightmode_from_heartbeat, voltage_to_percentage } from '@/util/mavutil'
 import { format_ms } from '@/util/javascript'
 import { GPS_FIX_TYPE, TAKEOFF_MIN_ALTITUDE, TAKEOFF_MAX_ALTITUDE, MANUAL_CONTROL_TYPES, MAV_AUTOPILOT } from '@/util/constants'
-
-
 import { ManualControlPanel, ManualControl } from '@/gcs/manual_control'
-
-import Drawer from "react-modern-drawer"
-import "../node_modules/react-modern-drawer/dist/index.css"
-
-import Draggable from 'react-draggable';
 
 const Log = reduxify({
     mapStateToProps: (state, props) => ({
@@ -286,31 +279,29 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_m
         heartbeat_timeout = setTimeout(() => setAlive(false), 2000)
     }, [heartbeat])
 
-    return <div className='nerdinfo-container' >
-        <Draggable >
-            <div className='row nerdinfo-inner'  >
-                <div className='col-6'>
-                    <div>Alt: {position ? `${position.relative_alt.toFixed(1)}m` : '--'}</div>
-                    <div>Lat: {position ? position.lat : '--'}</div>
-                    <div>Lon: {position ? position.lon : '--'}</div>
-                    <div>Battery: {battery ? `${battery.toFixed(1)}%` : '--'}</div>
-                    <div>Mode: {flight_mode}</div>
-                </div>
-                <div className='col-6'>
-                    <div>Speed: {gps ? `${gps.velocity}m/s` : '--'}</div>
-                    <div>GPS Count: {gps ? gps.satellites_visible : 0}</div>
-                    {/* <div>VDOP: {gps ? gps.epv : '--'}</div> */}
-                    {/* <div>HDOP: {gps ? gps.eph : '--'}</div> */}
-                    <div>Type: {gps ? gps.type : '--'}</div>
-                    <div>Time: {flight ? flight.time : '--'}</div>
-                    {/* <div>Flight distance: {getPathLength(path)}m</div> */}
-                    <div>
-                        <div className={`${alive ? 'green' : 'red'} dot`}></div>&nbsp;
-                        {alive ? 'Online' : 'No signal'}
-                    </div>
+    return <div className='nerdinfo-container'>
+        <div className='row nerdinfo-inner'>
+            <div className='col-6'>
+                <div>Alt: {position ? `${position.relative_alt.toFixed(1)}m` : '--'}</div>
+                <div>Lat: {position ? position.lat : '--'}</div>
+                <div>Lon: {position ? position.lon : '--'}</div>
+                <div>Battery: {battery ? `${battery.toFixed(1)}%` : '--'}</div>
+                <div>Mode: {flight_mode}</div>
+            </div>
+            <div className='col-6'>
+                <div>Speed: {gps ? `${gps.velocity}m/s` : '--'}</div>
+                <div>GPS Count: {gps ? gps.satellites_visible : 0}</div>
+                {/* <div>VDOP: {gps ? gps.epv : '--'}</div> */}
+                {/* <div>HDOP: {gps ? gps.eph : '--'}</div> */}
+                <div>Type: {gps ? gps.type : '--'}</div>
+                <div>Time: {flight ? flight.time : '--'}</div>
+                {/* <div>Flight distance: {getPathLength(path)}m</div> */}
+                <div>
+                    <div className={`${alive ? 'green' : 'red'} dot`}></div>&nbsp;
+                    {alive ? 'Online' : 'No signal'}
                 </div>
             </div>
-        </Draggable>
+        </div>
     </div>
 }
 
@@ -325,48 +316,67 @@ const LobbyButton = () => (
     </div>
 )
 
-export const Controls = () => {
-    const [isOpen, setIsOpen] = React.useState(false)
-    const toggleDrawer = () => {
-        setIsOpen((prevState) => !prevState)
-    }
+// export const Controls = () => {
+//     const [isOpen, setIsOpen] = useState(false)
+//     const [takeControlFlag, setTakeControlFlag] = useState(false)
+//     const [ctrlSelected, setCtrlSelected] = useState(MANUAL_CONTROL_TYPES.KEYBOARD)
 
+//     const toggleDrawer = () => setIsOpen(prevState => !prevState)
 
-    const [aDog, setADog] = React.useState("eres un perro")
-    //FOR MANUAL CONTROL
-    const [takeControlFlag, setTakeControlFlag] = React.useState(false)
-    const [ctrlSelected, setCtrlSelected] = React.useState(MANUAL_CONTROL_TYPES.KEYBOARD)
+//     return <div>
+//         <div className='controls-close-drawer-div'  >
+//             <button onClick={toggleDrawer}>Show</button>
+//         </div>
+//         <Drawer style={{ background: 'rgba(0, 0, 0, 0.0)' }} open={isOpen} onClose={toggleDrawer} direction='left'>
+//             <div className='controls-div' >
+//                 <div className='controls-row'>
+//                     <LobbyButton />
+//                     <ArmedSwitch />
+//                 </div>
+//                 <div className='controls-row'>
+//                     <TakeoffButton />
+//                     <LandButton />
 
-    return <div>
-        <div className='controls-close-drawer-div'  >
-            <button className='controls-close-drawer-button' onClick={toggleDrawer}>Show</button>
+//                 </div>
+//                 <div className='controls-row'>
+//                     <RTLButton />
+//                     <HookButton />
+//                     <PauseButton />
+//                 </div>
+//                 <div className='controls-row'>
+//                     <Log />
+//                 </div>
+//                 <div className='controls-row'>
+//                     <ManualControlPanel ctrlSelected={[ctrlSelected, setCtrlSelected]} takeControlFlag={[takeControlFlag, setTakeControlFlag]} />
+//                 </div>
+
+//             </div>
+//         </Drawer>
+//         <ManualControl ctrlSelected={[ctrlSelected, setCtrlSelected]} takeControlFlag={[takeControlFlag, setTakeControlFlag]} />
+
+//     </div>
+// }
+
+export const Controls = () => <>
+    <div className='controls-div'>
+        <div className='controls-row' style={{ borderBottom: 'solid 1px gray' }}>
+            <LobbyButton />
+            <ArmedSwitch />
         </div>
-        <Drawer style={{ background: 'rgba(0, 0, 0, 0.0)' }} open={isOpen} onClose={toggleDrawer} direction='left'>
-            <div className='controls-div' >
-                <div className='controls-row'>
-                    <LobbyButton />
-                    <ArmedSwitch />
-                </div>
-                <div className='controls-row'>
-                    <TakeoffButton />
-                    <LandButton />
-
-                </div>
-                <div className='controls-row'>
-                    <RTLButton />
-                    <HookButton />
-                    <PauseButton />
-                </div>
-                <div className='controls-row'>
-                    <Log />
-                </div>
-                <div className='controls-row'>
-                    <ManualControlPanel ctrlSelected={[ctrlSelected, setCtrlSelected]} takeControlFlag={[takeControlFlag, setTakeControlFlag]} />
-                </div>
-
-            </div>
-        </Drawer>
-        <ManualControl ctrlSelected={[ctrlSelected, setCtrlSelected]} takeControlFlag={[takeControlFlag, setTakeControlFlag]} />
-
+        <div className='controls-row'>
+            <TakeoffButton />
+            <LandButton />
+        </div>
+        <div className='controls-row'>
+            <RTLButton />
+            <HookButton />
+            <PauseButton />
+        </div>
+        <div className='controls-row'>
+            <Log />
+        </div>
+        {/* <div className='controls-row'>
+            <ManualControlPanel ctrlSelected={[ctrlSelected, setCtrlSelected]} takeControlFlag={[takeControlFlag, setTakeControlFlag]} />
+        </div> */}
     </div>
-}
+</>
