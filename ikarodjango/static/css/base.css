@@ -126,6 +126,7 @@ body {
     border-radius: 10px;
     background: #ffffff1a;
     backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
 }
 .controls-row {
     width: 100%;
@@ -247,6 +248,7 @@ div.instrument.altimeter div.needleSmall {
     margin-right: auto;
     background: #ffffff1a;
     backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
 }
 .nerdinfo-inner {
     margin: 0 auto;
