@@ -91,7 +91,7 @@ export const FlightPanel = {
             <Provider store={store}>
                 <MapContainer />
                 <TukanoPanel />
-                {/* {global.props.is_pilot && <Controls />} */}
+                {global.props.is_pilot && <Controls />}
                 {/* <Indicators /> */}
                 {/* <SpectatorsEye /> */}
                 <NerdInfo />

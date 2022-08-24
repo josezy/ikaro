@@ -57,7 +57,7 @@ const ArmedSwitch = reduxify({
     }),
     mapDispatchToProps: { send_mavcmd },
     render: ({ armed, send_mavcmd }) => <div style={{ marginLeft: 'auto' }}>
-        <label style={{ transform: 'scale(0.7)', display: 'flex' }}>
+        <label style={{ transform: 'scale(0.7)', display: 'flex', marginBottom: 0 }}>
             <span style={{ fontSize: '1.2rem', marginRight: 5, color: 'white' }} className='d-none d-lg-block'>
                 {armed ? 'ARMED' : 'DISARMED'}
             </span>
