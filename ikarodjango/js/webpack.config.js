@@ -2,6 +2,20 @@ const path = require('path');
 
 module.exports = {
   mode: 'production',
+  resolve: {
+    fallback: {
+      // "fs": false,
+      // "tls": false,
+      // "net": false,
+      "path": require.resolve("path-browserify"),
+      // "zlib": false,
+      // "http": false,
+      // "https": false,
+      // "stream": false,
+      // "crypto": false,
+      // "crypto-browserify": false,
+    } 
+  },
   entry: {
     flight_panel: './pages/flight_panel.js',
   },
