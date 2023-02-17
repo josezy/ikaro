@@ -58,3 +58,9 @@ u = User.objects.create_user(username="test", email="test@test.test", password="
 d = Drone.objects.create(plate="00000000", owner=u)
 r = Room.objects.create(host=u, drone=d)
 ```
+
+## With Docker
+
+docker-compose run django python /opt/ikaro/ikarodjango/manage.py manage.py migrate
+docker-compose run django python /opt/ikaro/ikarodjango/manage.py manage.py collectstatic --no-input
+docker-compose up

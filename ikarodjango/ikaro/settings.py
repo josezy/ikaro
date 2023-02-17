@@ -52,7 +52,7 @@ STATICFILES_DIR = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(DATA_DIR, 'media')
 STATIC_ROOT = os.path.join(DATA_DIR, 'static')
 
-REDIS_HOST = 'localhost'
+REDIS_HOST = 'redis'
 JANUS_ENDPOINT = 'ws://localhost:8188'
 
 MAP_KEY = PLACEHOLDER_FOR_SECRET
