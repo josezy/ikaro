@@ -349,10 +349,9 @@ div.instrument.altimeter div.needleSmall {
     align-items: center;
     pointer-events: none;
 }
+
 .manual-control-inner {
     margin-top: auto;
-       
-
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -375,17 +374,9 @@ div.instrument.altimeter div.needleSmall {
 
 
 /*    JOYSTICKS    */
-
 .manual-control-virtual-joystick-contanier {
     height: fit-content;
     width: fit-content;
-    /* position: relative;
-    display: flex; */
-    /* justify-content: center;
-    align-items: center; 
-    pointer-events: auto; */
-
-
 }
 
 .manual-control-virtual-joystick {
@@ -396,8 +387,8 @@ div.instrument.altimeter div.needleSmall {
     margin-bottom:20px;
 
     background: rgba(255, 255, 255, 0.3); 
-
 }
+
 .manual-control-virtual-joystick-transparent{
     opacity: 100%;
     border-radius: 50%;
