@@ -1,5 +1,5 @@
 import {
-    ALLOWED_MAVLINK_MSGS, ALLOWED_MAV_TYPES, MAVLINK_COMMANDS, MAV_TYPE
+    ALLOWED_MAVLINK_MSGS, MAVLINK_COMMANDS
 } from '@/util/constants'
 
 
@@ -43,9 +43,6 @@ export const send_mavcmd = (command, params = {}) => ({
 
 const valid_mavmsg = (mavmsg) => {
     if (!ALLOWED_MAVLINK_MSGS.includes(mavmsg.mavtype)) return false
-
-    // This only rejects heartbeat
-    // if (mavmsg.mavtype == 'HEARTBEAT' && !ALLOWED_MAV_TYPES.includes(MAV_TYPE[mavmsg.message.type])) return false
     return true
 }
 

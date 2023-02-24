@@ -21,6 +21,7 @@ import { reduxify } from '@/util/reduxify'
 
 import 'antd/dist/antd.less'
 import { Button } from 'antd'
+import { MAV_AUTOPILOT_ENUM, MAV_TYPE_ENUM } from '../util/constants'
 
 const MapVideoTogglerComponent = ({ toggle_mapcam }) => (
     <div className='map-video-toggler'>
@@ -62,8 +63,8 @@ export const FlightPanel = {
     onopen_mavlink() {
         if (!global.props.is_pilot) return
         setInterval(() => global.page.store.dispatch(send_mavmsg('HEARTBEAT', {
-            type: 6, // MAV_TYPE_GCS
-            autopilot: 8, // MAV_AUTOPILOT_INVALID
+            type: MAV_TYPE_ENUM['GSC'],
+            autopilot: MAV_AUTOPILOT_ENUM['INVALID'],
             base_mode: 0,
             custom_mode: 0,
             system_status: 0,

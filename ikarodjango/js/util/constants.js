@@ -19,7 +19,6 @@ export const ALLOWED_MAVLINK_MSGS = [
     'RC_CHANNELS_OVERRIDE',
     'RAW_IMU',
 ]
-// export const ALLOWED_MAV_TYPES = ['QUADROTOR', 'ROVER']
 
 export const MAP_INITIAL_CENTER = [-75.393921, 6.149080]
 export const MAP_INITIAL_ZOOM = [16]
@@ -50,6 +49,8 @@ export const MAV_AUTOPILOT = [
     'SMARTAP',
     'AIRRAILS',
 ]
+
+export const MAV_AUTOPILOT_ENUM = MAV_AUTOPILOT.map((type, idx) => ({ [type]: idx }))
 
 export const MAV_TYPE = [
     'GENERIC',
@@ -88,6 +89,8 @@ export const MAV_TYPE = [
     'SERVO',
     'ODID',
 ]
+
+export const MAV_TYPE_ENUM = MAV_TYPE.map((type, idx) => ({ [type]: idx }))
 
 export const GPS_FIX_TYPE = [
     'NO_GPS',
@@ -254,13 +257,13 @@ export const KEYBOARD_INTERVAL = 50
 export const MANUAL_CONTROL_TYPES = {
     "KEYBOARD": 0,
     "JOYSTICK": 1,
-    "DOUBLE_JOYSTICK": 2,
-    "PS3_CONTROL": 3
+    // "DOUBLE_JOYSTICK": 2,
+    // "PS3_CONTROL": 3,
 }
-export const MANUAL_CONTROL_TYPES_OPTIONS = [
-    { label: "KEYBOARD", value: 0 },
-    { label: "JOYSTICK", value: 1 },
-    // { label: "DOUBLE_JOYSTICK", value: 2 },
-    { label: "PS3_CONTROL", value: 3 },
 
-]
+export const MANUAL_CONTROL_TYPES_OPTIONS = Object
+    .entries(MANUAL_CONTROL_TYPES)
+    .map((entry) => ({
+        label: entry[0],
+        value: entry[1],
+    }))
