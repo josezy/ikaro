@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   mode: 'production',
@@ -61,6 +62,12 @@ module.exports = {
   },
   performance: {
     maxEntrypointSize: 700000,
-  }
+  },
+  plugins: [
+    // fix "process is not defined" error:
+    new webpack.ProvidePlugin({
+      process: 'process/browser',
+    }),
+  ]
 };
 

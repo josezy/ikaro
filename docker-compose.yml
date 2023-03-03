@@ -23,7 +23,7 @@ services:
       context: . 
       dockerfile: ./Dockerfile.webpack
     image: ikaro:webpack
-    command: sh -c "(webpack --mode development --watch --info-verbosity verbose &)| cat"
+    command: sh -c "(webpack --mode development --watch &)| cat"
     stdin_open: true
     tty: true
     volumes:
