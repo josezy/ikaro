@@ -60,10 +60,10 @@ const ManualControlComponent = ({
         {
 
             throttleParams: {
-                throttle: 1100,
-                maxThrottle: 1100,
+                throttle: 1100,//Current throttle value
+                maxThrottle: 1100, // Max throttle value
                 throttleStep: 50,
-                maxPwm: 1250,
+                maxPwm: 1800,
                 minPwm: 1100,
                 orientation: 2
             },
