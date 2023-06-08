@@ -1,6 +1,8 @@
 
 // Application constants
 
+import { arrayToObject } from "./javascript"
+
 export const ALLOWED_MAVLINK_MSGS = [
     'HEARTBEAT',
     'GLOBAL_POSITION_INT',
@@ -50,7 +52,7 @@ export const MAV_AUTOPILOT = [
     'AIRRAILS',
 ]
 
-export const MAV_AUTOPILOT_ENUM = MAV_AUTOPILOT.map((type, idx) => ({ [type]: idx }))
+export const MAV_AUTOPILOT_ENUM = arrayToObject(MAV_AUTOPILOT)
 
 export const MAV_TYPE = [
     'GENERIC',
@@ -90,7 +92,7 @@ export const MAV_TYPE = [
     'ODID',
 ]
 
-export const MAV_TYPE_ENUM = MAV_TYPE.map((type, idx) => ({ [type]: idx }))
+export const MAV_TYPE_ENUM = arrayToObject(MAV_TYPE)
 
 export const GPS_FIX_TYPE = [
     'NO_GPS',

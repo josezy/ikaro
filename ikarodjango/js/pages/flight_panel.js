@@ -62,14 +62,15 @@ export const FlightPanel = {
     },
     onopen_mavlink() {
         if (!global.props.is_pilot) return
-        setInterval(() => global.page.store.dispatch(send_mavmsg('HEARTBEAT', {
-            type: MAV_TYPE_ENUM['GSC'],
+        const params = {
+            type: MAV_TYPE_ENUM['GCS'],
             autopilot: MAV_AUTOPILOT_ENUM['INVALID'],
             base_mode: 0,
             custom_mode: 0,
             system_status: 0,
             mavlink_version: 3,
-        })), 1000)
+        }
+        setInterval(() => global.page.store.dispatch(send_mavmsg('HEARTBEAT', params)), 1000)
         const rds_interval = setInterval(() => {
             const state = global.page.store.getState()
             const { target_system, target_component } = state.mavlink
