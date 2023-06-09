@@ -27,7 +27,29 @@ export const MAP_INITIAL_ZOOM = [16]
 export const TAKEOFF_MIN_ALTITUDE = 10
 export const TAKEOFF_MAX_ALTITUDE = 150
 
-// MAVLINK specific constants/enums
+// Battery
+export const CELLS = [1, 2, 3, 4, 5]
+export const CELL_RANGE = [3.7, 4.2]
+
+
+export const RC_CHANNELS_OVERRIDE_INTERVAL = 100
+export const KEYBOARD_INTERVAL = 50
+
+export const MANUAL_CONTROL_TYPES = {
+    "KEYBOARD": 0,
+    "JOYSTICK": 1,
+}
+
+export const MANUAL_CONTROL_TYPES_OPTIONS = Object
+    .entries(MANUAL_CONTROL_TYPES)
+    .map((entry) => ({
+        label: entry[0],
+        value: entry[1],
+    }))
+
+// =============================================================================
+// ==================[[ MAVLINK specific constants/enums ]]=====================
+// =============================================================================
 
 export const MAV_AUTOPILOT = [
     'GENERIC',
@@ -248,24 +270,3 @@ export const mode_mapping_sub = {
     16: 'POSHOLD',
     19: 'MANUAL',
 }
-
-export const CELLS = [1, 2, 3, 4, 5]
-export const CELL_RANGE = [3.7, 4.2]
-
-export const RC_CHANNELS_OVERRIDE_INTERVAL = 100
-export const KEYBOARD_INTERVAL = 50
-
-
-export const MANUAL_CONTROL_TYPES = {
-    "KEYBOARD": 0,
-    "JOYSTICK": 1,
-    // "DOUBLE_JOYSTICK": 2,
-    // "PS3_CONTROL": 3,
-}
-
-export const MANUAL_CONTROL_TYPES_OPTIONS = Object
-    .entries(MANUAL_CONTROL_TYPES)
-    .map((entry) => ({
-        label: entry[0],
-        value: entry[1],
-    }))

@@ -1,5 +1,6 @@
 body {
     background-color: black !important;
+    color: white !important;
 }
 
 /*    Fonts    */
@@ -114,15 +115,14 @@ body {
  
 }
 .controls-div {
-    width: 100%;
+    width: 70vw;
     max-width: 350px;
-    height: calc(100vh - 40px);
     position: absolute;
     z-index: 15;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    margin: 20px;
+    margin: 1.5vh 1vw;
     border-radius: 10px;
     background: #ffffff1a;
     backdrop-filter: blur(5px);

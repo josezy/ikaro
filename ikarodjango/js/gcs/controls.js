@@ -5,13 +5,18 @@ import { createSelector } from 'reselect'
 
 import Switch from 'react-switch'
 import { Button } from 'react-bootstrap'
-import { Slider, InputNumber, Modal, Row } from 'antd'
+import { Slider, InputNumber, Modal, Row, Select } from 'antd'
 
 import { send_mavcmd, send_mavmsg } from '@/reducers/mavlink'
 import { flightmode_from_heartbeat, voltage_to_percentage } from '@/util/mavutil'
 import { format_ms } from '@/util/javascript'
-import { GPS_FIX_TYPE, TAKEOFF_MIN_ALTITUDE, TAKEOFF_MAX_ALTITUDE, MANUAL_CONTROL_TYPES, MAV_AUTOPILOT } from '@/util/constants'
-import { ManualControlPanel, ManualControl } from '@/gcs/manual_control'
+import {
+    GPS_FIX_TYPE,
+    TAKEOFF_MIN_ALTITUDE,
+    TAKEOFF_MAX_ALTITUDE,
+    MAV_AUTOPILOT,
+} from '@/util/constants'
+import { is_copter, is_rover } from '@/reducers/selectors'
 
 const Log = reduxify({
     mapStateToProps: (state, props) => ({
@@ -316,48 +321,62 @@ const LobbyButton = () => (
     </div>
 )
 
-// export const Controls = () => {
-//     const [isOpen, setIsOpen] = useState(false)
-//     const [takeControlFlag, setTakeControlFlag] = useState(false)
-//     const [ctrlSelected, setCtrlSelected] = useState(MANUAL_CONTROL_TYPES.KEYBOARD)
+const SelectMode = reduxify({
+    mapStateToProps: (state, props) => ({
+        target_system: state.mavlink.target_system,
+        flight_mode: createSelector(
+            state => state.mavlink.HEARTBEAT,
+            HEARTBEAT => HEARTBEAT && flightmode_from_heartbeat(HEARTBEAT)
+        )(state),
+    }),
+    mapDispatchToProps: {
+        send_mavmsg,
+    },
+    render: (props) => {
+        const onChangeMode = (value) => {
+            if (value == 'manual') props.send_mavmsg('SET_MODE', {
+                target_system: props.target_system,
+                base_mode: 129,
+                custom_mode: 0,
+            })
+            if (value == 'hold') props.send_mavmsg('SET_MODE', {
+                target_system: props.target_system,
+                base_mode: 193,
+                custom_mode: 4,
+            })
+        }
+        return (
+            <div className='row m-auto w-100'>
+                <div className='col-4 d-flex align-items-center justify-content-end'>Drive Mode:</div>
+                <div className='col-8 pl-0'>
+                    <Select
+                        value={['MANUAL', 'HOLD'].includes(props.flight_mode) ? props.flight_mode.toLowerCase() : null}
+                        style={{ width: '100%' }}
+                        onChange={onChangeMode}
+                        options={[
+                            { label: 'Manual', value: 'manual' },
+                            { label: 'Hold', value: 'hold' },
+                        ]}
+                    />
+                </div>
+            </div>
+        )
+    }
+})
 
-//     const toggleDrawer = () => setIsOpen(prevState => !prevState)
+const GuidedControl = reduxify({
+    render: (props) => {
+        return (
+            <>Guided Control</>
+            // TODO: if flight_mode is not manual, return null
+            // if "ontouchstart" in window, return <Joystick />
+            // else return <KeyboardControl />, with instructions
+            // TODO: trimmers
+        )
+    }
+})
 
-//     return <div>
-//         <div className='controls-close-drawer-div'  >
-//             <button onClick={toggleDrawer}>Show</button>
-//         </div>
-//         <Drawer style={{ background: 'rgba(0, 0, 0, 0.0)' }} open={isOpen} onClose={toggleDrawer} direction='left'>
-//             <div className='controls-div' >
-//                 <div className='controls-row'>
-//                     <LobbyButton />
-//                     <ArmedSwitch />
-//                 </div>
-//                 <div className='controls-row'>
-//                     <TakeoffButton />
-//                     <LandButton />
-
-//                 </div>
-//                 <div className='controls-row'>
-//                     <RTLButton />
-//                     <HookButton />
-//                     <PauseButton />
-//                 </div>
-//                 <div className='controls-row'>
-//                     <Log />
-//                 </div>
-//                 <div className='controls-row'>
-//                     <ManualControlPanel ctrlSelected={[ctrlSelected, setCtrlSelected]} takeControlFlag={[takeControlFlag, setTakeControlFlag]} />
-//                 </div>
-
-//             </div>
-//         </Drawer>
-//         <ManualControl ctrlSelected={[ctrlSelected, setCtrlSelected]} takeControlFlag={[takeControlFlag, setTakeControlFlag]} />
-
-//     </div>
-// }
-
-export const Controls = () => <>
+const CopterControls = () => <>
     <div className='controls-div'>
         <div className='controls-row' style={{ borderBottom: 'solid 1px gray' }}>
             <LobbyButton />
@@ -375,8 +394,39 @@ export const Controls = () => <>
         <div className='controls-row'>
             <Log />
         </div>
-        {/* <div className='controls-row'>
-            <ManualControlPanel ctrlSelected={[ctrlSelected, setCtrlSelected]} takeControlFlag={[takeControlFlag, setTakeControlFlag]} />
-        </div> */}
     </div>
 </>
+
+const RoverControls = () => <>
+    <div className='controls-div'>
+        <div className='controls-row' style={{ borderBottom: 'solid 1px gray' }}>
+            <LobbyButton />
+            <ArmedSwitch />
+        </div>
+        <div className='controls-row'>
+            <SelectMode />
+        </div>
+        <div className='controls-row'>
+            <GuidedControl />
+        </div>
+        <div className='controls-row'>
+            <Log />
+        </div>
+    </div>
+</>
+
+export const Controls = reduxify({
+    mapStateToProps: (state) => {
+        const vehicle_is_copter = is_copter(state)
+        const vehicle_is_rover = is_rover(state)
+        return {
+            vehicle_is_copter,
+            vehicle_is_rover,
+        }
+    },
+    render: (props) => {
+        if (props.vehicle_is_copter) return <CopterControls />
+        if (props.vehicle_is_rover) return <RoverControls />
+        return null
+    },
+})
