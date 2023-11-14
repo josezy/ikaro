@@ -1,6 +1,15 @@
 version: '3'
 
 services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - 8000:8000
+    volumes:
+      - ./etc/nginx/ikaro.docker.conf:/etc/nginx/nginx.conf
+      - ./ikarodjango:/opt/ikaro/ikarodjango
+      - ./ikarodjango/static:/opt/ikaro/ikarodjango/static
+
   redis:
     image: redis:6-alpine
     volumes:
@@ -8,9 +17,9 @@ services:
 
   django:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
-    ports:
-      - 8000:8000
+    command: daphne -b 0.0.0.0 -p 8000 ikaro.asgi:application
+    expose:
+      - 8000
     environment:
       SERVER_ENV: DEV
       REDIS_HOST: redis
