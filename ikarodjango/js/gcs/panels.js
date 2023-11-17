@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React from 'react'
 import { reduxify } from '@/util/reduxify'
 
 import { createSelector } from 'reselect'
@@ -33,10 +33,10 @@ export const TukanoPanel = reduxify({
                                 return <div key={idxx}>
                                     <span className="variable-title">
                                         {snake_to_title(variable)}:
-                                </span>&nbsp;
-                                <span className="variable-value">
+                                    </span>&nbsp;
+                                    <span className="variable-value">
                                         {two_dec(var_data['value'])} ({var_data['units']})
-                                </span>
+                                    </span>
                                 </div>
                             })}
                         </div>

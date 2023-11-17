@@ -1,6 +1,8 @@
 
 // Application constants
 
+import { arrayToObject } from "./javascript"
+
 export const ALLOWED_MAVLINK_MSGS = [
     'HEARTBEAT',
     'GLOBAL_POSITION_INT',
@@ -15,15 +17,36 @@ export const ALLOWED_MAVLINK_MSGS = [
     'MISSION_ITEM',
     'PARAM_VALUE',
     'HOME_POSITION',
+    'SET_MODE',
+    'RC_CHANNELS_OVERRIDE',
+    'RAW_IMU',
 ]
-// export const ALLOWED_MAV_TYPES = ['QUADROTOR', 'ROVER']
 
 export const MAP_INITIAL_CENTER = [-75.393921, 6.149080]
 export const MAP_INITIAL_ZOOM = [16]
 export const TAKEOFF_MIN_ALTITUDE = 10
 export const TAKEOFF_MAX_ALTITUDE = 150
 
-// MAVLINK specific constants/enums
+// Battery
+export const CELLS = [1, 2, 3, 4, 5]
+export const CELL_RANGE = [3.7, 4.2]
+
+
+export const RC_CHANNELS_OVERRIDE_INTERVAL = 1000 // Based on AFS_RC_FAIL_TIME parameter
+export const MAX_THROTTLE = 2000
+export const MIN_THROTTLE = 1500
+export const ROLL_LEFT = 1000
+export const ROLL_RIGHT = 2000
+export const ROLL_NEUTRAL = 1500
+
+export const MANUAL_CONTROL_TYPES = {
+    "KEYBOARD": 0,
+    "JOYSTICK": 1,
+}
+
+// =============================================================================
+// ==================[[ MAVLINK specific constants/enums ]]=====================
+// =============================================================================
 
 export const MAV_AUTOPILOT = [
     'GENERIC',
@@ -47,6 +70,8 @@ export const MAV_AUTOPILOT = [
     'SMARTAP',
     'AIRRAILS',
 ]
+
+export const MAV_AUTOPILOT_ENUM = arrayToObject(MAV_AUTOPILOT)
 
 export const MAV_TYPE = [
     'GENERIC',
@@ -85,6 +110,8 @@ export const MAV_TYPE = [
     'SERVO',
     'ODID',
 ]
+
+export const MAV_TYPE_ENUM = arrayToObject(MAV_TYPE)
 
 export const GPS_FIX_TYPE = [
     'NO_GPS',
@@ -132,14 +159,14 @@ export const auto_mode_flags = (
 )
 
 export const PX4_CUSTOM_MAIN_MODE = {
-    PX4_CUSTOM_MAIN_MODE_MANUAL: 1, 
-    PX4_CUSTOM_MAIN_MODE_ALTCTL: 2, 
-    PX4_CUSTOM_MAIN_MODE_POSCTL: 3, 
-    PX4_CUSTOM_MAIN_MODE_AUTO: 4, 
-    PX4_CUSTOM_MAIN_MODE_ACRO: 5, 
-    PX4_CUSTOM_MAIN_MODE_OFFBOARD: 6, 
-    PX4_CUSTOM_MAIN_MODE_STABILIZED: 7, 
-    PX4_CUSTOM_MAIN_MODE_RATTITUDE: 8, 
+    PX4_CUSTOM_MAIN_MODE_MANUAL: 1,
+    PX4_CUSTOM_MAIN_MODE_ALTCTL: 2,
+    PX4_CUSTOM_MAIN_MODE_POSCTL: 3,
+    PX4_CUSTOM_MAIN_MODE_AUTO: 4,
+    PX4_CUSTOM_MAIN_MODE_ACRO: 5,
+    PX4_CUSTOM_MAIN_MODE_OFFBOARD: 6,
+    PX4_CUSTOM_MAIN_MODE_STABILIZED: 7,
+    PX4_CUSTOM_MAIN_MODE_RATTITUDE: 8,
 }
 
 export const PX4_CUSTOM_SUB_MODE = {
@@ -240,6 +267,3 @@ export const mode_mapping_sub = {
     16: 'POSHOLD',
     19: 'MANUAL',
 }
-
-export const CELLS = [1, 2, 3, 4, 5]
-export const CELL_RANGE = [3.7, 4.2]

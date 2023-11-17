@@ -20,10 +20,15 @@ const Mapbox = ReactMapboxGl({
     renderWorldCopies: false,
 })
 
-const MapComponent = ({ goto_point }) => {
+const MapComponent = ({ goto_point, smallVideo }) => {
     const [goto_coords, setGotoCoords] = useState(null)
-    return <>
-        <div style={{ width: '100vw', height: '100vh', position: 'absolute' }}>
+
+    useEffect(() => {
+        if (global.page?.map) global.page.map.resize()
+    }, [smallVideo])
+
+    return (
+        <div className={smallVideo ? 'wholescreen-container' : 'pip-container'}>
             <Mapbox
                 // style="mapbox://styles/mapbox/navigation-guidance-night-v4"
                 style="mapbox://styles/mapbox/satellite-v9"
@@ -72,11 +77,13 @@ const MapComponent = ({ goto_point }) => {
                 </MapContext.Consumer>
             </Mapbox>
         </div>
-    </>
+    )
 }
 
 export const MapContainer = reduxify({
-    mapStateToProps: (state, props) => ({}),
+    mapStateToProps: (state, props) => ({
+        smallVideo: state.pageSettings.smallVideo,
+    }),
     mapDispatchToProps: { goto_point },
     render: props => <MapComponent {...props} />
 })
