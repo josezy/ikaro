@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import ReactMapboxGl, {
-    Marker, MapContext, Source, Layer, ZoomControl, GeoJSONLayer
+    Marker, MapContext, Source, Layer, ZoomControl, Popup, GeoJSONLayer
 } from 'react-mapbox-gl'
+import { Button } from 'antd'
 import { createSelector } from 'reselect'
 import { reduxify } from '@/util/reduxify'
 
 import { goto_point, send_mavmsg } from '@/reducers/mavlink'
 
 import {
-    MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM, MAVLINK_MESSAGES
+    MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM, MAVLINK_COMMANDS
 } from '@/util/constants'
 
 
@@ -19,10 +20,15 @@ const Mapbox = ReactMapboxGl({
     renderWorldCopies: false,
 })
 
-const MapComponent = ({ goto_point }) => {
+const MapComponent = ({ goto_point, smallVideo }) => {
     const [goto_coords, setGotoCoords] = useState(null)
-    return <>
-        <div style={{ width: '100vw', height: '100vh', position: 'absolute' }}>
+
+    useEffect(() => {
+        if (global.page?.map) global.page.map.resize()
+    }, [smallVideo])
+
+    return (
+        <div className={smallVideo ? 'wholescreen-container' : 'pip-container'}>
             <Mapbox
                 // style="mapbox://styles/mapbox/navigation-guidance-night-v4"
                 style="mapbox://styles/mapbox/satellite-v9"
@@ -32,15 +38,19 @@ const MapComponent = ({ goto_point }) => {
                 onClick={(map, e) => {
                     if (!global.props.is_pilot) return
                     setGotoCoords([e.lngLat.lng, e.lngLat.lat])
-                    goto_point(e.lngLat.lat, e.lngLat.lng)
                 }}
             >
                 <ZoomControl style={{ top: '40%' }} />
                 <MarkerComponent />
-                {global.props.is_pilot && <GotoMarker center={goto_coords} />}
+                {global.props.is_pilot && <GotoMarker
+                    center={goto_coords}
+                    setGotoCoords={setGotoCoords}
+                    goto_point={goto_point}
+                />}
                 <MissionPath />
                 <TraveledPath />
                 {/* <Fence /> */}
+                <Home />
                 <MapContext.Consumer>
                     {map => {
                         global.page.map = map
@@ -67,20 +77,56 @@ const MapComponent = ({ goto_point }) => {
                 </MapContext.Consumer>
             </Mapbox>
         </div>
-    </>
+    )
 }
 
 export const MapContainer = reduxify({
-    mapStateToProps: (state, props) => ({}),
+    mapStateToProps: (state, props) => ({
+        smallVideo: state.pageSettings.smallVideo,
+    }),
     mapDispatchToProps: { goto_point },
     render: props => <MapComponent {...props} />
 })
 
-const GotoMarker = ({ center }) => center ?
-    <Marker coordinates={center}>
-        <span className="material-icons gold" style={{ fontSize: '2rem' }}>place</span>
-    </Marker>
-    : null
+const GotoMarker = ({ center, setGotoCoords, goto_point }) => {
+    const [showConfirm, setShowConfirm] = useState(!!center)
+
+    useEffect(() => {
+        if (center) setShowConfirm(true)
+    }, [center])
+
+    const denyGoto = () => {
+        setShowConfirm(false)
+        setGotoCoords(null)
+    }
+
+    const confirmGoto = () => {
+        setShowConfirm(false)
+        goto_point(center[1], center[0])
+    }
+
+    if (!center) return null
+
+    return (
+        <>
+            {showConfirm && <Popup
+                coordinates={center}
+                anchor="bottom"
+                offset={38}
+                style={{ zIndex: 0 }}
+            >
+                <h6>Are you sure to fly here?</h6>
+                <Button onClick={denyGoto}>No</Button>
+                <Button onClick={confirmGoto} type="primary" style={{
+                    float: "right",
+                }}>Yes</Button>
+            </Popup>}
+            <Marker coordinates={center} anchor="bottom" style={{ zIndex: 0 }}>
+                <span className="material-icons gold" style={{ fontSize: '2rem' }}>place</span>
+            </Marker>
+        </>
+    )
+}
 
 const MarkerComponent = reduxify({
     mapStateToProps: (state, props) => ({
@@ -100,7 +146,7 @@ const MarkerComponent = reduxify({
                 <span className="material-icons" style={{
                     color: 'red',
                     fontSize: '3.5rem',
-                    transform: `rotate(${heading}deg)`
+                    transform: `rotate(${heading}deg)`,
                 }}>navigation</span>
             </Marker>
             : null
@@ -190,7 +236,7 @@ const MissionPathComponent = (props) => {
         }
     }, [mission_count && mission_count.count])
     useEffect(() => {
-        if (mission_item && mission_item.command == MAVLINK_MESSAGES['MAV_CMD_NAV_WAYPOINT']) {
+        if (mission_item && mission_item.command == MAVLINK_COMMANDS['MAV_CMD_NAV_WAYPOINT']) {
             setPath([...path, [mission_item.y, mission_item.x]])
         }
     }, [mission_item && mission_item.seq])
@@ -219,6 +265,24 @@ const MissionPathComponent = (props) => {
         <Layer type="line" sourceId="mission_path" layout={layout} paint={paint} />
     </>
 }
+
+const Home = reduxify({
+    mapStateToProps: (state, props) => ({
+        home_center: createSelector(
+            state => state.mavlink.HOME_POSITION
+                && state.mavlink.HOME_POSITION.longitude,
+            state => state.mavlink.HOME_POSITION
+                && state.mavlink.HOME_POSITION.latitude,
+            (lon, lat) => lon && lat && [lon / 10 ** 7, lat / 10 ** 7]
+        )(state),
+    }),
+    mapDispatchToProps: {},
+    render: ({ home_center }) => home_center ?
+        <Marker coordinates={home_center} anchor="center">
+            <span className="material-icons gold" style={{ fontSize: "3rem" }}>home</span>
+        </Marker>
+        : null
+})
 
 const Fence = reduxify({
     mapStateToProps: (state, props) => ({

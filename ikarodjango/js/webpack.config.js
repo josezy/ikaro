@@ -1,7 +1,22 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   mode: 'production',
+  resolve: {
+    fallback: {
+      // "fs": false,
+      // "tls": false,
+      // "net": false,
+      "path": require.resolve("path-browserify"),
+      // "zlib": false,
+      // "http": false,
+      // "https": false,
+      // "stream": false,
+      // "crypto": false,
+      // "crypto-browserify": false,
+    } 
+  },
   entry: {
     flight_panel: './pages/flight_panel.js',
   },
@@ -47,6 +62,12 @@ module.exports = {
   },
   performance: {
     maxEntrypointSize: 700000,
-  }
+  },
+  plugins: [
+    // fix "process is not defined" error:
+    new webpack.ProvidePlugin({
+      process: 'process/browser',
+    }),
+  ]
 };
 

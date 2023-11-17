@@ -1,7 +1,24 @@
 import {
-    ALLOWED_MAVLINK_MSGS, ALLOWED_MAV_TYPES, MAVLINK_MESSAGES, MAV_TYPE
+    ALLOWED_MAVLINK_MSGS, MAVLINK_COMMANDS
 } from '@/util/constants'
 
+
+export const rover_rc_channels_override = (throttle, roll, direction = true) => (dispatch, getState) => {
+    const { target_system, target_component } = getState().mavlink
+
+    return dispatch(send_mavmsg('RC_CHANNELS_OVERRIDE', {
+        target_system,
+        target_component,
+        chan1_raw: roll,
+        chan2_raw: 0,
+        chan3_raw: throttle,
+        chan4_raw: 0,
+        chan5_raw: 0,
+        chan6_raw: 0,
+        chan7_raw: direction ? 1000 : 2000,
+        chan8_raw: direction ? 2000 : 1000,
+    }))
+}
 
 export const goto_point = (lat, lng) => (dispatch, getState) => {
     const { target_system, target_component } = getState().mavlink
@@ -18,7 +35,7 @@ export const goto_point = (lat, lng) => (dispatch, getState) => {
         target_component,
         seq: 0,
         frame: 3,
-        command: MAVLINK_MESSAGES['MAV_CMD_NAV_WAYPOINT'],
+        command: MAVLINK_COMMANDS['MAV_CMD_NAV_WAYPOINT'],
         current: 2,
         autocontinue: 1,
         param1: 0.0,
@@ -43,7 +60,6 @@ export const send_mavcmd = (command, params = {}) => ({
 
 const valid_mavmsg = (mavmsg) => {
     if (!ALLOWED_MAVLINK_MSGS.includes(mavmsg.mavtype)) return false
-    if (mavmsg.mavtype == 'HEARTBEAT' && !ALLOWED_MAV_TYPES.includes(MAV_TYPE[mavmsg.message.type])) return false
     return true
 }
 

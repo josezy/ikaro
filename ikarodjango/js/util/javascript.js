@@ -15,3 +15,5 @@ export const format_ms = duration => {
 
     return hours + ":" + minutes + ":" + seconds
 }
+
+export const arrayToObject = (arr) => arr.reduce((acc, elem, idx) => ({...acc, [elem]: idx}), {})

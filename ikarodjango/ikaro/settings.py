@@ -18,6 +18,7 @@ from ikaro.system import (
 )
 
 SERVER_ENV = os.getenv('SERVER_ENV', 'DEV').upper()
+assert SERVER_ENV in ('DEV', 'PROD'), 'Server environment is invalid'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,8 +26,10 @@ REPO_DIR = os.path.dirname(BASE_DIR)
 DATA_DIR = os.path.abspath(os.path.join(REPO_DIR, 'data'))
 ENV_DIR = os.path.join(REPO_DIR, 'env')
 ENV_SECRETS_FILE = os.path.join(ENV_DIR, 'secrets.env')
+ENV_SETTINGS_FILE = os.path.join(ENV_DIR, f'{SERVER_ENV.lower()}.env')
 
-GIT_SHA = "someshafornow"
+
+GIT_SHA = 'someshafornow'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -49,7 +52,8 @@ STATICFILES_DIR = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(DATA_DIR, 'media')
 STATIC_ROOT = os.path.join(DATA_DIR, 'static')
 
-REDIS_URL = "redis://localhost:6379"
+REDIS_HOST = 'localhost'
+JANUS_ENDPOINT = 'ws://localhost:8188'
 
 MAP_KEY = PLACEHOLDER_FOR_SECRET
 
@@ -59,6 +63,10 @@ MAP_KEY = PLACEHOLDER_FOR_SECRET
 
 # settings defined above in this file (settings.py)
 SETTINGS_DEFAULTS = load_env_settings(env=globals())
+
+# settings set via env/ODDSLINGERS_ENV.env
+ENV_DEFAULTS = load_env_settings(dotenv_path=ENV_SETTINGS_FILE, defaults=globals())
+globals().update(ENV_DEFAULTS)
 
 # settings set via env/secrets.env
 ENV_SECRETS = load_env_settings(
@@ -128,7 +136,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [REDIS_URL],
+            "hosts": [f"redis://{REDIS_HOST}:6379"],
             "capacity": 1500,
             "expiry": 1,
         },

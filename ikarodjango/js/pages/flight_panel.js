@@ -6,17 +6,41 @@ import thunk from 'redux-thunk'
 import { Provider } from 'react-redux'
 
 import { mavlink, onmessage_mavlink, send_mavmsg } from '@/reducers/mavlink'
+import { pageSettings, toggle_mapcam } from '@/reducers/pageSettings'
 
 import { SocketRouter } from '@/components/websocket'
 import { CommandSender } from '@/components/command_sender'
-import { SpectatorsEye } from '@/components/SpectatorsEye'
+// import { SpectatorsEye } from '@/components/SpectatorsEye'
 import { MapContainer } from '@/gcs/maps'
 import { TukanoPanel } from '@/gcs/panels'
 import { Controls, NerdInfo } from '@/gcs/controls'
-import { Indicators } from '@/gcs/indicators'
-import { request_data_stream } from '@/util/mavutil'
+// import { Indicators } from '@/gcs/indicators'
+import { VideoVisor } from '@/gcs/video'
+import { request_data_stream, mavcmd_home_position_interval } from '@/util/mavutil'
+import { reduxify } from '@/util/reduxify'
 
 import 'antd/dist/antd.less'
+import { Button } from 'antd'
+import { MAV_AUTOPILOT_ENUM, MAV_TYPE_ENUM } from '../util/constants'
+
+const MapVideoTogglerComponent = ({ toggle_mapcam }) => (
+    <div className='map-video-toggler'>
+        <Button onClick={toggle_mapcam}>
+            <span className="material-icons" style={{
+                fontSize: '2rem',
+                width: '100%',
+                height: '100%',
+                margin: '10px 6px',
+            }}>cameraswitch</span>
+        </Button>
+    </div>
+)
+
+const MapVideoToggler = reduxify({
+    mapStateToProps: (state, props) => ({ }),
+    mapDispatchToProps: { toggle_mapcam },
+    render: props => <MapVideoTogglerComponent {...props} />
+})
 
 export const FlightPanel = {
     view: 'ui.views.pages.FlightPanel',
@@ -25,6 +49,7 @@ export const FlightPanel = {
         const initial_state = {}
         const store = this.setupStore({
             mavlink,
+            pageSettings,
         }, initial_state)
 
         const mavlink_path = window.location.pathname.replace('flight', 'mavlink/room')
@@ -37,19 +62,21 @@ export const FlightPanel = {
     },
     onopen_mavlink() {
         if (!global.props.is_pilot) return
-        setInterval(() => global.page.store.dispatch(send_mavmsg('HEARTBEAT', {
-            type: 6, // MAV_TYPE_GCS
-            autopilot: 8, // MAV_AUTOPILOT_INVALID
+        const params = {
+            type: MAV_TYPE_ENUM['GCS'],
+            autopilot: MAV_AUTOPILOT_ENUM['INVALID'],
             base_mode: 0,
             custom_mode: 0,
             system_status: 0,
             mavlink_version: 3,
-        })), 1000)
+        }
+        setInterval(() => global.page.store.dispatch(send_mavmsg('HEARTBEAT', params)), 1000)
         const rds_interval = setInterval(() => {
             const state = global.page.store.getState()
             const { target_system, target_component } = state.mavlink
             if (target_system && target_component) {
                 request_data_stream(target_system, target_component)
+                mavcmd_home_position_interval()
                 clearInterval(rds_interval)
             }
         }, 500)
@@ -67,9 +94,11 @@ export const FlightPanel = {
                 <MapContainer />
                 <TukanoPanel />
                 {global.props.is_pilot && <Controls />}
-                <Indicators />
+                {/* <Indicators /> */}
                 {/* <SpectatorsEye /> */}
                 <NerdInfo />
+                <VideoVisor />
+                <MapVideoToggler />
             </Provider>
         )
     },

@@ -28,16 +28,17 @@ class BaseContextMixin(object):
         """get the base context items made available to every template"""
 
         return {
-            'DEBUG': settings.DEBUG,
-            'GIT_SHA': settings.GIT_SHA,
-            'ENVIRONMENT': settings.SERVER_ENV,
-            'TIME_ZONE': settings.TIME_ZONE,
-            'LANGUAGE_CODE': settings.LANGUAGE_CODE,
             'user': request.user,
             'title': self.title or self.__class__.__name__,
             'page_id': self.__class__.__name__.lower(),
             'component': self.component,
             'custom_stylesheet': self.custom_stylesheet,
+            'DEBUG': settings.DEBUG,
+            'GIT_SHA': settings.GIT_SHA,
+            'ENVIRONMENT': settings.SERVER_ENV,
+            'TIME_ZONE': settings.TIME_ZONE,
+            'LANGUAGE_CODE': settings.LANGUAGE_CODE,
+            'JANUS_ENDPOINT': settings.JANUS_ENDPOINT,
         }
 
     def context(self, request, *args, **kwargs):
@@ -123,6 +124,7 @@ class PublicReactView(BaseView):
 
     def get_base_props(self, request, *args, **kwargs):
         base_props = {
+            'user': self.user_json(request),
             'url_name': request.resolver_match.url_name,
             'url': request.build_absolute_uri(),
             'domain': request.META.get('HTTP_HOST', ''),
@@ -131,7 +133,7 @@ class PublicReactView(BaseView):
             'GIT_SHA': settings.GIT_SHA,
             'ENVIRONMENT': settings.SERVER_ENV,
             'TIME_ZONE': settings.TIME_ZONE,
-            'user': self.user_json(request),
+            'JANUS_ENDPOINT': settings.JANUS_ENDPOINT,
         }
 
         return base_props

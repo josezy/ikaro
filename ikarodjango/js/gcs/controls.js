@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import { reduxify } from '@/util/reduxify'
 import { createSelector } from 'reselect'
-import { getPathLength } from 'geolib'
+// import { getPathLength } from 'geolib'
 
 import Switch from 'react-switch'
 import { Button } from 'react-bootstrap'
-import { Slider, InputNumber, Modal, Row } from 'antd'
+import { Slider, InputNumber, Modal, Row, Select } from 'antd'
 
 import { send_mavcmd, send_mavmsg } from '@/reducers/mavlink'
-import { flightmode_from_heartbeat } from '@/util/mavutil'
+import { voltage_to_percentage } from '@/util/mavutil'
 import { format_ms } from '@/util/javascript'
-import { GPS_FIX_TYPE, TAKEOFF_MIN_ALTITUDE, TAKEOFF_MAX_ALTITUDE } from '@/util/constants'
-
+import {
+    GPS_FIX_TYPE,
+    TAKEOFF_MIN_ALTITUDE,
+    TAKEOFF_MAX_ALTITUDE,
+    MAV_AUTOPILOT,
+} from '@/util/constants'
+import { is_copter, is_rover, flight_mode } from '@/reducers/selectors'
+import { KeyboardControl } from '@/gcs/guided_controls'
 
 const Log = reduxify({
     mapStateToProps: (state, props) => ({
@@ -30,7 +36,7 @@ const LogComponent = ({ status }) => {
         if (status) setLog([...log.slice(-100), status])
         setTimeout(() => {
             const log_elem = document.getElementById('log')
-            log_elem.scrollTop = log_elem.scrollHeight
+            if (log_elem) log_elem.scrollTop = log_elem.scrollHeight
         }, 500)
     }, [status])
 
@@ -50,7 +56,7 @@ const ArmedSwitch = reduxify({
     }),
     mapDispatchToProps: { send_mavcmd },
     render: ({ armed, send_mavcmd }) => <div style={{ marginLeft: 'auto' }}>
-        <label style={{ transform: 'scale(0.7)', display: 'flex' }}>
+        <label style={{ transform: 'scale(0.7)', display: 'flex', marginBottom: 0 }}>
             <span style={{ fontSize: '1.2rem', marginRight: 5, color: 'white' }} className='d-none d-lg-block'>
                 {armed ? 'ARMED' : 'DISARMED'}
             </span>
@@ -69,7 +75,7 @@ const RTLButton = reduxify({
     render: ({ send_mavcmd }) => <div className='m-auto p-1 h-100 col-4'>
         <Button variant='outline-warning' className='secondary-button' onClick={
             () => send_mavcmd('MAV_CMD_NAV_RETURN_TO_LAUNCH')
-        }>Return to launch</Button>
+        }>Return to Launch</Button>
     </div>
 })
 
@@ -135,21 +141,34 @@ const TakeoffButton = reduxify({
             state => state.mavlink.HEARTBEAT,
             HEARTBEAT => HEARTBEAT && Boolean(HEARTBEAT.base_mode & 10 ** 7)
         )(state),
+        mslAltitude: createSelector(
+            state => state.mavlink.HOME_POSITION,
+            HOME_POSITION => HOME_POSITION && HOME_POSITION.altitude / 1000
+        )(state),
+        autopilot: createSelector(
+            state => state.mavlink.HEARTBEAT,
+            HEARTBEAT => MAV_AUTOPILOT[HEARTBEAT?.autopilot]
+        )(state),
     }),
     mapDispatchToProps: { send_mavmsg },
     render: (props) => <TakeoffButtonComponent {...props} />
 })
 
-const TakeoffButtonComponent = ({ send_mavmsg, target_system, armed }) => {
+const TakeoffButtonComponent = ({
+    send_mavmsg, target_system, armed, mslAltitude, autopilot
+}) => {
     const [showModal, setShowModal] = useState(false)
     const [alt, setAlt] = useState(TAKEOFF_MIN_ALTITUDE)
 
     const takeoff = async () => {
         setShowModal(false)
-        send_mavmsg('SET_MODE', { target_system, base_mode: 81, custom_mode: 4 })
+        if (autopilot === 'PX4')
+            send_mavmsg('SET_MODE', { target_system, base_mode: 81, custom_mode: 4 })
+
+        const takeoff_alt = autopilot === 'PX4' ? alt + mslAltitude : alt
         global.page.command_sender.send(
             { command: 'MAV_CMD_COMPONENT_ARM_DISARM', params: { param1: 1 } },
-            { command: 'MAV_CMD_NAV_TAKEOFF', params: { param7: alt } }
+            { command: 'MAV_CMD_NAV_TAKEOFF', params: { param7: takeoff_alt } }
         )
     }
 
@@ -222,12 +241,14 @@ export const NerdInfo = reduxify({
                 lat: GLOBAL_POSITION_INT.lat / 10 ** 7,
                 lon: GLOBAL_POSITION_INT.lon / 10 ** 7,
                 alt: GLOBAL_POSITION_INT.alt / 10 ** 3,
+                vx: GLOBAL_POSITION_INT.vx,
+                vy: GLOBAL_POSITION_INT.vy,
                 relative_alt: GLOBAL_POSITION_INT.relative_alt / 10 ** 3,
             }
         )(state),
         battery: createSelector(
             state => state.mavlink.SYS_STATUS,
-            SYS_STATUS => SYS_STATUS && SYS_STATUS.battery_remaining
+            SYS_STATUS => SYS_STATUS && voltage_to_percentage(SYS_STATUS.voltage_battery / 1000)
         )(state),
         gps: createSelector(
             state => state.mavlink.GPS_RAW_INT,
@@ -239,10 +260,7 @@ export const NerdInfo = reduxify({
                 velocity: GPS_RAW_INT.vel / 100,
             }
         )(state),
-        flight_mode: createSelector(
-            state => state.mavlink.HEARTBEAT,
-            HEARTBEAT => HEARTBEAT && flightmode_from_heartbeat(HEARTBEAT)
-        )(state),
+        flight_mode: flight_mode(state),
     }),
     mapDispatchToProps: {},
     render: props => <NerdInfoComponent {...props} />
@@ -270,7 +288,7 @@ const NerdInfoComponent = ({ flight, position, battery, gps, heartbeat, flight_m
                 <div>Alt: {position ? `${position.relative_alt.toFixed(1)}m` : '--'}</div>
                 <div>Lat: {position ? position.lat : '--'}</div>
                 <div>Lon: {position ? position.lon : '--'}</div>
-                <div>Battery: {Math.max(battery, 0)}%</div>
+                <div>Battery: {battery ? `${battery.toFixed(1)}%` : '--'}</div>
                 <div>Mode: {flight_mode}</div>
             </div>
             <div className='col-6'>
@@ -301,9 +319,61 @@ const LobbyButton = () => (
     </div>
 )
 
-export const Controls = () => <>
+const SelectMode = reduxify({
+    mapStateToProps: (state, props) => ({
+        target_system: state.mavlink.target_system,
+        flight_mode: flight_mode(state),
+    }),
+    mapDispatchToProps: {
+        send_mavmsg,
+    },
+    render: (props) => {
+        const onChangeMode = (value) => {
+            if (value == 'manual') props.send_mavmsg('SET_MODE', {
+                target_system: props.target_system,
+                base_mode: 129,
+                custom_mode: 0,
+            })
+            if (value == 'hold') props.send_mavmsg('SET_MODE', {
+                target_system: props.target_system,
+                base_mode: 193,
+                custom_mode: 4,
+            })
+        }
+        return (
+            <div className='row m-auto w-100'>
+                <div className='col-4 d-flex align-items-center justify-content-end'>Drive Mode:</div>
+                <div className='col-8 pl-0'>
+                    <Select
+                        value={props.flight_mode.charAt(0).toUpperCase() + props.flight_mode.slice(1).toLowerCase()}
+                        style={{ width: '100%' }}
+                        onChange={onChangeMode}
+                        options={[
+                            { label: 'Manual', value: 'manual' },
+                            { label: 'Hold', value: 'hold' },
+                        ]}
+                    />
+                </div>
+            </div>
+        )
+    }
+})
+
+const GuidedControl = reduxify({
+    mapStateToProps: (state, props) => ({
+        flight_mode_is_manual: flight_mode(state) == 'MANUAL',
+    }),
+    render: (props) => {
+        // TODO: add trimmers for precise control and/or servo alignment
+        if (!props.flight_mode_is_manual) return null
+        // if ("ontouchstart" in window) return <JoystickControl />
+        return <KeyboardControl />
+    }
+})
+
+const CopterControls = () => <>
     <div className='controls-div'>
-        <div className='controls-row'>
+        <div className='controls-row' style={{ borderBottom: 'solid 1px gray' }}>
             <LobbyButton />
             <ArmedSwitch />
         </div>
@@ -321,3 +391,37 @@ export const Controls = () => <>
         </div>
     </div>
 </>
+
+const RoverControls = () => <>
+    <div className='controls-div'>
+        <div className='controls-row' style={{ borderBottom: 'solid 1px gray' }}>
+            <LobbyButton />
+            <ArmedSwitch />
+        </div>
+        <div className='controls-row'>
+            <SelectMode />
+        </div>
+        <div className='controls-row'>
+            <GuidedControl />
+        </div>
+        <div className='controls-row'>
+            <Log />
+        </div>
+    </div>
+</>
+
+export const Controls = reduxify({
+    mapStateToProps: (state) => {
+        const vehicle_is_copter = is_copter(state)
+        const vehicle_is_rover = is_rover(state)
+        return {
+            vehicle_is_copter,
+            vehicle_is_rover,
+        }
+    },
+    render: (props) => {
+        if (props.vehicle_is_copter) return <CopterControls />
+        if (props.vehicle_is_rover) return <RoverControls />
+        return null
+    },
+})

@@ -1,6 +1,8 @@
 
 // Application constants
 
+import { arrayToObject } from "./javascript"
+
 export const ALLOWED_MAVLINK_MSGS = [
     'HEARTBEAT',
     'GLOBAL_POSITION_INT',
@@ -14,15 +16,37 @@ export const ALLOWED_MAVLINK_MSGS = [
     'MISSION_COUNT',
     'MISSION_ITEM',
     'PARAM_VALUE',
+    'HOME_POSITION',
+    'SET_MODE',
+    'RC_CHANNELS_OVERRIDE',
+    'RAW_IMU',
 ]
-export const ALLOWED_MAV_TYPES = ['QUADROTOR']
 
 export const MAP_INITIAL_CENTER = [-75.393921, 6.149080]
 export const MAP_INITIAL_ZOOM = [16]
 export const TAKEOFF_MIN_ALTITUDE = 10
 export const TAKEOFF_MAX_ALTITUDE = 150
 
-// MAVLINK specific constants/enums
+// Battery
+export const CELLS = [1, 2, 3, 4, 5]
+export const CELL_RANGE = [3.7, 4.2]
+
+
+export const RC_CHANNELS_OVERRIDE_INTERVAL = 1000 // Based on AFS_RC_FAIL_TIME parameter
+export const MAX_THROTTLE = 2000
+export const MIN_THROTTLE = 1500
+export const ROLL_LEFT = 1000
+export const ROLL_RIGHT = 2000
+export const ROLL_NEUTRAL = 1500
+
+export const MANUAL_CONTROL_TYPES = {
+    "KEYBOARD": 0,
+    "JOYSTICK": 1,
+}
+
+// =============================================================================
+// ==================[[ MAVLINK specific constants/enums ]]=====================
+// =============================================================================
 
 export const MAV_AUTOPILOT = [
     'GENERIC',
@@ -46,6 +70,8 @@ export const MAV_AUTOPILOT = [
     'SMARTAP',
     'AIRRAILS',
 ]
+
+export const MAV_AUTOPILOT_ENUM = arrayToObject(MAV_AUTOPILOT)
 
 export const MAV_TYPE = [
     'GENERIC',
@@ -85,6 +111,8 @@ export const MAV_TYPE = [
     'ODID',
 ]
 
+export const MAV_TYPE_ENUM = arrayToObject(MAV_TYPE)
+
 export const GPS_FIX_TYPE = [
     'NO_GPS',
     'NO_FIX',
@@ -97,15 +125,61 @@ export const GPS_FIX_TYPE = [
     'PPP',
 ]
 
-export const MAVLINK_MESSAGES = {
+const switch_entries = (acc, entry) => ({ ...acc, [entry[1]]: entry[0] })
+
+export const MAVLINK_COMMANDS = {
     MAV_CMD_NAV_WAYPOINT: 16,
     MAV_CMD_NAV_TAKEOFF: 22,
     MAV_CMD_COMPONENT_ARM_DISARM: 400,
 }
+export const MAVLINK_COMMAND_IDS = Object.entries(MAVLINK_COMMANDS).reduce(switch_entries, {})
 
-export const MAVLINK_IDS = Object.entries(MAVLINK_MESSAGES).reduce(
-    (acc, entry) => ({ ...acc, [entry[1]]: entry[0] })
-    , {})
+
+export const MAVLINK_MESSAGES = {
+    HOME_POSITION: 242,
+}
+export const MAVLINK_MESSAGE_IDS = Object.entries(MAVLINK_MESSAGES).reduce(switch_entries, {})
+
+
+export const MAV_MODE_FLAG = {
+    MAV_MODE_FLAG_SAFETY_ARMED: 128,
+    MAV_MODE_FLAG_MANUAL_INPUT_ENABLED: 64,
+    MAV_MODE_FLAG_HIL_ENABLED: 32,
+    MAV_MODE_FLAG_STABILIZE_ENABLED: 16,
+    MAV_MODE_FLAG_GUIDED_ENABLED: 8,
+    MAV_MODE_FLAG_AUTO_ENABLED: 4,
+    MAV_MODE_FLAG_TEST_ENABLED: 2,
+    MAV_MODE_FLAG_CUSTOM_MODE_ENABLED: 1,
+}
+
+export const auto_mode_flags = (
+    MAV_MODE_FLAG.MAV_MODE_FLAG_AUTO_ENABLED
+    | MAV_MODE_FLAG.MAV_MODE_FLAG_GUIDED_ENABLED
+    | MAV_MODE_FLAG.MAV_MODE_FLAG_STABILIZE_ENABLED
+)
+
+export const PX4_CUSTOM_MAIN_MODE = {
+    PX4_CUSTOM_MAIN_MODE_MANUAL: 1,
+    PX4_CUSTOM_MAIN_MODE_ALTCTL: 2,
+    PX4_CUSTOM_MAIN_MODE_POSCTL: 3,
+    PX4_CUSTOM_MAIN_MODE_AUTO: 4,
+    PX4_CUSTOM_MAIN_MODE_ACRO: 5,
+    PX4_CUSTOM_MAIN_MODE_OFFBOARD: 6,
+    PX4_CUSTOM_MAIN_MODE_STABILIZED: 7,
+    PX4_CUSTOM_MAIN_MODE_RATTITUDE: 8,
+}
+
+export const PX4_CUSTOM_SUB_MODE = {
+    PX4_CUSTOM_SUB_MODE_OFFBOARD: 0,
+    PX4_CUSTOM_SUB_MODE_AUTO_READY: 1,
+    PX4_CUSTOM_SUB_MODE_AUTO_TAKEOFF: 2,
+    PX4_CUSTOM_SUB_MODE_AUTO_LOITER: 3,
+    PX4_CUSTOM_SUB_MODE_AUTO_MISSION: 4,
+    PX4_CUSTOM_SUB_MODE_AUTO_RTL: 5,
+    PX4_CUSTOM_SUB_MODE_AUTO_LAND: 6,
+    PX4_CUSTOM_SUB_MODE_AUTO_RTGS: 7,
+    PX4_CUSTOM_SUB_MODE_AUTO_FOLLOW_TARGET: 8,
+}
 
 
 export const mode_mapping_apm = {
