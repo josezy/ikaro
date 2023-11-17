@@ -32,20 +32,17 @@ export const CELLS = [1, 2, 3, 4, 5]
 export const CELL_RANGE = [3.7, 4.2]
 
 
-export const RC_CHANNELS_OVERRIDE_INTERVAL = 100
-export const KEYBOARD_INTERVAL = 50
+export const RC_CHANNELS_OVERRIDE_INTERVAL = 1000 // Based on AFS_RC_FAIL_TIME parameter
+export const MAX_THROTTLE = 2000
+export const MIN_THROTTLE = 1500
+export const ROLL_LEFT = 1000
+export const ROLL_RIGHT = 2000
+export const ROLL_NEUTRAL = 1500
 
 export const MANUAL_CONTROL_TYPES = {
     "KEYBOARD": 0,
     "JOYSTICK": 1,
 }
-
-export const MANUAL_CONTROL_TYPES_OPTIONS = Object
-    .entries(MANUAL_CONTROL_TYPES)
-    .map((entry) => ({
-        label: entry[0],
-        value: entry[1],
-    }))
 
 // =============================================================================
 // ==================[[ MAVLINK specific constants/enums ]]=====================

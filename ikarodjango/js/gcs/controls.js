@@ -8,7 +8,7 @@ import { Button } from 'react-bootstrap'
 import { Slider, InputNumber, Modal, Row, Select } from 'antd'
 
 import { send_mavcmd, send_mavmsg } from '@/reducers/mavlink'
-import { flightmode_from_heartbeat, voltage_to_percentage } from '@/util/mavutil'
+import { voltage_to_percentage } from '@/util/mavutil'
 import { format_ms } from '@/util/javascript'
 import {
     GPS_FIX_TYPE,
@@ -16,7 +16,8 @@ import {
     TAKEOFF_MAX_ALTITUDE,
     MAV_AUTOPILOT,
 } from '@/util/constants'
-import { is_copter, is_rover } from '@/reducers/selectors'
+import { is_copter, is_rover, flight_mode } from '@/reducers/selectors'
+import { KeyboardControl } from '@/gcs/guided_controls'
 
 const Log = reduxify({
     mapStateToProps: (state, props) => ({
@@ -259,10 +260,7 @@ export const NerdInfo = reduxify({
                 velocity: GPS_RAW_INT.vel / 100,
             }
         )(state),
-        flight_mode: createSelector(
-            state => state.mavlink.HEARTBEAT,
-            HEARTBEAT => HEARTBEAT && flightmode_from_heartbeat(HEARTBEAT)
-        )(state),
+        flight_mode: flight_mode(state),
     }),
     mapDispatchToProps: {},
     render: props => <NerdInfoComponent {...props} />
@@ -324,10 +322,7 @@ const LobbyButton = () => (
 const SelectMode = reduxify({
     mapStateToProps: (state, props) => ({
         target_system: state.mavlink.target_system,
-        flight_mode: createSelector(
-            state => state.mavlink.HEARTBEAT,
-            HEARTBEAT => HEARTBEAT && flightmode_from_heartbeat(HEARTBEAT)
-        )(state),
+        flight_mode: flight_mode(state),
     }),
     mapDispatchToProps: {
         send_mavmsg,
@@ -350,7 +345,7 @@ const SelectMode = reduxify({
                 <div className='col-4 d-flex align-items-center justify-content-end'>Drive Mode:</div>
                 <div className='col-8 pl-0'>
                     <Select
-                        value={['MANUAL', 'HOLD'].includes(props.flight_mode) ? props.flight_mode.toLowerCase() : null}
+                        value={props.flight_mode.charAt(0).toUpperCase() + props.flight_mode.slice(1).toLowerCase()}
                         style={{ width: '100%' }}
                         onChange={onChangeMode}
                         options={[
@@ -365,14 +360,14 @@ const SelectMode = reduxify({
 })
 
 const GuidedControl = reduxify({
+    mapStateToProps: (state, props) => ({
+        flight_mode_is_manual: flight_mode(state) == 'MANUAL',
+    }),
     render: (props) => {
-        return (
-            <>Guided Control</>
-            // TODO: if flight_mode is not manual, return null
-            // if "ontouchstart" in window, return <Joystick />
-            // else return <KeyboardControl />, with instructions
-            // TODO: trimmers
-        )
+        // TODO: add trimmers for precise control and/or servo alignment
+        if (!props.flight_mode_is_manual) return null
+        // if ("ontouchstart" in window) return <JoystickControl />
+        return <KeyboardControl />
     }
 })
 

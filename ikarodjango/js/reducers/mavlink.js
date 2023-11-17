@@ -3,6 +3,23 @@ import {
 } from '@/util/constants'
 
 
+export const rover_rc_channels_override = (throttle, roll, direction = true) => (dispatch, getState) => {
+    const { target_system, target_component } = getState().mavlink
+
+    return dispatch(send_mavmsg('RC_CHANNELS_OVERRIDE', {
+        target_system,
+        target_component,
+        chan1_raw: roll,
+        chan2_raw: 0,
+        chan3_raw: throttle,
+        chan4_raw: 0,
+        chan5_raw: 0,
+        chan6_raw: 0,
+        chan7_raw: direction ? 1000 : 2000,
+        chan8_raw: direction ? 2000 : 1000,
+    }))
+}
+
 export const goto_point = (lat, lng) => (dispatch, getState) => {
     const { target_system, target_component } = getState().mavlink
     const { relative_alt } = getState().mavlink.GLOBAL_POSITION_INT
