@@ -1,0 +1,57 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - 8000:8000
+    volumes:
+      - ./etc/nginx/ikaro.docker.conf:/etc/nginx/nginx.conf
+      - ./ikarodjango:/opt/ikaro/ikarodjango
+      - ./ikarodjango/static:/opt/ikaro/ikarodjango/static
+
+  redis:
+    image: redis:6-alpine
+    volumes:
+      - ./data/redis:/data
+
+  django:
+    build: .
+    command: daphne -b 0.0.0.0 -p 8000 ikaro.asgi:application
+    expose:
+      - 8000
+    environment:
+      SERVER_ENV: PROD
+      REDIS_HOST: redis
+    volumes:
+      - ./ikarodjango:/opt/ikaro/ikarodjango
+      - ./env:/opt/ikaro/env
+
+  webpack:
+    build:
+      context: . 
+      dockerfile: ./Dockerfile.webpack
+    image: ikaro:webpack
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./ikarodjango/js:/opt/ikaro/ikarodjango/js
+      - ./ikarodjango/static:/opt/ikaro/ikarodjango/static
+      # Hide local node_modules
+      - ./ikarodjango/js/node_modules:/src/node_modules
+
+  janus:
+    image: canyan/janus-gateway:master
+    command: ["/usr/local/bin/janus", "-F", "/usr/local/etc/janus"]
+    ports:
+      # - "80:80"
+      - "7088:7088" # admin
+      - "8088:8088" # drone
+      - "8188:8188" # front
+      # - "7089:7089"
+      # - "8089:8089"
+      # - "8889:8889"
+    volumes:
+      - ./etc/janus/janus.jcfg:/usr/local/etc/janus/janus.jcfg
+      - ./etc/janus/janus.plugin.videoroom.jcfg:/usr/local/etc/janus/janus.plugin.videoroom.jcfg
+      - ./etc/janus/janus.transport.http.jcfg:/usr/local/etc/janus/janus.transport.http.jcfg
