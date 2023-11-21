@@ -3,58 +3,38 @@ Django based web server for running drones from a browser
 
 ## Project quickstart
 
-* Clone and make sure you have python, pip, virtualenv, npm, node and yarn
+* Clone and run `docker compose up` :boom:
 
-```bash
-virtualenv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-
-python ikarodjango/manage.py migrate
-```
-
-Make sure to paste or set your env variables in `env/secrets.env`, then run:
-```
-python ikarodjango/manage.py runserver
-```
-
-For development, do the following before migrating and runing server
-```bash
-# Install javascript dependencies
-npm i -g yarn
-
-# For Bash: add this line to ~/.bashrc or ~/.bash_profile
-PATH=./node_modules/.bin:$PATH
-# For fish: add this line to ~/.config/fish/config.fish
-set -x PATH ./node_modules/.bin $PATH
-
-cd ikarodjango/js
-yarn install
-webpack --watch --mode development
-```
+Make sure to paste or set your env variables in `env/secrets.env`
 
 ## Useful commands
 ```
-# Activate env
-. .venv/bin/activate.fish
+# Connect to BD
+docker compose run --rm django ./ikarodjango/manage.py shell_plus
 
-# Make sure redis is running
-redis-cli ping
+# Create demo data (Inside shell_plus)
+u = User.objects.create_user(username="test", email="test@test.test", password="testtest")
+d = Drone.objects.create(plate="00000000", owner=u)
+r = Room.objects.create(host=u, drone=d)
+```
 
-# Run server
-python ikarodjango/manage.py runserver
+## Janus notes
 
-# Run dron simulator, make sure venv is activated
+Used ports:
+    7088 - admin
+    8088 - drone
+    8188 - front
+Review [config files](https://github.com/meetecho/janus-gateway/tree/master/conf) to check additional ports
+
+## Useful commands for tukano
+```
+# Run drone simulator, make sure venv is activated
 dronekit-sitl copter --home=6.149014,-75.393962,0,180
 
 # Run tukano service
 python src/tukano_service.py
 
-# Connect to BD - Activate virtual env
-python ikarodjango/manage.py shell_plus
-
-# To create demo data (Inside shell_plus)
-u = User.objects.create_user(username="test", email="test@test.test", password="testtest")
-d = Drone.objects.create(plate="00000000", owner=u)
-r = Room.objects.create(host=u, drone=d)
+# Run janus publisher (dev cam)
+python src/janus.py http://<DOCKER_IP>:8088/janus
 ```
+
