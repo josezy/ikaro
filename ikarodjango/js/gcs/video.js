@@ -36,7 +36,7 @@ const VideoVisorComponent = ({ smallVideo }) => {
 
     const client = new Janus({
         url: global.props.JANUS_ENDPOINT,
-        token: '123456789',
+        // token: '123456789', // TODO: get token from server
     });
 
     const onTrack = (evt) => {
