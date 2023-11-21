@@ -22,8 +22,8 @@ r = Room.objects.create(host=u, drone=d)
 
 Used ports:
     7088 - admin
-    8088 - drone
-    8188 - front
+    8088 - drone / http
+    8188 - front / ws
 Review [config files](https://github.com/meetecho/janus-gateway/tree/master/conf) to check additional ports
 
 ## Useful commands for tukano
