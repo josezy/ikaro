@@ -12,10 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
-from ikaro.system import (
-    PLACEHOLDER_FOR_SECRET,
-    load_env_settings,
-)
+from ikaro.system import PLACEHOLDER_FOR_SECRET, load_env_settings
 
 SERVER_ENV = os.getenv('SERVER_ENV', 'DEV').upper()
 assert SERVER_ENV in ('DEV', 'PROD'), 'Server environment is invalid'
@@ -38,7 +35,7 @@ GIT_SHA = 'someshafornow'
 SECRET_KEY = PLACEHOLDER_FOR_SECRET
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
@@ -89,6 +86,8 @@ SETTINGS_SOURCES = {
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

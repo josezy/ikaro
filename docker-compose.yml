@@ -1,23 +1,21 @@
-version: '3'
-
 services:
-  nginx:
-    image: nginx:alpine
-    ports:
-      - 8000:8000
+  caddy:
+    image: caddy:2.8
     volumes:
-      - ./etc/nginx/ikaro.docker.conf:/etc/nginx/nginx.conf
-      - ./ikarodjango:/opt/ikaro/ikarodjango
-      - ./ikarodjango/static:/opt/ikaro/ikarodjango/static
+      - ./etc/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    ports:
+      - 3000:3000
 
   redis:
     image: redis:6-alpine
-    volumes:
-      - ./data/redis:/data
+    expose:
+      - 6379
 
   django:
     build: .
-    command: daphne -b 0.0.0.0 -p 8000 ikaro.asgi:application
+    command: python manage.py runserver 0.0.0.0:8000
     expose:
       - 8000
     environment:
@@ -26,6 +24,7 @@ services:
     volumes:
       - ./ikarodjango:/opt/ikaro/ikarodjango
       - ./env:/opt/ikaro/env
+    tty: true
 
   webpack:
     build:
@@ -33,8 +32,8 @@ services:
       dockerfile: ./Dockerfile.webpack
     image: ikaro:webpack
     command: webpack --mode development --watch
-    stdin_open: true
-    tty: true
+    environment:
+      - JANUS_ENDPOINT=ws://janus:8188
     volumes:
       - ./ikarodjango/js:/opt/ikaro/ikarodjango/js
       - ./ikarodjango/static:/opt/ikaro/ikarodjango/static
@@ -42,6 +41,16 @@ services:
       - ./ikarodjango/js/node_modules:/src/node_modules
 
   janus:
-    image: canyan/janus-gateway:master
-    command: ["/usr/local/bin/janus", "-F", "/usr/local/etc/janus"]
-    network_mode: host
+    image: canyan/janus-gateway:latest
+    ports:
+      - 8188:8188
+      - 8088:8088
+      - 8089:8089
+      - 8889:8889
+      - 8000:8000
+      - 7088:7088
+      - 7089:7089
+
+volumes:
+  caddy_data:
+  caddy_config:
