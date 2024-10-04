@@ -1,8 +1,3 @@
-body {
-    background-color: black !important;
-    color: white !important;
-}
-
 /*    Fonts    */
 @font-face {
   font-family: 'Aquatico-Regular';
@@ -44,6 +39,11 @@ body {
 :root {
     --gold:#e4cf77;
     --dark-blue:#02253C;
+    --gray: #f4f4f2;
+}
+body {
+    background-color: var(--gray);
+    color: var(--dark-blue);
 }
 .gold {
     color: var(--gold)
