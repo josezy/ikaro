@@ -44,5 +44,5 @@ python src/janus.py http://<DOCKER_IP>:8088/janus
 ## Production
 ```
 # Run Django and collect statics
-docker compose run --rm django python manage.py migrate
+docker compose -f docker-compose.prod.yml run --rm django python manage.py collectstatic --no-input
 ```
