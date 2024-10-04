@@ -1,46 +1,39 @@
-version: '3'
-
 services:
-  nginx:
-    image: nginx:alpine
-    ports:
-      - 8000:8000
+  caddy:
+    image: caddy:2.8
     volumes:
-      - ./etc/nginx/ikaro.docker.conf:/etc/nginx/nginx.conf
-      - ./ikarodjango:/opt/ikaro/ikarodjango
-      - ./ikarodjango/static:/opt/ikaro/ikarodjango/static
+      - ./etc/caddy/Caddyfile.prod:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+      - ./data/static:/app/static
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      - JANUS_VIDEO=video.tucanorobotics.co
 
   redis:
     image: redis:6-alpine
-    volumes:
-      - ./data/redis:/data
+    expose:
+      - 6379
 
   django:
-    build: .
+    build:
+      context: .
+      dockerfile: ./Dockerfile.prod
     command: daphne -b 0.0.0.0 -p 8000 ikaro.asgi:application
     expose:
       - 8000
     environment:
-      SERVER_ENV: PROD
-      REDIS_HOST: redis
+      - DEBUG=False
+      - SERVER_ENV=PROD
+      - REDIS_HOST=redis
+      - ALLOWED_HOSTS=ikaro.tucanorobotics.co
+      - JANUS_ENDPOINT=wss://ikaro.tucanorobotics.co/video
     volumes:
-      - ./ikarodjango:/opt/ikaro/ikarodjango
-      - ./env:/opt/ikaro/env
+      - ./env:/env
+      - ./data:/data
 
-  webpack:
-    build:
-      context: . 
-      dockerfile: ./Dockerfile.webpack
-    image: ikaro:webpack
-    stdin_open: true
-    tty: true
-    volumes:
-      - ./ikarodjango/js:/opt/ikaro/ikarodjango/js
-      - ./ikarodjango/static:/opt/ikaro/ikarodjango/static
-      # Hide local node_modules
-      - ./ikarodjango/js/node_modules:/src/node_modules
-
-  janus:
-    image: canyan/janus-gateway:master
-    command: ["/usr/local/bin/janus", "-F", "/usr/local/etc/janus"]
-    network_mode: host
+volumes:
+  caddy_data:
+  caddy_config:

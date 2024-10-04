@@ -1,0 +1,17 @@
+ikaro.tucanorobotics.co {
+  handle_path /static/* {
+    root * /app/static/
+    try_files {path}
+    file_server
+  }
+  handle /video* {
+    uri strip_prefix /video
+    reverse_proxy {$JANUS_VIDEO}:8188
+  }
+  handle /janus* {
+    reverse_proxy {$JANUS_VIDEO}:8088
+  }
+  handle {
+    reverse_proxy django:8000
+  }
+}

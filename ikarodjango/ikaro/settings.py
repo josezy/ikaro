@@ -39,7 +39,8 @@ DEBUG = True
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["localhost"]
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 IPYTHON_ARGUMENTS = ['--no-confirm-exit', '--no-banner']
 ENABLE_DEBUG_TOOLBAR = False
@@ -158,9 +159,9 @@ ASGI_APPLICATION = 'ikaro.routing.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(DATA_DIR, 'db.sqlite3'),
         'TEST': {
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3.test'),
+            'NAME': os.path.join(DATA_DIR, 'db.sqlite3.test'),
         },
     }
 }

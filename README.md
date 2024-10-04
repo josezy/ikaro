@@ -7,15 +7,18 @@ Django based web server for running drones from a browser
 
 Make sure to paste or set your env variables in `env/secrets.env`
 
-## Useful commands
+## Setup DB (only once)
 ```
+# Run Django and migrate:
+docker compose run --rm django python manage.py migrate
+
 # Connect to BD
 docker compose run --rm django ./ikarodjango/manage.py shell_plus
 
 # Create demo data (Inside shell_plus)
 u = User.objects.create_user(username="test", email="test@test.test", password="testtest")
 d = Drone.objects.create(plate="00000000", owner=u)
-r = Room.objects.create(host=u, drone=d)
+r = Room.objects.create(host=u, drone=d, videoroom_id="1234")
 ```
 
 ## Janus notes
@@ -38,3 +41,8 @@ python src/tukano_service.py
 python src/janus.py http://<DOCKER_IP>:8088/janus
 ```
 
+## Production
+```
+# Run Django and collect statics
+docker compose run --rm django python manage.py migrate
+```

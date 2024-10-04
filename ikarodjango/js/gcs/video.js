@@ -1,8 +1,8 @@
 // https://github.com/meetecho/janus-gateway/blob/master/html/videoroomtest.js
 
-import React, { useEffect, useRef } from 'react'
-import { reduxify } from '@/util/reduxify'
-import { Janus } from 'janus-videoroom-client'
+import { reduxify } from '@/util/reduxify';
+import { Janus } from 'janus-videoroom-client';
+import React, { useEffect, useRef } from 'react';
 
 
 const pc_create_negotiate = async (listenerHandle, onTrack) => {

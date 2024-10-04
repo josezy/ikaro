@@ -1,0 +1,21 @@
+FROM node:18 AS frontend_builder
+
+WORKDIR /app/js
+
+COPY ./ikarodjango/js/package.json ./ikarodjango/js/yarn.lock ./
+RUN yarn install
+ENV PATH="/app/js/node_modules/.bin:${PATH}"
+
+COPY ./ikarodjango/js/ .
+RUN webpack
+
+
+FROM python:3.12
+
+WORKDIR /app
+
+COPY --from=frontend_builder /app/static/js/pages /app/static/js/pages
+COPY ./requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY ./ikarodjango /app
