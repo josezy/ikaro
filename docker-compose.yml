@@ -24,6 +24,7 @@ services:
     volumes:
       - ./ikarodjango:/opt/ikaro/ikarodjango
       - ./env:/opt/ikaro/env
+      - ./data:/opt/ikaro/data
     tty: true
 
   webpack:
