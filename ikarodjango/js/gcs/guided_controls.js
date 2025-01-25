@@ -53,7 +53,7 @@ export const KeyboardControl = (props) => {
     }, [])
 
     return (
-        <div className='m-auto'>
+        <div className='m-auto text-white'>
             <b>W: </b>Forward / <b>S: </b>Backwards<br />
             <b>A: </b>Turn left / <b>D: </b>Turn right<br />
             {/* <b>E: </b>Aumentar aceleración<br /> */}
