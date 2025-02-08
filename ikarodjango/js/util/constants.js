@@ -33,8 +33,8 @@ export const CELL_RANGE = [3.7, 4.2]
 
 
 export const RC_CHANNELS_OVERRIDE_INTERVAL = 1000 // Based on AFS_RC_FAIL_TIME parameter
-export const MAX_THROTTLE = 2000
-export const MIN_THROTTLE = 1000
+export const MAX_THROTTLE = 20000
+export const MIN_THROTTLE = 0
 export const ROLL_LEFT = 1000
 export const ROLL_RIGHT = 2000
 export const ROLL_NEUTRAL = 1500
