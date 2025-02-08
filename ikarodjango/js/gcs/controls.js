@@ -342,7 +342,7 @@ const SelectMode = reduxify({
         }
         return (
             <div className='row m-auto w-100'>
-                <div className='col-4 d-flex align-items-center justify-content-end'>Drive Mode:</div>
+                <div className='col-4 d-flex align-items-center justify-content-end text-white'>Drive Mode:</div>
                 <div className='col-8 pl-0'>
                     <Select
                         value={props.flight_mode.charAt(0).toUpperCase() + props.flight_mode.slice(1).toLowerCase()}
