@@ -3,6 +3,20 @@ import {
 } from '@/util/constants'
 
 
+export const set_servo_trim = (servo, param_value) => (dispatch, getState) => {
+    const { target_system, target_component } = getState().mavlink
+
+    if (target_system == undefined || target_component == undefined) return null
+
+    return dispatch(send_mavmsg('PARAM_SET', {
+        target_system,
+        target_component,
+        param_id: `SERVO${servo}_TRIM`,
+        param_value,
+        param_type: 4
+    }))
+}
+
 export const rover_rc_channels_override = (throttle, roll, direction = true) => (dispatch, getState) => {
     const { target_system, target_component } = getState().mavlink
 
